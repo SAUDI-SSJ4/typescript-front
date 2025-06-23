@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Plus, Search } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
-function Courses() {
+function MyCourses() {
   const navigate = useNavigate();
 
   const handleSearchCourses = () => {
@@ -61,4 +61,4 @@ function Courses() {
   );
 }
 
-export default Courses;
+export default MyCourses;

@@ -12,7 +12,7 @@ export default function Header() {
             background:
               "linear-gradient(91.81deg, rgba(255, 255, 255, 0.87) 21.24%, rgba(255, 255, 255, 0.87) 109.59%)",
           }}
-          className="p-4 backdrop-blur rounded-[20px] flex items-center justify-between"
+          className="p-4 backdrop-blur rounded-[20px] flex items-center justify-between shadow-sm"
         >
           <div className="flex items-center flex-1 justify-between lg:justify-start gap-4 lg:gap-10">
             <Link to="/">
@@ -20,7 +20,7 @@ export default function Header() {
                 src="/assets/images/logo.svg"
                 alt="Logo"
                 loading="eager"
-                className="w-[100px] h-[45px]"
+                className="w-[100px] h-[45px] object-contain"
               />
             </Link>
             <MobileMenu links={links} />

@@ -27,6 +27,9 @@ export enum Pages {
   RESET_PASSWORD = "reset-password",
   LOGOUT = "logout",
   USERS = "users",
+  COURSES = "courses",
+  NEW = "new",
+  TRAINERS = "trainers",
 }
 
 export enum InputTypes {

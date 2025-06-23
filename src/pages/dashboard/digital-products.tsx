@@ -7,14 +7,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import {
-  Search,
-  ChevronDown,
-  Package,
-  Plus,
-  ShoppingCartIcon,
-} from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { Search, ChevronDown, Package, Plus } from "lucide-react";
 
 function DigitalProducts() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -28,12 +21,6 @@ function DigitalProducts() {
     "الأكثر مبيعاً",
   ];
 
-  const navigate = useNavigate();
-
-  const handleAddProducts = () => {
-    navigate("/");
-  };
-
   return (
     <div className="p-6 space-y-6">
       {/* Header */}
@@ -42,10 +29,6 @@ function DigitalProducts() {
           <Package className="w-10 h-10 text-gray-400" />
           <h1 className="text-2xl font-bold text-gray-900">المنتجات الرقمية</h1>
         </div>
-        <Button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-colors">
-          <Plus className="w-4 h-4 ml-2" />
-          إضافة منتج جديد
-        </Button>
       </div>
 
       {/* Search and Sort Controls */}
@@ -118,15 +101,6 @@ function DigitalProducts() {
         <p className="text-gray-500 text-center mb-6 max-w-md">
           ابدأ في إنشاء منتجاتك الرقمية الأولى وابدأ في بيعها عبر المنصة
         </p>
-
-        <Button
-          onClick={handleAddProducts}
-          style={{ backgroundColor: "rgba(102, 126, 234, 0.1)" }}
-          className="hover:bg-primary text-[rgb(102_126_234)] rounded-[50px] text-sm font-semibold flex items-center gap-2 mx-auto shadow-lg transition-all duration-200 hover:shadow-xl"
-        >
-          <ShoppingCartIcon className="w-5 h-5 ml-2" />
-          إنشاء منتج رقمي
-        </Button>
       </div>
     </div>
   );

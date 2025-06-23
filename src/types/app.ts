@@ -19,7 +19,8 @@ export interface IFormField {
     | "phone"
     | "hidden"
     | "textarea"
-    | "image";
+    | "image"
+    | "file";
   placeholder?: string;
   disabled?: boolean;
   autoFocus?: boolean;

@@ -12,6 +12,7 @@ import EmployeeTraining from "@/pages/employee-training";
 import Ai from "@/pages/ai";
 import { dashboardRoutes } from "./DashboardRoutes";
 import { authRoutes } from "./AuthRoutes";
+import { academyRoutes } from "./AcademyRoutes";
 
 export const router = createBrowserRouter(
   createRoutesFromElements(
@@ -24,6 +25,7 @@ export const router = createBrowserRouter(
       <Route path="employee-training" element={<EmployeeTraining />} />
       {dashboardRoutes}
       {authRoutes}
+      {academyRoutes}
       <Route path="*" element={<NotFound />} />
     </>
   )

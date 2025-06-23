@@ -1,6 +1,9 @@
 import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import {
   Dialog,
   DialogContent,
@@ -12,6 +15,8 @@ import {
 } from "@/components/ui/dialog";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Camera } from "lucide-react";
+import { toast } from "sonner";
+import { userSchema, type UserFormData } from "@/validations/user";
 
 interface UserInfo {
   name: string;
@@ -33,60 +38,153 @@ export function EditUserInfoModal({
   trigger,
 }: EditUserInfoModalProps) {
   const [open, setOpen] = useState(false);
-  const [formData, setFormData] = useState<UserInfo>(userInfo);
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleInputChange = (field: keyof UserInfo, value: string) => {
-    setFormData((prev) => ({
-      ...prev,
-      [field]: value,
-    }));
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+    setValue,
+    watch,
+    reset,
+  } = useForm<UserFormData>({
+    resolver: zodResolver(userSchema),
+    defaultValues: {
+      name: userInfo.name,
+      email: userInfo.email,
+      phone: userInfo.phone,
+      avatar: userInfo.avatar || "",
+      coverImage: userInfo.coverImage || "",
+    },
+  });
+
+  const watchedValues = watch();
+
+  const validateFile = (
+    file: File,
+    type: "avatar" | "cover"
+  ): string | null => {
+    const maxSize = type === "avatar" ? 2 : 5; // MB
+    const allowedTypes = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
+
+    if (!allowedTypes.includes(file.type)) {
+      return `نوع الملف غير مدعوم. الأنواع المدعومة: ${allowedTypes.join(
+        ", "
+      )}`;
+    }
+
+    if (file.size > maxSize * 1024 * 1024) {
+      return `حجم الملف كبير جداً. الحد الأقصى ${maxSize} ميجابايت`;
+    }
+
+    return null;
   };
 
-  const handleSave = async () => {
+  const handleFormSubmit = async (data: UserFormData) => {
     setIsLoading(true);
     try {
       // Simulate API call
       await new Promise((resolve) => setTimeout(resolve, 1000));
-      onSave(formData);
+
+      const userInfo: UserInfo = {
+        name: data.name,
+        email: data.email,
+        phone: data.phone,
+        avatar: typeof data.avatar === "string" ? data.avatar : undefined,
+        coverImage:
+          typeof data.coverImage === "string" ? data.coverImage : undefined,
+      };
+
+      onSave(userInfo);
+      toast.success("تم تحديث المعلومات بنجاح!");
       setOpen(false);
     } catch (error) {
       console.error("Error saving user info:", error);
+      toast.error("حدث خطأ أثناء حفظ المعلومات");
     } finally {
       setIsLoading(false);
     }
   };
 
   const handleCancel = () => {
-    setFormData(userInfo); // Reset form data
+    reset(); // Reset form to default values
     setOpen(false);
+  };
+
+  const validateCoverImageDimensions = async (file: File): Promise<boolean> => {
+    return new Promise((resolve) => {
+      const img = new Image();
+      img.onload = () => {
+        // Cover image should be landscape and reasonably sized
+        const minWidth = 800; // Minimum width for cover
+        const minHeight = 300; // Minimum height for cover
+        const maxWidth = 2048; // Maximum width
+        const maxHeight = 1152; // Maximum height
+
+        // Also check aspect ratio (should be wider than tall for cover)
+        const aspectRatio = img.width / img.height;
+        const minAspectRatio = 2.0; // At least 2:1 ratio
+        const maxAspectRatio = 4.0; // Maximum 4:1 ratio
+
+        const isValidDimensions =
+          img.width >= minWidth &&
+          img.height >= minHeight &&
+          img.width <= maxWidth &&
+          img.height <= maxHeight &&
+          aspectRatio >= minAspectRatio &&
+          aspectRatio <= maxAspectRatio;
+
+        resolve(isValidDimensions);
+      };
+
+      img.onerror = () => resolve(false);
+      img.src = URL.createObjectURL(file);
+    });
   };
 
   const handleAvatarChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
+      const validationError = validateFile(file, "avatar");
+      if (validationError) {
+        toast.error(validationError);
+        return;
+      }
+
       const reader = new FileReader();
       reader.onload = (e) => {
         const result = e.target?.result as string;
-        setFormData((prev) => ({
-          ...prev,
-          avatar: result,
-        }));
+        setValue("avatar", result);
       };
       reader.readAsDataURL(file);
     }
   };
 
-  const handleCoverChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleCoverChange = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     const file = event.target.files?.[0];
     if (file) {
+      // Basic validation first
+      const basicValidation = validateFile(file, "cover");
+      if (basicValidation) {
+        toast.error(basicValidation);
+        return;
+      }
+
+      // Validate dimensions
+      const isValidDimensions = await validateCoverImageDimensions(file);
+      if (!isValidDimensions) {
+        toast.error(
+          "أبعاد صورة الغلاف غير مناسبة. الحد الأدنى: 800x300 بكسل، الحد الأقصى: 2048x1152 بكسل، ونسبة العرض للارتفاع بين 2:1 و 4:1"
+        );
+        return;
+      }
+
       const reader = new FileReader();
       reader.onload = (e) => {
         const result = e.target?.result as string;
-        setFormData((prev) => ({
-          ...prev,
-          coverImage: result,
-        }));
+        setValue("coverImage", result);
       };
       reader.readAsDataURL(file);
     }
@@ -121,9 +219,13 @@ export function EditUserInfoModal({
               className="relative cursor-pointer group h-32 bg-gradient-to-r from-gray-200 via-gray-100 to-gray-200 rounded-lg overflow-hidden"
               onClick={() => document.getElementById("cover-upload")?.click()}
             >
-              {formData.coverImage || userInfo.coverImage ? (
+              {watchedValues.coverImage ? (
                 <img
-                  src={formData.coverImage || userInfo.coverImage}
+                  src={
+                    typeof watchedValues.coverImage === "string"
+                      ? watchedValues.coverImage
+                      : ""
+                  }
                   alt="Cover"
                   className="w-full h-full object-cover transition-all duration-200 group-hover:opacity-80"
                 />
@@ -156,11 +258,17 @@ export function EditUserInfoModal({
             >
               <Avatar className="w-24 h-24 transition-all duration-200 group-hover:opacity-80">
                 <AvatarImage
-                  src={formData.avatar || userInfo.avatar}
+                  src={
+                    typeof watchedValues.avatar === "string"
+                      ? watchedValues.avatar
+                      : userInfo.avatar
+                  }
                   alt="Profile"
                 />
                 <AvatarFallback className="bg-gray-200 text-gray-600 text-2xl">
-                  {formData.name.charAt(0)}
+                  {watchedValues.name
+                    ? watchedValues.name.charAt(0)
+                    : userInfo.name.charAt(0)}
                 </AvatarFallback>
               </Avatar>
               <div className="absolute bottom-0 right-0 bg-blue-500 hover:bg-blue-600 text-white rounded-full p-2 transition-colors">
@@ -180,46 +288,74 @@ export function EditUserInfoModal({
           </div>
 
           {/* Form Fields */}
-          <div className="space-y-4">
+          <form
+            id="user-info-form"
+            onSubmit={handleSubmit(handleFormSubmit)}
+            className="space-y-4"
+          >
             <div className="text-right">
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <Label
+                htmlFor="name"
+                className="block text-sm font-medium text-gray-700 mb-2"
+              >
                 الاسم الكامل
-              </label>
+              </Label>
               <Input
+                id="name"
                 type="text"
-                value={formData.name}
-                onChange={(e) => handleInputChange("name", e.target.value)}
+                {...register("name")}
                 className="text-right"
                 placeholder="أدخل اسمك الكامل"
               />
+              {errors.name && (
+                <p className="text-red-500 text-sm mt-1 text-right">
+                  {errors.name.message}
+                </p>
+              )}
             </div>
 
             <div className="text-right">
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <Label
+                htmlFor="email"
+                className="block text-sm font-medium text-gray-700 mb-2"
+              >
                 البريد الإلكتروني
-              </label>
+              </Label>
               <Input
+                id="email"
                 type="email"
-                value={formData.email}
-                onChange={(e) => handleInputChange("email", e.target.value)}
+                {...register("email")}
                 className="text-right"
                 placeholder="أدخل بريدك الإلكتروني"
               />
+              {errors.email && (
+                <p className="text-red-500 text-sm mt-1 text-right">
+                  {errors.email.message}
+                </p>
+              )}
             </div>
 
             <div className="text-right">
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <Label
+                htmlFor="phone"
+                className="block text-sm font-medium text-gray-700 mb-2"
+              >
                 رقم الهاتف
-              </label>
+              </Label>
               <Input
+                id="phone"
                 type="tel"
-                value={formData.phone}
-                onChange={(e) => handleInputChange("phone", e.target.value)}
+                {...register("phone")}
                 className="text-right"
                 placeholder="أدخل رقم هاتفك"
               />
+              {errors.phone && (
+                <p className="text-red-500 text-sm mt-1 text-right">
+                  {errors.phone.message}
+                </p>
+              )}
             </div>
-          </div>
+          </form>
         </div>
 
         <DialogFooter className="flex gap-2 justify-start">
@@ -227,17 +363,17 @@ export function EditUserInfoModal({
             type="button"
             variant="outline"
             onClick={handleCancel}
-            disabled={isLoading}
+            disabled={isLoading || isSubmitting}
           >
             إلغاء
           </Button>
           <Button
-            type="button"
-            onClick={handleSave}
-            disabled={isLoading}
+            type="submit"
+            form="user-info-form"
+            disabled={isLoading || isSubmitting}
             className="bg-blue-500 hover:bg-blue-600"
           >
-            {isLoading ? (
+            {isLoading || isSubmitting ? (
               <div className="flex items-center gap-2">
                 <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
                 جاري الحفظ...

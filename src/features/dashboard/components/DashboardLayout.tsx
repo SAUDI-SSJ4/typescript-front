@@ -9,12 +9,12 @@ export function DashboardLayout() {
 
   return (
     <div className="min-h-screen bg-background flex">
-      <DashboardSidebar userType={UserType.STUDENT} />
+      <DashboardSidebar userType={UserType.ACADEMY} />
       <DashboardSidebar
         isMobile={true}
         isOpen={isMobileSidebarOpen}
         onClose={() => setIsMobileSidebarOpen(false)}
-        userType={UserType.STUDENT}
+        userType={UserType.ACADEMY}
       />
       <div className="flex-1 flex flex-col">
         <DashboardHeader
