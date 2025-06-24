@@ -4,14 +4,8 @@ import StudentReviewsTable from "./StudentReviewsTable";
 
 function StudentReviews() {
   return (
-    <div className="flex flex-col gap-6">
-      <div className="bg-white p-4 lg:p-6 rounded-xl shadow-sm border border-gray-100 flex items-center justify-between">
-        <h1 className="text-2xl font-bold flex gap-4 items-center text-foreground">
-          <Star className="text-primary" />
-          اراء الطلبة
-        </h1>
-        <StudentReviewForm />
-      </div>
+    <div className="space-y-6">
+      <Header />
       <StudentReviewsTable
         reviews={[
           {
@@ -39,3 +33,21 @@ function StudentReviews() {
 }
 
 export default StudentReviews;
+
+function Header() {
+  return (
+    <div className="flex flex-col sm:space-y-0 sm:flex-row sm:items-center sm:justify-between gap-4 bg-white p-4 lg:p-6 rounded-xl shadow-sm border border-gray-100">
+      <div className="flex flex-col sm:flex-row sm:items-center gap-3 lg:gap-4">
+        <div className="flex items-center gap-2 text-gray-600">
+          <Star className="w-5 h-5 text-blue-600" />
+          <span className="font-medium text-sm lg:text-base">
+            آراء الطلبة
+          </span>
+        </div>
+      </div>
+      <div className="flex items-center gap-4">
+        <StudentReviewForm />
+      </div>
+    </div>
+  );
+}

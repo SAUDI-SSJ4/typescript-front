@@ -41,7 +41,7 @@ function Footer() {
             <SocialMedia />
           </div>
         </div>
-        <div className="border-t border-border py-6 text-card-foreground lg:text-lg text-center flex flex-wrap gap-4 justify-between">
+        <div className="border-t border-border py-6 text-card-foreground text-sm lg:text-base text-center flex flex-wrap gap-4 justify-between">
           <p>
             جميع الحقوق محفوظة © 2025 تم التطوير بواسطة{" "}
             <Link

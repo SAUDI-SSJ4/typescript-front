@@ -33,7 +33,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
-import { Routes, UserType } from "@/constants/enums";
+import { UserType } from "@/constants/enums";
 
 interface SidebarSubItem {
   id: string;
@@ -97,6 +97,14 @@ function DashboardSidebar({
           title: "الجلسات الحضورية",
           href: "/dashboard/live-sessions",
           icon: <Calendar className="w-4 h-4" />,
+          badge: "قريباً",
+          comingSoon: true,
+        },
+        {
+          id: "certificates-editing",
+          title: "تحرير الشهادات",
+          href: "/dashboard/certificates-editing",
+          icon: <Award className="w-4 h-4" />,
           badge: "قريباً",
           comingSoon: true,
         },
@@ -180,13 +188,13 @@ function DashboardSidebar({
         },
         {
           id: "main-menu",
-          title: "القائمة الرئيسية",
+          title: "القسم الرئيسي",
           href: "/dashboard/template/main-menu",
           icon: <List className="w-4 h-4" />,
         },
         {
           id: "about",
-          title: "من نحن",
+          title: "قسم من نحن",
           href: "/dashboard/template/about",
           icon: <Info className="w-4 h-4" />,
         },
@@ -212,7 +220,7 @@ function DashboardSidebar({
     },
     {
       id: "trainers",
-      title: "ادارة المديرين",
+      title: "ادارة المدربين",
       href: "/dashboard/trainers",
       icon: <UserCheck className="w-5 h-5" />,
     },
@@ -311,20 +319,35 @@ function DashboardSidebar({
             variant="ghost"
             onClick={() => toggleExpanded(item.id)}
             className={cn(
-              "w-full justify-between h-auto px-4 py-3 text-right rounded-xl transition-all duration-200 group",
+              "w-full justify-between h-auto px-4 py-3 text-right rounded-lg transition-colors group",
               hasActiveSubItem || isExpanded
-                ? "bg-blue-50 text-primary"
-                : "text-foreground hover:bg-blue-50 hover:text-primary"
+                ? "text-white hover:text-white"
+                : "bg-white text-gray-900 hover:text-white"
             )}
+            style={hasActiveSubItem || isExpanded ? { backgroundColor: '#0062ff' } : {}}
+            onMouseEnter={(e) => {
+              if (!(hasActiveSubItem || isExpanded)) {
+                e.currentTarget.style.backgroundColor = '#0062ff';
+                const icon = e.currentTarget.querySelector('.sidebar-icon') as HTMLElement;
+                const arrow = e.currentTarget.querySelector('.sidebar-arrow') as HTMLElement;
+                if (icon) icon.style.color = 'white';
+                if (arrow) arrow.style.color = 'white';
+              }
+            }}
+            onMouseLeave={(e) => {
+              if (!(hasActiveSubItem || isExpanded)) {
+                e.currentTarget.style.backgroundColor = 'white';
+                const icon = e.currentTarget.querySelector('.sidebar-icon') as HTMLElement;
+                const arrow = e.currentTarget.querySelector('.sidebar-arrow') as HTMLElement;
+                if (icon) icon.style.color = '#0062ff';
+                if (arrow) arrow.style.color = '#0062ff';
+              }
+            }}
           >
             <div className="flex items-center gap-3">
               <div
-                className={cn(
-                  "transition-colors",
-                  hasActiveSubItem || isExpanded
-                    ? "text-primary"
-                    : "text-muted-foreground group-hover:text-primary"
-                )}
+                className="sidebar-icon transition-colors w-6 h-6 flex items-center justify-center"
+                style={{color: hasActiveSubItem || isExpanded ? 'white' : '#0062ff'}}
               >
                 {item.icon}
               </div>
@@ -332,33 +355,31 @@ function DashboardSidebar({
             </div>
             <ChevronDown
               className={cn(
-                "w-4 h-4 transition-transform duration-200",
-                isExpanded ? "rotate-180" : "rotate-0",
-                hasActiveSubItem || isExpanded
-                  ? "text-primary"
-                  : "text-muted-foreground"
+                "sidebar-arrow w-5 h-5 transition-transform",
+                isExpanded ? "rotate-180" : "rotate-0"
               )}
+              style={{color: hasActiveSubItem || isExpanded ? 'white' : '#0062ff'}}
             />
           </Button>
 
           {/* Sub Items */}
           {isExpanded && (
-            <div className="ml-6 space-y-1 animate-in slide-in-from-top-1 duration-200">
+            <div className="ml-6 space-y-1">
               {item.subItems.map((subItem) => (
                 <div key={subItem.id}>
                   {subItem.comingSoon ? (
                     <div
                       className={cn(
-                        "flex items-center justify-between w-full px-4 py-2 text-right rounded-lg transition-colors",
-                        "text-muted-foreground bg-gray-50 cursor-not-allowed"
+                        "flex items-center justify-between w-full px-4 py-2 text-right rounded-md transition-colors",
+                        "text-gray-500 bg-white cursor-not-allowed"
                       )}
                     >
-                      <div className="flex items-center gap-3">
-                        <div className="text-gray-400">{subItem.icon}</div>
-                        <span className="font-medium text-sm">
-                          {subItem.title}
-                        </span>
-                      </div>
+                                              <div className="flex items-center gap-3">
+                          <div className="w-5 h-5 flex items-center justify-center text-gray-400">{subItem.icon}</div>
+                          <span className="font-medium text-sm">
+                            {subItem.title}
+                          </span>
+                        </div>
                       {subItem.badge && (
                         <Badge
                           variant="secondary"
@@ -376,20 +397,31 @@ function DashboardSidebar({
                       <Button
                         variant="ghost"
                         className={cn(
-                          "w-full justify-between h-auto px-4 py-2 text-right rounded-lg transition-all duration-200 group",
+                          "w-full justify-between h-auto px-4 py-2 text-right rounded-md transition-colors group",
                           isActivePath(subItem.href!)
-                            ? "bg-primary text-white hover:bg-primary/90"
-                            : "text-foreground hover:bg-blue-50 hover:text-primary"
+                            ? "text-white hover:text-white"
+                            : "bg-white text-gray-900 hover:text-white"
                         )}
+                        style={isActivePath(subItem.href!) ? { backgroundColor: '#0062ff' } : {}}
+                        onMouseEnter={(e) => {
+                          if (!isActivePath(subItem.href!)) {
+                            e.currentTarget.style.backgroundColor = '#0062ff';
+                            const icon = e.currentTarget.querySelector('.sidebar-subicon') as HTMLElement;
+                            if (icon) icon.style.color = 'white';
+                          }
+                        }}
+                        onMouseLeave={(e) => {
+                          if (!isActivePath(subItem.href!)) {
+                            e.currentTarget.style.backgroundColor = 'white';
+                            const icon = e.currentTarget.querySelector('.sidebar-subicon') as HTMLElement;
+                            if (icon) icon.style.color = '#0062ff';
+                          }
+                        }}
                       >
                         <div className="flex items-center gap-3">
                           <div
-                            className={cn(
-                              "transition-colors",
-                              isActivePath(subItem.href!)
-                                ? "text-white group-hover:text-foreground"
-                                : "text-muted-foreground group-hover:text-primary"
-                            )}
+                            className="sidebar-subicon transition-colors w-5 h-5 flex items-center justify-center"
+                            style={{color: isActivePath(subItem.href!) ? 'white' : '#0062ff'}}
                           >
                             {subItem.icon}
                           </div>
@@ -414,12 +446,12 @@ function DashboardSidebar({
         <div
           key={item.id}
           className={cn(
-            "flex items-center justify-between w-full px-4 py-3 text-right rounded-xl transition-colors",
-            "text-muted-foreground bg-gray-50 cursor-not-allowed"
+            "flex items-center justify-between w-full px-4 py-3 text-right rounded-lg transition-colors",
+            "text-gray-500 bg-white cursor-not-allowed"
           )}
         >
           <div className="flex items-center gap-3">
-            <div className="text-gray-400">{item.icon}</div>
+            <div className="w-6 h-6 flex items-center justify-center text-gray-400">{item.icon}</div>
             <span className="font-medium">{item.title}</span>
           </div>
           <div className="flex items-center gap-2">
@@ -445,20 +477,31 @@ function DashboardSidebar({
         <Button
           variant="ghost"
           className={cn(
-            "w-full justify-between h-auto px-4 py-3 text-right rounded-xl transition-all duration-200 group",
+            "w-full justify-between h-auto px-4 py-3 text-right rounded-lg transition-colors group",
             isActivePath(item.href!)
-              ? "bg-primary text-white hover:bg-primary/90 shadow-md"
-              : "text-foreground hover:bg-blue-50 hover:text-primary"
+              ? "text-white hover:text-white shadow-sm"
+              : "bg-white text-gray-900 hover:text-white"
           )}
+          style={isActivePath(item.href!) ? { backgroundColor: '#0062ff' } : {}}
+          onMouseEnter={(e) => {
+            if (!isActivePath(item.href!)) {
+              e.currentTarget.style.backgroundColor = '#0062ff';
+              const icon = e.currentTarget.querySelector('.sidebar-mainicon') as HTMLElement;
+              if (icon) icon.style.color = 'white';
+            }
+          }}
+          onMouseLeave={(e) => {
+            if (!isActivePath(item.href!)) {
+              e.currentTarget.style.backgroundColor = 'white';
+              const icon = e.currentTarget.querySelector('.sidebar-mainicon') as HTMLElement;
+              if (icon) icon.style.color = '#0062ff';
+            }
+          }}
         >
           <div className="flex items-center gap-3">
             <div
-              className={cn(
-                "transition-colors",
-                isActivePath(item.href!)
-                  ? ""
-                  : "text-muted-foreground group-hover:text-primary"
-              )}
+              className="sidebar-mainicon transition-colors w-6 h-6 flex items-center justify-center"
+              style={{color: isActivePath(item.href!) ? 'white' : '#0062ff'}}
             >
               {item.icon}
             </div>
@@ -495,35 +538,92 @@ function DashboardSidebar({
           </Button>
         </div>
       )}
-      <div className="p-6 space-y-6">
-        <div className="hidden lg:flex items-center gap-2">
-          {userType === UserType.ACADEMY ? (
-            <Link
-              to="/academy/simple-arab-code"
-              target="_blank"
-              className="flex items-center gap-4 group"
+
+      {/* Mobile Back to Main Site Button */}
+      {isMobile && (
+        <div className="p-4 border-b border-gray-100">
+          <Link to="/" className="block" onClick={onClose}>
+            <Button 
+              size="sm"
+              variant="outline"
+              className="w-full justify-center gap-2 h-10 text-sm border-gray-200 hover:bg-gray-50 text-gray-700 rounded-lg font-medium"
             >
-              <img
-                src="https://avatars.githubusercontent.com/u/87553297?v=4"
-                alt="Sayan"
-                className="w-24 h-24 rounded-full"
-              />
-              <h3 className="text-muted-foreground group-hover:text-primary transition-colors duration-200 font-semibold text-lg">
-                SAC Academy
-              </h3>
-            </Link>
+              <Home className="w-4 h-4" />
+              العودة للصفحة الرئيسية
+            </Button>
+          </Link>
+        </div>
+      )}
+      <div className="p-5 space-y-4">
+        {/* Back to Main Site Button */}
+        <div className="hidden lg:block">
+          <Link to="/" className="block">
+            <Button 
+              size="sm"
+              variant="outline"
+              className="w-full justify-center gap-2 h-10 text-sm border-gray-200 hover:bg-gray-50 text-gray-700 rounded-lg font-medium"
+            >
+              <Home className="w-4 h-4" />
+              العودة للصفحة الرئيسية
+            </Button>
+          </Link>
+        </div>
+
+        {/* Profile Section */}
+        <div className="hidden lg:block">
+          {userType === UserType.ACADEMY ? (
+            <div className="space-y-3">
+              {/* Academy Profile */}
+              <div className="flex items-center gap-3">
+                <img
+                  src="https://avatars.githubusercontent.com/u/87553297?v=4"
+                  alt="أكاديمية سيان"
+                  className="w-12 h-12 rounded-lg object-cover shadow-sm"
+                />
+                <div className="flex-1 min-w-0">
+                  <h3 className="font-semibold text-gray-900 text-base truncate">
+                    أكاديمية سيان
+                  </h3>
+                </div>
+              </div>
+              
+              {/* Visit Academy Button */}
+              <Link
+                to="/academy/simple-arab-code"
+                target="_blank"
+                className="block"
+              >
+                <Button 
+                  size="sm"
+                  className="w-full justify-center gap-1.5 h-9 text-xs bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium"
+                >
+                  <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                  </svg>
+                  زيارة صفحة المنصة التعليمية
+                </Button>
+              </Link>
+            </div>
           ) : (
-            <Link to={Routes.ROOT}>
+            <div className="flex items-center gap-3">
               <img
                 src="/assets/images/logo.svg"
-                alt="Sayan"
-                className="w-24 h-24"
+                alt="المستخدم"
+                className="w-12 h-12 rounded-lg object-cover bg-gray-50 p-2 shadow-sm"
               />
-            </Link>
+              <div className="flex-1 min-w-0">
+                <h3 className="font-semibold text-gray-900 text-base truncate">
+                  مرحباً بك
+                </h3>
+                <p className="text-xs text-gray-500 truncate">
+                  مستخدم النظام
+                </p>
+              </div>
+            </div>
           )}
         </div>
         <nav>
-          <ul className="flex flex-col gap-2">
+          <ul className="flex flex-col gap-1">
             {sidebarItems.map((item) => renderSidebarItem(item))}
           </ul>
         </nav>
@@ -557,7 +657,7 @@ function DashboardSidebar({
 
   // Desktop Sidebar
   return (
-    <aside className="w-80 bg-white border-l border-border h-full overflow-y-auto hidden lg:block">
+    <aside className="w-80 bg-white border-l border-gray-200 h-full overflow-y-auto hidden lg:block">
       {sidebarContent}
     </aside>
   );

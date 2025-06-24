@@ -65,17 +65,6 @@ const columns: ColumnDef<StudentFaq>[] = [
     ),
   },
   {
-    accessorKey: "created_at",
-    header: "تاريخ الإضافة",
-    cell: ({ row }) => (
-      <div className="text-sm text-gray-500 text-right">
-        {row.getValue("created_at")
-          ? new Date(row.getValue("created_at")).toLocaleDateString("ar-SA")
-          : "غير محدد"}
-      </div>
-    ),
-  },
-  {
     id: "actions",
     header: "الإجراءات",
     enableHiding: false,
@@ -157,7 +146,6 @@ function StudentFaqsTable({ faqs }: StudentFaqsTableProps) {
                 const columnHeaders = {
                   question: "السؤال الشائع",
                   answer: "الإجابة",
-                  created_at: "تاريخ الإضافة",
                 };
                 return (
                   <DropdownMenuCheckboxItem

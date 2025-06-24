@@ -1,4 +1,4 @@
-import { Users, BookOpen, Star, TrendingUp } from "lucide-react";
+import { Users, BookOpen, TrendingUp } from "lucide-react";
 import type { Trainer } from "@/types/trainer";
 
 interface TrainerStatsProps {
@@ -15,7 +15,7 @@ interface StatCardProps {
 
 function StatCard({ title, value, icon, change, changeType }: StatCardProps) {
   return (
-    <div className="bg-white rounded-lg border border-gray-200 p-6">
+          <div className="bg-white rounded-lg border-0 shadow-sm p-6">
       <div className="flex items-center justify-between">
         <div>
           <p className="text-sm font-medium text-gray-600">{title}</p>
@@ -47,9 +47,6 @@ function TrainerStats({ trainers }: TrainerStatsProps) {
     (sum, trainer) => sum + (trainer.studentsCount || 0),
     0
   );
-  const averageRating =
-    trainers.reduce((sum, trainer) => sum + (trainer.rating || 0), 0) /
-    trainers.length;
 
   const stats = [
     {
@@ -71,13 +68,6 @@ function TrainerStats({ trainers }: TrainerStatsProps) {
       value: totalStudents.toLocaleString(),
       icon: <Users className="w-8 h-8" />,
       change: "+15% من الشهر الماضي",
-      changeType: "positive" as const,
-    },
-    {
-      title: "متوسط التقييم",
-      value: averageRating.toFixed(1),
-      icon: <Star className="w-8 h-8" />,
-      change: "تحسن بـ 0.2 نقطة",
       changeType: "positive" as const,
     },
   ];

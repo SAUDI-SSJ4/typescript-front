@@ -1,5 +1,5 @@
 import { Card } from "@/components/ui/card";
-import { Wallet } from "lucide-react";
+import { Wallet, TrendingUp} from "lucide-react";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { useState, useMemo } from "react";
 import WithdrawalModal from "@/components/shared/dashboard/WithdrawalModal";
@@ -44,9 +44,9 @@ function WalletPage() {
             label: "الإيرادات",
             data: [10, 25, 30, 85, 40, 60, 45],
             backgroundColor: "rgba(59, 130, 246, 0.8)",
-            borderColor: "rgba(59, 130, 246, 1)",
-            borderWidth: 1,
-            borderRadius: 4,
+            borderColor: "rgba(59, 130, 246, 0.2)",
+            borderWidth: 0,
+            borderRadius: 6,
           },
         ],
       },
@@ -57,9 +57,9 @@ function WalletPage() {
             label: "الإيرادات",
             data: [1200, 1900, 3000, 5000, 2000, 3000],
             backgroundColor: "rgba(59, 130, 246, 0.8)",
-            borderColor: "rgba(59, 130, 246, 1)",
-            borderWidth: 1,
-            borderRadius: 4,
+            borderColor: "rgba(59, 130, 246, 0.2)",
+            borderWidth: 0,
+            borderRadius: 6,
           },
         ],
       },
@@ -70,9 +70,9 @@ function WalletPage() {
             label: "الإيرادات",
             data: [15000, 25000, 35000, 45000, 55000, 81000],
             backgroundColor: "rgba(59, 130, 246, 0.8)",
-            borderColor: "rgba(59, 130, 246, 1)",
-            borderWidth: 1,
-            borderRadius: 4,
+            borderColor: "rgba(59, 130, 246, 0.2)",
+            borderWidth: 0,
+            borderRadius: 6,
           },
         ],
       },
@@ -89,28 +89,47 @@ function WalletPage() {
           display: false,
         },
         tooltip: {
-          backgroundColor: "rgba(0, 0, 0, 0.8)",
-          titleColor: "white",
-          bodyColor: "white",
-          borderColor: "rgba(59, 130, 246, 1)",
+          backgroundColor: "rgba(255, 255, 255, 0.95)",
+          titleColor: "#374151",
+          bodyColor: "#374151",
+          borderColor: "rgba(59, 130, 246, 0.2)",
           borderWidth: 1,
+          cornerRadius: 8,
+          padding: 12,
         },
       },
       scales: {
         y: {
           beginAtZero: true,
+          border: {
+            display: false,
+          },
           grid: {
-            color: "rgba(0, 0, 0, 0.1)",
+            color: "rgba(0, 0, 0, 0.03)",
+            lineWidth: 1,
           },
           ticks: {
+            color: "#6B7280",
+            font: {
+              size: 12,
+            },
             callback: function (value: number | string) {
               return value + " ﷼";
             },
           },
         },
         x: {
+          border: {
+            display: false,
+          },
           grid: {
             display: false,
+          },
+          ticks: {
+            color: "#6B7280",
+            font: {
+              size: 12,
+            },
           },
         },
       },
@@ -119,79 +138,44 @@ function WalletPage() {
   );
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
-      <div className="max-w-7xl mx-auto px-4">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Main Content */}
-          <div className="lg:col-span-2 space-y-8">
-            {/* Header with Tabs */}
-            <div className="border-b border-gray-200">
-              <h1 className="text-center text-2xl font-bold text-blue-600 mb-4">
-                الإيراد
-              </h1>
-              <Tabs
-                value={activeTab}
-                onValueChange={setActiveTab}
-                className="w-full"
-              >
-                <TabsList className="grid w-full grid-cols-3 rounded-none bg-transparent">
-                  <TabsTrigger
-                    value="yearly"
-                    className="data-[state=active]:border-b-2 data-[state=active]:border-blue-500 data-[state=active]:shadow-none rounded-none"
-                  >
-                    السنة السابقة
-                  </TabsTrigger>
-                  <TabsTrigger
-                    value="monthly"
-                    className="data-[state=active]:border-b-2 data-[state=active]:border-blue-500 data-[state=active]:shadow-none rounded-none"
-                  >
-                    شهري
-                  </TabsTrigger>
-                  <TabsTrigger
-                    value="weekly"
-                    className="data-[state=active]:border-b-2 data-[state=active]:border-blue-500 data-[state=active]:shadow-none rounded-none bg-blue-100 text-blue-700"
-                  >
-                    أسبوعي
-                  </TabsTrigger>
-                </TabsList>
-              </Tabs>
-            </div>
-
-            {/* Income/Expense Overview */}
-            <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
-              <div className="flex justify-between items-center mb-6">
-                <div>
-                  <h3 className="text-lg font-semibold text-gray-700">
-                    المصروفات الشهرية
-                  </h3>
-                  <p className="text-3xl font-bold mt-1 flex items-center">
-                    <span>﷼</span>
-                    <span className="mr-1">0</span>
-                  </p>
-                </div>
-                <div>
-                  <h3 className="text-lg font-semibold text-gray-700">
-                    الإيرادات الشهرية
-                  </h3>
-                  <p className="text-3xl font-bold mt-1 flex items-center text-right">
-                    <span>﷼</span>
-                    <span className="mr-1">81,000,019.8</span>
-                    <span className="text-green-500 text-sm font-medium mr-2">
-                      +0.5%
-                    </span>
-                  </p>
-                  <p className="text-xs text-gray-500 text-right">
-                    مقارنة بالشهر السابق
-                  </p>
-                </div>
+    <div className="space-y-6">
+      <Header />
+      
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+        {/* Main Content */}
+        <div className="lg:col-span-3 space-y-6">
+          {/* Chart Section */}
+          <Card className="p-6 bg-white border-gray-100">
+            <div className="mb-6">
+              <div className="flex items-center justify-between mb-6">
+                <h3 className="text-xl font-semibold text-gray-900">الإيرادات</h3>
+                
+                {/* Monthly Revenue Card - moved inside chart section */}
+                <Card className="p-4 bg-gradient-to-r from-blue-500 to-blue-600 text-white min-w-[280px] border-0 shadow-lg">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-blue-100 text-sm mb-1">إيرادات هذا الشهر</p>
+                      <div className="flex items-center">
+                        <span className="text-2xl font-bold">81,000,019.8</span>
+                        <span className="text-lg mr-2">﷼</span>
+                      </div>
+                      <div className="flex items-center mt-1 text-green-200">
+                        <TrendingUp className="w-3 h-3 mr-1" />
+                        <span className="text-xs">+0.5% من الشهر السابق</span>
+                      </div>
+                    </div>
+                    <Wallet className="w-8 h-8 text-blue-200" />
+                  </div>
+                </Card>
               </div>
-              <div className="mt-8 mb-4">
-                <h4 className="mb-4 font-bold">طلبات سحب معتمدة</h4>
-                <Tabs
-                  value={activeTab}
-                  onValueChange={setActiveTab}
-                  className="w-full"
-                >
+              
+              <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+                <TabsList className="grid w-full grid-cols-3 bg-gray-50 border-0">
+                  <TabsTrigger value="weekly" className="text-sm">أسبوعي</TabsTrigger>
+                  <TabsTrigger value="monthly" className="text-sm">شهري</TabsTrigger>
+                  <TabsTrigger value="yearly" className="text-sm">سنوي</TabsTrigger>
+                </TabsList>
+                <div className="mt-6 h-64">
                   <TabsContent value="weekly" className="h-full">
                     <Bar data={chartData.weekly} options={chartOptions} />
                   </TabsContent>
@@ -201,135 +185,115 @@ function WalletPage() {
                   <TabsContent value="yearly" className="h-full">
                     <Bar data={chartData.yearly} options={chartOptions} />
                   </TabsContent>
-                </Tabs>
-              </div>
+                </div>
+              </Tabs>
             </div>
-            <FinancialTransactions />
+          </Card>
+
+          {/* Financial Transactions */}
+          <FinancialTransactions />
+        </div>
+
+        {/* Right Sidebar */}
+        <div className="lg:col-span-1 space-y-6">
+          {/* Wallet Card */}
+          <Card className="p-6 bg-gradient-to-r from-emerald-500 to-emerald-600 text-white border-0 shadow-lg">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-emerald-100 text-sm mb-1">كافة رصيد الأكاديمية</p>
+                <div className="flex items-center">
+                  <span className="text-2xl font-bold">81,000,019.8</span>
+                  <span className="text-lg mr-2">﷼</span>
+                </div>
+                <div className="flex items-center mt-1 text-green-200">
+                </div>
+              </div>
+              <Wallet className="w-8 h-8 text-emerald-200" />
+            </div>
+          </Card>
+
+          {/* Withdrawal Button */}
+          <div className="space-y-4">
+            <WithdrawalModal availableBalance={81000019.8} />
           </div>
 
-          {/* Right Sidebar */}
-          <div className="lg:col-span-1 space-y-8">
-            {/* Balance Overview */}
-            <Card className="p-6 text-right shadow-lg border-0 bg-gradient-to-br from-blue-50 to-indigo-100">
-              <div className="flex items-center justify-between mb-4">
-                <Wallet className="w-8 h-8 text-blue-600" />
-                <h2 className="text-gray-600 text-lg font-semibold">
-                  رصيد المحفظة
-                </h2>
-              </div>
-              <div className="flex items-center justify-end mb-2">
-                <span className="text-4xl font-bold text-gray-900">
-                  81,000,019.8
-                </span>
-                <span className="mr-2 text-2xl text-gray-700">﷼</span>
-              </div>
-              <div className="flex items-center justify-end gap-4 mb-6">
-                <p className="text-green-500 text-sm font-medium">
-                  <span>+%0.5</span>
-                  <span className="mr-1">الفوائد الشهرية</span>
-                </p>
-                <div className="flex items-center text-green-500">
-                  <svg
-                    className="w-4 h-4 mr-1"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M5.293 7.707a1 1 0 010-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 01-1.414 1.414L11 5.414V17a1 1 0 11-2 0V5.414L6.707 7.707a1 1 0 01-1.414 0z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                </div>
-              </div>
-              <WithdrawalModal availableBalance={81000019.8} />
-            </Card>
-
-            {/* Credit Card Visualization */}
-            <div className="relative overflow-hidden rounded-xl bg-gradient-to-br from-blue-600 via-purple-600 to-indigo-700 text-white p-8 shadow-xl">
-              <div className="absolute top-4 right-4">
-                <div className="flex space-x-2">
-                  <div className="w-8 h-6 bg-white bg-opacity-80 rounded"></div>
-                  <div className="w-12 h-8 bg-white bg-opacity-60 rounded-md"></div>
-                </div>
-              </div>
-              <div className="absolute top-4 left-4">
-                <Wallet className="w-8 h-8 opacity-70" />
-              </div>
-              <div className="mt-12">
-                <h3 className="text-xl font-medium opacity-90 mb-2">
-                  محفظة الأكاديمية
-                </h3>
-                <p className="text-4xl font-bold tracking-wider mb-8">
-                  <span className="text-2xl">﷼</span>
-                  <span className="mr-2">81,000,019.8</span>
-                </p>
-              </div>
-              <div className="flex justify-between items-end">
-                <div className="opacity-70">
-                  <p className="text-sm">رقم المحفظة</p>
-                  <p className="font-mono text-lg tracking-wider">
-                    1890 **** **** ****
-                  </p>
-                </div>
-                <div className="text-right opacity-70">
-                  <p className="text-sm">تاريخ الانتهاء</p>
-                  <p className="font-mono text-lg">12/29</p>
-                </div>
-              </div>
-            </div>
-            {/* Withdrawal Requests */}
-            <div>
-              <h2 className="text-xl font-bold mb-4">طلبات سحب الأرباح</h2>
-              <div className="space-y-3">
-                <Card className="p-4 border-orange-200 bg-orange-50">
-                  <div className="flex justify-between items-center">
-                    <div className="flex items-center text-orange-600 text-sm gap-2">
-                      <span className="w-2 h-2 rounded-full bg-orange-500"></span>
-                      <span className="font-medium">معلق</span>
-                    </div>
-                    <div className="text-right">
-                      <span className="font-bold text-lg">﷼1,111</span>
-                      <span className="text-sm text-gray-500 block">
-                        طلب سحب الأرباح
-                      </span>
-                    </div>
-                    <div className="text-gray-500 text-sm">١٤٤٦/١٢/١٣هـ</div>
-                  </div>
-                </Card>
-                <Card className="p-4 border-green-200 bg-green-50">
-                  <div className="flex justify-between items-center">
-                    <div className="flex items-center text-green-600 text-sm gap-2">
-                      <span className="w-2 h-2 rounded-full bg-green-500"></span>
-                      <span className="font-medium">مكتمل</span>
-                    </div>
-                    <div className="text-right">
-                      <span className="font-bold text-lg">﷼5,000</span>
-                      <span className="text-sm text-gray-500 block">
-                        سحب الأرباح
-                      </span>
-                    </div>
-                    <div className="text-gray-500 text-sm">١٤٤٦/١٢/١٠هـ</div>
-                  </div>
-                </Card>
-                <Card className="p-4 border-green-200 bg-green-50">
-                  <div className="flex justify-between items-center">
-                    <div className="flex items-center text-green-600 text-sm gap-2">
-                      <span className="w-2 h-2 rounded-full bg-green-500"></span>
-                      <span className="font-medium">مكتمل</span>
-                    </div>
-                    <div className="text-right">
-                      <span className="font-bold text-lg">﷼2,500</span>
-                      <span className="text-sm text-gray-500 block">
-                        سحب الأرباح
-                      </span>
-                    </div>
-                    <div className="text-gray-500 text-sm">١٤٤٦/١٢/٠٥هـ</div>
-                  </div>
-                </Card>
-              </div>
+          {/* Withdrawal Requests */}
+          <div>
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">طلبات السحب</h3>
+            <div className="space-y-3">
+              <WithdrawalRequestCard 
+                status="pending" 
+                amount={1111} 
+                date="١٤٤٦/١٢/١٣هـ" 
+              />
+              <WithdrawalRequestCard 
+                status="completed" 
+                amount={5000} 
+                date="١٤٤٦/١٢/١٠هـ" 
+              />
+              <WithdrawalRequestCard 
+                status="completed" 
+                amount={2500} 
+                date="١٤٤٦/١٢/٠٥هـ" 
+              />
             </div>
           </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// Simplified Withdrawal Request Card Component
+function WithdrawalRequestCard({ status, amount, date }: {
+  status: 'pending' | 'completed';
+  amount: number;
+  date: string;
+}) {
+  const statusConfig = {
+    pending: {
+      color: 'orange',
+      bg: 'bg-orange-50',
+      border: 'border-orange-100',
+      text: 'text-orange-600',
+      label: 'معلق'
+    },
+    completed: {
+      color: 'green',
+      bg: 'bg-green-50',
+      border: 'border-green-100',
+      text: 'text-green-600',
+      label: 'مكتمل'
+    }
+  };
+
+  const config = statusConfig[status];
+
+  return (
+    <Card className={`p-4 ${config.bg} ${config.border} shadow-sm`}>
+      <div className="flex justify-between items-center">
+        <div className={`flex items-center gap-2 ${config.text} text-sm`}>
+          <span className={`w-2 h-2 rounded-full bg-${config.color}-500`}></span>
+          <span className="font-medium">{config.label}</span>
+        </div>
+        <div className="text-right">
+          <span className="font-bold text-lg">﷼{amount.toLocaleString()}</span>
+          <p className="text-xs text-gray-500">{date}</p>
+        </div>
+      </div>
+    </Card>
+  );
+}
+
+function Header() {
+  return (
+    <div className="flex flex-col sm:space-y-0 sm:flex-row sm:items-center sm:justify-between gap-4 bg-white p-4 lg:p-6 rounded-xl shadow-sm border border-gray-100">
+      <div className="flex flex-col sm:flex-row sm:items-center gap-3 lg:gap-4">
+        <div className="flex items-center gap-2 text-gray-600">
+          <Wallet className="w-5 h-5 text-blue-600" />
+          <span className="font-medium text-sm lg:text-base">
+            محفظة الأكاديمية
+          </span>
         </div>
       </div>
     </div>
@@ -339,98 +303,78 @@ function WalletPage() {
 export default WalletPage;
 
 function FinancialTransactions() {
+  const transactions = [
+    {
+      date: "١٤٤٦/١٢/٢٢هـ",
+      type: "إضافة رصيد",
+      typeColor: "green",
+      product: "-",
+      student: "-",
+      change: "+1.0",
+      after: "81,000,019.8"
+    },
+    {
+      date: "١٤٤٦/١٢/٢٠هـ",
+      type: "بيع دورة",
+      typeColor: "blue",
+      product: "دورة البرمجة المتقدمة",
+      student: "أحمد محمد",
+      change: "+18.9",
+      after: "81,000,018.9"
+    },
+    {
+      date: "١٤٤٦/١٢/١٨هـ",
+      type: "بيع دورة",
+      typeColor: "blue",
+      product: "دورة تصميم الجرافيك",
+      student: "فاطمة علي",
+      change: "+50",
+      after: "81,000,000"
+    },
+    {
+      date: "١٤٤٦/١٢/١٥هـ",
+      type: "عمولة شراكة",
+      typeColor: "purple",
+      product: "برنامج الشراكة",
+      student: "سارة أحمد",
+      change: "+150",
+      after: "80,999,950"
+    }
+  ];
+
   return (
-    <div>
-      <h2 className="text-xl font-bold mb-4">سجل المعاملات المالية</h2>
-      <div className="bg-white rounded-lg border border-gray-200 overflow-hidden shadow-sm">
-        <div className="overflow-x-auto">
-          <table className="w-full text-sm">
-            <thead className="bg-gray-50 border-b border-gray-200">
-              <tr className="text-right text-gray-700">
-                <th className="px-4 py-4 font-semibold">التاريخ</th>
-                <th className="px-4 py-4 font-semibold">نوع المعاملة</th>
-                <th className="px-4 py-4 font-semibold">المنتج</th>
-                <th className="px-4 py-4 font-semibold">الطالب</th>
-                <th className="px-4 py-4 font-semibold">قبل</th>
-                <th className="px-4 py-4 font-semibold">التغيير</th>
-                <th className="px-4 py-4 font-semibold">بعد</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-100">
-              <tr className="hover:bg-gray-50 transition-colors">
-                <td className="px-4 py-4 text-gray-900">١٤٤٦/١٢/٢٢هـ</td>
-                <td className="px-4 py-4">
-                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                    إضافة رصيد
+    <Card className="p-6 bg-white border-gray-100 shadow-sm">
+      <h3 className="text-xl font-semibold text-gray-900 mb-6">سجل المعاملات المالية</h3>
+      <div className="overflow-x-auto">
+        <table className="w-full text-sm">
+          <thead className="bg-gray-50/50">
+            <tr className="text-right text-gray-700">
+              <th className="px-4 py-3 font-semibold text-gray-600 border-b border-gray-100">التاريخ</th>
+              <th className="px-4 py-3 font-semibold text-gray-600 border-b border-gray-100">نوع المعاملة</th>
+              <th className="px-4 py-3 font-semibold text-gray-600 border-b border-gray-100">المنتج</th>
+              <th className="px-4 py-3 font-semibold text-gray-600 border-b border-gray-100">الطالب</th>
+              <th className="px-4 py-3 font-semibold text-gray-600 border-b border-gray-100">التغيير في الرصيد</th>
+              <th className="px-4 py-3 font-semibold text-gray-600 border-b border-gray-100">الرصيد</th>
+            </tr>
+          </thead>
+          <tbody>
+            {transactions.map((transaction, index) => (
+              <tr key={index} className="hover:bg-gray-50/50 transition-colors">
+                <td className="px-4 py-4 text-gray-900 border-b border-gray-50">{transaction.date}</td>
+                <td className="px-4 py-4 border-b border-gray-50">
+                  <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-${transaction.typeColor}-100 text-${transaction.typeColor}-700`}>
+                    {transaction.type}
                   </span>
                 </td>
-                <td className="px-4 py-4 text-gray-500">-</td>
-                <td className="px-4 py-4 text-gray-500">-</td>
-                <td className="px-4 py-4 text-gray-900 font-medium">
-                  ﷼81,000,018.9
-                </td>
-                <td className="px-4 py-4 text-green-600 font-bold">+﷼1.0</td>
-                <td className="px-4 py-4 text-gray-900 font-medium">
-                  ﷼81,000,019.8
-                </td>
+                <td className="px-4 py-4 text-gray-600 border-b border-gray-50">{transaction.product}</td>
+                <td className="px-4 py-4 text-gray-600 border-b border-gray-50">{transaction.student}</td>
+                <td className="px-4 py-4 text-green-600 font-semibold border-b border-gray-50">﷼{transaction.change}</td>
+                <td className="px-4 py-4 text-gray-900 font-medium border-b border-gray-50">﷼{transaction.after}</td>
               </tr>
-              <tr className="hover:bg-gray-50 transition-colors">
-                <td className="px-4 py-4 text-gray-900">١٤٤٦/١٢/٢٠هـ</td>
-                <td className="px-4 py-4">
-                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                    بيع دورة
-                  </span>
-                </td>
-                <td className="px-4 py-4 text-blue-600">
-                  دورة البرمجة المتقدمة
-                </td>
-                <td className="px-4 py-4 text-gray-900">أحمد محمد</td>
-                <td className="px-4 py-4 text-gray-900 font-medium">
-                  ﷼81,000,000
-                </td>
-                <td className="px-4 py-4 text-green-600 font-bold">+﷼18.9</td>
-                <td className="px-4 py-4 text-gray-900 font-medium">
-                  ﷼81,000,018.9
-                </td>
-              </tr>
-              <tr className="hover:bg-gray-50 transition-colors">
-                <td className="px-4 py-4 text-gray-900">١٤٤٦/١٢/١٨هـ</td>
-                <td className="px-4 py-4">
-                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                    بيع دورة
-                  </span>
-                </td>
-                <td className="px-4 py-4 text-blue-600">دورة تصميم الجرافيك</td>
-                <td className="px-4 py-4 text-gray-900">فاطمة علي</td>
-                <td className="px-4 py-4 text-gray-900 font-medium">
-                  ﷼80,999,950
-                </td>
-                <td className="px-4 py-4 text-green-600 font-bold">+﷼50</td>
-                <td className="px-4 py-4 text-gray-900 font-medium">
-                  ﷼81,000,000
-                </td>
-              </tr>
-              <tr className="hover:bg-gray-50 transition-colors">
-                <td className="px-4 py-4 text-gray-900">١٤٤٦/١٢/١٥هـ</td>
-                <td className="px-4 py-4">
-                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-orange-100 text-orange-800">
-                    عمولة شراكة
-                  </span>
-                </td>
-                <td className="px-4 py-4 text-orange-600">برنامج الشراكة</td>
-                <td className="px-4 py-4 text-gray-900">سارة أحمد</td>
-                <td className="px-4 py-4 text-gray-900 font-medium">
-                  ﷼80,999,800
-                </td>
-                <td className="px-4 py-4 text-green-600 font-bold">+﷼150</td>
-                <td className="px-4 py-4 text-gray-900 font-medium">
-                  ﷼80,999,950
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+            ))}
+          </tbody>
+        </table>
       </div>
-    </div>
+    </Card>
   );
 }

@@ -13,16 +13,9 @@ import type {
   SortingState,
   VisibilityState,
 } from "@tanstack/react-table";
-import { ChevronDown, Edit, Trash2 } from "lucide-react";
+import { Edit, Trash2 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuCheckboxItem,
-  DropdownMenuContent,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Input } from "@/components/ui/input";
 import {
   Table,
   TableBody,
@@ -31,6 +24,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import type { Table as TanstackTable } from "@tanstack/react-table";
 import { Badge } from "@/components/ui/badge";
 
 interface Course {
@@ -48,6 +42,7 @@ interface Course {
 
 interface CourseTableProps {
   courses: Course[];
+  onTableReady?: (table: TanstackTable<Course>) => void;
 }
 
 const columns: ColumnDef<Course>[] = [
@@ -165,7 +160,7 @@ const columns: ColumnDef<Course>[] = [
   },
 ];
 
-function CourseTable({ courses }: CourseTableProps) {
+function CourseTable({ courses, onTableReady }: CourseTableProps) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
@@ -193,61 +188,22 @@ function CourseTable({ courses }: CourseTableProps) {
     },
   });
 
+  // Pass table object to parent for filters
+  React.useEffect(() => {
+    if (onTableReady) {
+      onTableReady(table);
+    }
+  }, [table, onTableReady]);
+
   return (
     <div className="w-full">
-      <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 py-4">
-        <Input
-          placeholder="البحث في الدورات..."
-          value={(table.getColumn("title")?.getFilterValue() as string) ?? ""}
-          onChange={(event) =>
-            table.getColumn("title")?.setFilterValue(event.target.value)
-          }
-          className="w-full sm:max-w-sm"
-        />
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="w-full sm:w-auto sm:ml-auto">
-              الأعمدة <ChevronDown className="ml-2 h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            {table
-              .getAllColumns()
-              .filter((column) => column.getCanHide())
-              .map((column) => {
-                const columnHeaders = {
-                  image: "الصورة",
-                  title: "اسم المادة",
-                  category: "الفئة",
-                  type: "النوع",
-                  level: "المستوى",
-                  instructor: "اسم المدرب",
-                  price: "السعر",
-                };
-                return (
-                  <DropdownMenuCheckboxItem
-                    key={column.id}
-                    checked={column.getIsVisible()}
-                    onCheckedChange={(value) =>
-                      column.toggleVisibility(!!value)
-                    }
-                  >
-                    {columnHeaders[column.id as keyof typeof columnHeaders] ||
-                      column.id}
-                  </DropdownMenuCheckboxItem>
-                );
-              })}
-          </DropdownMenuContent>
-        </DropdownMenu>
-      </div>
-
       {/* Mobile Card View */}
       <div className="block lg:hidden space-y-4">
         {table.getRowModel().rows?.length ? (
           table.getRowModel().rows.map((row) => (
             <div
               key={row.id}
-              className="bg-white rounded-lg border border-gray-200 p-4 space-y-3"
+              className="bg-white rounded-lg border-0 shadow-sm p-4 space-y-3"
             >
               <div className="flex items-start gap-3">
                 <img
@@ -326,7 +282,7 @@ function CourseTable({ courses }: CourseTableProps) {
       </div>
 
       {/* Desktop Table View */}
-      <div className="hidden lg:block rounded-lg border border-gray-200 bg-white overflow-hidden">
+      <div className="hidden lg:block rounded-lg border-0 shadow-sm bg-white overflow-hidden">
         <Table>
           <TableHeader className="bg-gray-50">
             {table.getHeaderGroups().map((headerGroup) => (

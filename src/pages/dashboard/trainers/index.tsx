@@ -7,6 +7,7 @@ import { Pages, Routes } from "@/constants/enums";
 import type { Trainer } from "@/types/trainer";
 import { useState, useMemo } from "react";
 import TrainersTable from "@/features/trainers/components/TrainersTable";
+import type { Table } from "@tanstack/react-table";
 
 const trainers: Trainer[] = [
   {
@@ -60,28 +61,23 @@ const trainers: Trainer[] = [
 ];
 
 function Trainers() {
-  const [searchTerm, setSearchTerm] = useState("");
   const [selectedSpecialization, setSelectedSpecialization] = useState("الكل");
   const [minCoursesCount, setMinCoursesCount] = useState(0);
+  const [table, setTable] = useState<Table<Trainer> | null>(null);
 
   const filteredTrainers = useMemo(() => {
     return trainers.filter((trainer) => {
-      const matchesSearch =
-        trainer.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        trainer.email.toLowerCase().includes(searchTerm.toLowerCase());
-
       const matchesSpecialization =
         selectedSpecialization === "الكل" ||
         trainer.specialization === selectedSpecialization;
 
       const matchesCoursesCount = trainer.coursesCount >= minCoursesCount;
 
-      return matchesSearch && matchesSpecialization && matchesCoursesCount;
+      return matchesSpecialization && matchesCoursesCount;
     });
-  }, [searchTerm, selectedSpecialization, minCoursesCount]);
+  }, [selectedSpecialization, minCoursesCount]);
 
   const handleClearFilters = () => {
-    setSearchTerm("");
     setSelectedSpecialization("الكل");
     setMinCoursesCount(0);
   };
@@ -91,15 +87,14 @@ function Trainers() {
       <Header />
       <TrainerStats trainers={filteredTrainers} />
       <TrainerFilters
-        searchTerm={searchTerm}
-        onSearchChange={setSearchTerm}
         selectedSpecialization={selectedSpecialization}
         onSpecializationChange={setSelectedSpecialization}
         minCoursesCount={minCoursesCount}
         onMinCoursesCountChange={setMinCoursesCount}
         onClearFilters={handleClearFilters}
+        table={table}
       />
-      <TrainersTable trainers={filteredTrainers} />
+      <TrainersTable trainers={filteredTrainers} onTableReady={setTable} />
     </div>
   );
 }
@@ -108,16 +103,13 @@ export default Trainers;
 
 function Header() {
   return (
-    <div className="flex flex-col sm:space-y-0 sm:flex-row sm:items-center sm:justify-between gap-4 bg-white p-4 lg:p-6 rounded-xl shadow-sm border border-gray-100">
+    <div className="flex flex-col sm:space-y-0 sm:flex-row sm:items-center sm:justify-between gap-4 bg-white p-4 lg:p-6 rounded-xl shadow-sm border-0">
       <div className="flex flex-col sm:flex-row sm:items-center gap-3 lg:gap-4">
         <div className="flex items-center gap-2 text-gray-600">
           <Users className="w-5 h-5 text-blue-600" />
           <span className="font-medium text-sm lg:text-base">
             إدارة المدربين
           </span>
-        </div>
-        <div className="bg-gradient-to-r from-blue-100 to-blue-200 text-blue-700 px-3 lg:px-4 py-1.5 lg:py-2 rounded-full text-sm font-medium border border-blue-300 shadow-sm">
-          المدربين ({trainers.length})
         </div>
       </div>
       <div className="flex items-center gap-4">

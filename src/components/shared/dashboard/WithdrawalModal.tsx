@@ -11,7 +11,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
-import { Download, X, AlertCircle, CheckCircle } from "lucide-react";
+import { Download, AlertCircle, CheckCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Directions } from "@/constants/enums";
 
@@ -356,7 +356,6 @@ function WithdrawalModal({
               className="flex-1"
               disabled={isSubmitting}
             >
-              <X className="w-4 h-4 ml-1" />
               إلغاء
             </Button>
           </div>

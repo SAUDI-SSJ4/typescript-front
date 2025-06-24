@@ -27,7 +27,7 @@ interface StatCardProps {
 
 function StatCard({ title, value, icon, change, changeType }: StatCardProps) {
   return (
-    <div className="bg-white rounded-lg border border-gray-200 p-6">
+          <div className="bg-white rounded-lg border-0 shadow-sm p-6">
       <div className="flex items-center justify-between">
         <div>
           <p className="text-sm font-medium text-gray-600">{title}</p>

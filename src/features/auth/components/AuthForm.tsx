@@ -18,7 +18,7 @@ const AuthForm: React.FC<{ slug: string }> = ({ slug }) => {
   const { getFormFields } = useFormFields({ slug });
   const { getValidationSchema } = useFormValidations({ slug });
 
-  const { login, signup, isLoading } = useAuth();
+  const { signup, isLoading } = useAuth();
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const DEFAULT_VALUES: any = {};
@@ -66,7 +66,7 @@ const AuthForm: React.FC<{ slug: string }> = ({ slug }) => {
         toast.error(errorMessage);
       }
     },
-    [slug, login, signup, navigate]
+    [slug, signup, navigate]
   );
 
   const formLoading = isSubmitting || isLoading;
@@ -112,7 +112,7 @@ function ForgotPassword({
         to={`/${Routes.AUTH}/${Pages.FORGOT_PASSWORD}`}
         className="text-sm font-medium text-primary hover:underline"
       >
-        هل نسيت كلمةالمرور؟
+        هل نسيت كلمة المرور؟
       </Link>
     </div>
   );

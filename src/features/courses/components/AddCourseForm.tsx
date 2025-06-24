@@ -67,7 +67,7 @@ const AddCourseForm = ({
     const savedStep = getFromLocalStorage(FORM_STEP_KEY);
     return savedStep || 1;
   });
-  const totalSteps = 3;
+  const totalSteps = 2;
 
   // Get saved form data from localStorage
   const getSavedFormData = useCallback(() => {
@@ -200,141 +200,9 @@ const AddCourseForm = ({
   const getFieldsForStep = (step: number): (keyof ICourseForm)[] => {
     switch (step) {
       case 1:
-        return ["title", "category", "type", "instructor", "level", "price"];
+        return ["image", "video", "title", "category", "type", "instructor", "level", "price"];
       case 2:
         return ["description", "shortContent", "skills", "requirements"];
-      case 3:
-        return ["image", "video"];
-      default:
-        return [];
-    }
-  };
-
-  // Form field configurations
-  const step1Fields = [
-    {
-      name: "title",
-      label: "عنوان المادة التعليمية",
-      type: "text" as const,
-      placeholder: "أدخل عنوان المادة التعليمية",
-    },
-    {
-      name: "category",
-      label: "الفئة",
-      type: "select" as const,
-      placeholder: "اختر فئة المادة",
-      options: [
-        { label: "برمجة", value: "برمجة" },
-        { label: "تصميم", value: "تصميم" },
-        { label: "تسويق", value: "تسويق" },
-        { label: "أعمال", value: "أعمال" },
-        { label: "تطوير شخصي", value: "تطوير شخصي" },
-      ],
-    },
-    {
-      name: "type",
-      label: "نوع المادة",
-      type: "select" as const,
-      placeholder: "اختر نوع المادة",
-      options: [
-        { label: "تطوير الويب", value: "تطوير الويب" },
-        { label: "تصميم", value: "تصميم" },
-        { label: "تسويق رقمي", value: "تسويق رقمي" },
-        { label: "ذكاء اصطناعي", value: "ذكاء اصطناعي" },
-        { label: "إدارة", value: "إدارة" },
-      ],
-    },
-    {
-      name: "instructor",
-      label: "المدرب",
-      type: "select" as const,
-      placeholder: "اختر المدرب",
-      options: [
-        { label: "أحمد محمد", value: "أحمد محمد" },
-        { label: "سارة أحمد", value: "سارة أحمد" },
-        { label: "محمد علي", value: "محمد علي" },
-        { label: "د. خالد إبراهيم", value: "د. خالد إبراهيم" },
-        { label: "عمر حسن", value: "عمر حسن" },
-        { label: "ليلى كمال", value: "ليلى كمال" },
-      ],
-    },
-    {
-      name: "level",
-      label: "مستوى الطالب المطلوب",
-      type: "select" as const,
-      placeholder: "اختر مستوى الطالب",
-      options: [
-        { label: "مبتدئ", value: "مبتدئ" },
-        { label: "متوسط", value: "متوسط" },
-        { label: "متقدم", value: "متقدم" },
-      ],
-    },
-    {
-      name: "price",
-      label: "السعر (ريال سعودي)",
-      type: "number" as const,
-      placeholder: "0",
-    },
-  ];
-
-  const step2Fields = [
-    {
-      name: "description",
-      label: "الوصف التفصيلي للمادة",
-      type: "textarea" as const,
-      placeholder: "اكتب وصفاً شاملاً للمادة التعليمية وما سيتعلمه الطلاب...",
-    },
-    {
-      name: "shortContent",
-      label: "المحتوى المختصر",
-      type: "textarea" as const,
-      placeholder: "ملخص قصير عن محتوى المادة...",
-    },
-    {
-      name: "skills",
-      label: "المهارات المكتسبة",
-      type: "textarea" as const,
-      placeholder: "اذكر المهارات التي سيكتسبها الطلاب من هذه المادة...",
-    },
-    {
-      name: "requirements",
-      label: "المتطلبات الأساسية",
-      type: "textarea" as const,
-      placeholder: "اذكر المتطلبات والمعرفة المسبقة المطلوبة...",
-    },
-  ];
-
-  const step3Fields = [
-    {
-      name: "image",
-      label: "صورة المادة التعليمية",
-      type: "file" as const,
-      placeholder: "اختر صورة للمادة التعليمية",
-      fileType: "image" as const,
-      accept: "image/*",
-      maxSize: 5,
-      allowedTypes: ["image/jpeg", "image/png", "image/jpg", "image/webp"],
-    },
-    {
-      name: "video",
-      label: "فيديو تعريفي للمادة",
-      type: "file" as const,
-      placeholder: "اختر فيديو تعريفي للمادة",
-      fileType: "video" as const,
-      accept: "video/*",
-      maxSize: 100,
-      allowedTypes: ["video/mp4", "video/avi", "video/mov", "video/wmv"],
-    },
-  ];
-
-  const getCurrentFields = () => {
-    switch (currentStep) {
-      case 1:
-        return step1Fields;
-      case 2:
-        return step2Fields;
-      case 3:
-        return step3Fields;
       default:
         return [];
     }
@@ -343,11 +211,9 @@ const AddCourseForm = ({
   const getStepTitle = () => {
     switch (currentStep) {
       case 1:
-        return "المعلومات الأساسية";
+        return "المعلومات الأساسية والوسائط";
       case 2:
         return "محتوى المادة";
-      case 3:
-        return "الوسائط";
       default:
         return "";
     }
@@ -356,18 +222,16 @@ const AddCourseForm = ({
   const getStepDescription = () => {
     switch (currentStep) {
       case 1:
-        return "أدخل المعلومات الأساسية للمادة التعليمية";
+        return "أضف الوسائط والمعلومات الأساسية للمادة التعليمية";
       case 2:
         return "أضف محتوى المادة والمعلومات التفصيلية";
-      case 3:
-        return "أضف الصورة والفيديو التعريفي للمادة";
       default:
         return "";
     }
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-6 space-y-8">
+    <div className="space-y-8">
       {/* Progress Steps */}
       <div className="flex items-center justify-center mb-8">
         {Array.from({ length: totalSteps }, (_, index) => (
@@ -405,18 +269,188 @@ const AddCourseForm = ({
       </div>
 
       {/* Form */}
-      <Card className="p-8">
+      <Card className="p-8 border-0 shadow-sm">
         <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {getCurrentFields().map((field) => (
-              <div
-                key={field.name}
-                className={field.type === "textarea" ? "md:col-span-2" : ""}
-              >
-                <FormFields {...field} control={control} errors={errors} />
+          {currentStep === 1 ? (
+            <div className="space-y-6">
+              {/* الصف الأول: الوسائط */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <FormFields 
+                    name="image"
+                    label="صورة المادة التعليمية"
+                    type="file"
+                    placeholder="اختر صورة للمادة التعليمية"
+                    fileType="image"
+                    accept="image/*"
+                    maxSize={5}
+                    allowedTypes={["image/jpeg", "image/png", "image/jpg", "image/webp"]}
+                    control={control} 
+                    errors={errors} 
+                  />
+                </div>
+                <div>
+                  <FormFields 
+                    name="video"
+                    label="فيديو تعريفي للمادة"
+                    type="file"
+                    placeholder="اختر فيديو تعريفي للمادة"
+                    fileType="video"
+                    accept="video/*"
+                    maxSize={100}
+                    allowedTypes={["video/mp4", "video/avi", "video/mov", "video/wmv"]}
+                    control={control} 
+                    errors={errors} 
+                  />
+                </div>
               </div>
-            ))}
-          </div>
+              
+              {/* الصفوف التالية: المعلومات الأساسية */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <FormFields 
+                    name="title"
+                    label="عنوان المادة التعليمية"
+                    type="text"
+                    placeholder="أدخل عنوان المادة التعليمية"
+                    control={control} 
+                    errors={errors} 
+                  />
+                </div>
+                <div>
+                  <FormFields 
+                    name="category"
+                    label="الفئة"
+                    type="select"
+                    placeholder="اختر فئة المادة"
+                    options={[
+                      { label: "برمجة", value: "برمجة" },
+                      { label: "تصميم", value: "تصميم" },
+                      { label: "تسويق", value: "تسويق" },
+                      { label: "أعمال", value: "أعمال" },
+                      { label: "تطوير شخصي", value: "تطوير شخصي" },
+                    ]}
+                    control={control} 
+                    errors={errors} 
+                  />
+                </div>
+              </div>
+              
+              {/* صف نوع المادة والمدرب والمستوى */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div>
+                  <FormFields 
+                    name="type"
+                    label="نوع المادة"
+                    type="select"
+                    placeholder="اختر نوع المادة"
+                    options={[
+                      { label: "تفاعلية", value: "تفاعلية" },
+                    ]}
+                    control={control} 
+                    errors={errors} 
+                  />
+                </div>
+                <div>
+                  <FormFields 
+                    name="instructor"
+                    label="المدرب"
+                    type="select"
+                    placeholder="اختر المدرب"
+                    options={[
+                      { label: "أحمد محمد", value: "أحمد محمد" },
+                      { label: "سارة أحمد", value: "سارة أحمد" },
+                      { label: "محمد علي", value: "محمد علي" },
+                      { label: "د. خالد إبراهيم", value: "د. خالد إبراهيم" },
+                      { label: "عمر حسن", value: "عمر حسن" },
+                      { label: "ليلى كمال", value: "ليلى كمال" },
+                    ]}
+                    control={control} 
+                    errors={errors} 
+                  />
+                </div>
+                <div>
+                  <FormFields 
+                    name="level"
+                    label="مستوى الطالب المطلوب"
+                    type="select"
+                    placeholder="اختر مستوى الطالب"
+                    options={[
+                      { label: "مبتدئ", value: "مبتدئ" },
+                      { label: "متوسط", value: "متوسط" },
+                      { label: "متقدم", value: "متقدم" },
+                    ]}
+                    control={control} 
+                    errors={errors} 
+                  />
+                </div>
+              </div>
+              
+              {/* صف السعر */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <FormFields 
+                    name="price"
+                    label="السعر (ريال سعودي)"
+                    type="number"
+                    placeholder="0"
+                    control={control} 
+                    errors={errors} 
+                  />
+                </div>
+              </div>
+            </div>
+          ) : currentStep === 2 ? (
+            <div className="space-y-6">
+              {/* الصف الأول: الوصف التفصيلي والمحتوى المختصر */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <FormFields 
+                    name="description"
+                    label="الوصف التفصيلي للمادة"
+                    type="textarea"
+                    placeholder="اكتب وصفاً شاملاً للمادة التعليمية وما سيتعلمه الطلاب..."
+                    control={control} 
+                    errors={errors} 
+                  />
+                </div>
+                <div>
+                  <FormFields 
+                    name="shortContent"
+                    label="المحتوى المختصر"
+                    type="textarea"
+                    placeholder="ملخص قصير عن محتوى المادة..."
+                    control={control} 
+                    errors={errors} 
+                  />
+                </div>
+              </div>
+              
+              {/* الصف الثاني: المهارات المكتسبة والمتطلبات الأساسية */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <FormFields 
+                    name="skills"
+                    label="المهارات المكتسبة"
+                    type="textarea"
+                    placeholder="اذكر المهارات التي سيكتسبها الطلاب من هذه المادة..."
+                    control={control} 
+                    errors={errors} 
+                  />
+                </div>
+                <div>
+                  <FormFields 
+                    name="requirements"
+                    label="المتطلبات الأساسية"
+                    type="textarea"
+                    placeholder="اذكر المتطلبات والمعرفة المسبقة المطلوبة..."
+                    control={control} 
+                    errors={errors} 
+                  />
+                </div>
+              </div>
+            </div>
+          ) : null}
 
           {/* Form Actions */}
           <div className="flex items-center justify-between pt-6 border-t">

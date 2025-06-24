@@ -7,7 +7,6 @@ const imageVariants = {
     scale: 1,
     transition: {
       duration: 0.8,
-      ease: "easeOut",
     },
   },
 };
@@ -18,7 +17,6 @@ const floatingAnimation = {
     transition: {
       duration: 3,
       repeat: Infinity,
-      ease: "easeInOut",
     },
   },
 };

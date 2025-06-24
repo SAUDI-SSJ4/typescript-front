@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import AddCourseForm from "@/features/courses/components/AddCourseForm";
 import type { ICourseForm } from "@/validations/course";
+import { Plus } from "lucide-react";
 
 function AddNewCourse() {
   const navigate = useNavigate();
@@ -17,23 +18,28 @@ function AddNewCourse() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
-      <div className="max-w-7xl mx-auto">
-        {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">
-            إضافة مادة تعليمية جديدة
-          </h1>
-          <p className="text-gray-600 mt-2">
-            أنشئ مادة تعليمية جديدة وأضفها إلى منصتك التعليمية
-          </p>
-        </div>
+    <div className="space-y-6">
+      <Header />
 
-        {/* Form */}
-        <AddCourseForm onSubmit={handleSubmit} onCancel={handleCancel} />
-      </div>
+      {/* Form */}
+      <AddCourseForm onSubmit={handleSubmit} onCancel={handleCancel} />
     </div>
   );
 }
 
 export default AddNewCourse;
+
+function Header() {
+  return (
+    <div className="flex flex-col sm:space-y-0 sm:flex-row sm:items-center sm:justify-between gap-4 bg-white p-4 lg:p-6 rounded-xl shadow-sm border-0">
+      <div className="flex flex-col sm:flex-row sm:items-center gap-3 lg:gap-4">
+        <div className="flex items-center gap-2 text-gray-600">
+          <Plus className="w-5 h-5 text-blue-600" />
+          <span className="font-medium text-sm lg:text-base">
+            إضافة مادة تعليمية جديدة
+          </span>
+        </div>
+      </div>
+    </div>
+  );
+}

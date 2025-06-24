@@ -46,17 +46,6 @@ interface StudentReviewsTableProps {
 
 const columns: ColumnDef<StudentReview>[] = [
   {
-    accessorKey: "student_name",
-    header: "اسم الطالب",
-    cell: ({ row }) => (
-      <div className="max-w-[300px]">
-        <div className="font-medium text-right truncate">
-          {row.getValue("student_name")}
-        </div>
-      </div>
-    ),
-  },
-  {
     accessorKey: "image",
     header: "الصورة",
     cell: ({ row }) => (
@@ -68,6 +57,18 @@ const columns: ColumnDef<StudentReview>[] = [
     ),
     enableSorting: false,
   },
+  {
+    accessorKey: "student_name",
+    header: "اسم الطالب",
+    cell: ({ row }) => (
+      <div className="max-w-[300px]">
+        <div className="font-medium text-right truncate">
+          {row.getValue("student_name")}
+        </div>
+      </div>
+    ),
+  },
+ 
   {
     accessorKey: "rating",
     header: "التقييم",

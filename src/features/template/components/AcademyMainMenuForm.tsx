@@ -11,6 +11,9 @@ import {
 } from "@/validations/template";
 import { Input } from "@/components/ui/input";
 import { useState, useEffect } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Menu, Settings, Link2, Image as ImageIcon, CheckCircle, Loader2 } from "lucide-react";
 
 const AcademyMainMenuForm = () => {
   const [hasUserChanges, setHasUserChanges] = useState(false);
@@ -58,237 +61,320 @@ const AcademyMainMenuForm = () => {
   const formLoading = isSubmitting;
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
-      <div className="space-y-6">
-        {/* Main Title */}
-        <div>
-          <Label htmlFor="mainTitle" className="text-sm font-medium">
-            العنوان الرئيسي
-          </Label>
-          <Controller
-            control={control}
-            name="mainTitle"
-            render={({ field: { onChange, value } }) => (
-              <Input
-                id="mainTitle"
-                type="text"
-                value={value || ""}
-                onChange={onChange}
-                placeholder="أدخل العنوان الرئيسي"
-                disabled={formLoading}
-                className={errors.mainTitle ? "border-destructive" : ""}
-              />
-            )}
-          />
-          {errors.mainTitle && (
-            <p className="text-sm text-destructive mt-1" role="alert">
-              {errors.mainTitle.message}
-            </p>
-          )}
-        </div>
-
-        {/* Sub Title */}
-        <div>
-          <Label htmlFor="subTitle" className="text-sm font-medium">
-            العنوان الفرعي
-          </Label>
-          <Controller
-            control={control}
-            name="subTitle"
-            render={({ field: { onChange, value } }) => (
-              <Input
-                id="subTitle"
-                type="text"
-                value={value || ""}
-                onChange={onChange}
-                placeholder="أدخل العنوان الفرعي"
-                disabled={formLoading}
-                className={errors.subTitle ? "border-destructive" : ""}
-              />
-            )}
-          />
-          {errors.subTitle && (
-            <p className="text-sm text-destructive mt-1" role="alert">
-              {errors.subTitle.message}
-            </p>
-          )}
-        </div>
-
-        {/* Description */}
-        <div>
-          <TextareaField
-            name="description"
-            type="textarea"
-            label="الوصف"
-            placeholder="أدخل وصف تفصيلي"
-            control={control}
-            errors={errors}
-            disabled={formLoading}
-            rows={4}
-            maxLength={500}
-          />
-        </div>
-
-        {/* Links Section */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {/* First Link */}
-          <div className="space-y-4">
-            <h3 className="text-lg font-semibold">الرابط الأول</h3>
-
-            <div>
-              <Label htmlFor="firstLinkTitle" className="text-sm font-medium">
-                عنوان الرابط الأول
-              </Label>
-              <Controller
-                control={control}
-                name="firstLinkTitle"
-                render={({ field: { onChange, value } }) => (
-                  <Input
-                    id="firstLinkTitle"
-                    type="text"
-                    value={value || ""}
-                    onChange={onChange}
-                    placeholder="مثال: مدونتي"
-                    disabled={formLoading}
-                    className={
-                      errors.firstLinkTitle ? "border-destructive" : ""
-                    }
-                  />
-                )}
-              />
-              {errors.firstLinkTitle && (
-                <p className="text-sm text-destructive mt-1" role="alert">
-                  {errors.firstLinkTitle.message}
-                </p>
-              )}
-            </div>
-
-            <div>
-              <Label htmlFor="firstLinkUrl" className="text-sm font-medium">
-                رابط الرابط الأول
-              </Label>
-              <Controller
-                control={control}
-                name="firstLinkUrl"
-                render={({ field: { onChange, value } }) => (
-                  <Input
-                    id="firstLinkUrl"
-                    type="url"
-                    value={value || ""}
-                    onChange={onChange}
-                    placeholder="https://www.google.com"
-                    disabled={formLoading}
-                    className={errors.firstLinkUrl ? "border-destructive" : ""}
-                  />
-                )}
-              />
-              {errors.firstLinkUrl && (
-                <p className="text-sm text-destructive mt-1" role="alert">
-                  {errors.firstLinkUrl.message}
-                </p>
-              )}
-            </div>
+    <div className="space-y-6" dir="rtl">
+      {/* Header Section */}
+      <div className="bg-purple-50 rounded-lg p-4">
+        <div className="flex items-center gap-3">
+          <Menu className="w-5 h-5 text-purple-600" />
+          <div>
+            <h2 className="text-base font-semibold text-gray-900">تحرير القسم الرئيسي </h2>
+            <p className="text-sm text-gray-600">قم بتخصيص المحتوى والروابط في القسم الرئيسي </p>
           </div>
-
-          {/* Second Link */}
-          <div className="space-y-4">
-            <h3 className="text-lg font-semibold">الرابط الثاني</h3>
-
-            <div>
-              <Label htmlFor="secondLinkTitle" className="text-sm font-medium">
-                عنوان الرابط الثاني
-              </Label>
-              <Controller
-                control={control}
-                name="secondLinkTitle"
-                render={({ field: { onChange, value } }) => (
-                  <Input
-                    id="secondLinkTitle"
-                    type="text"
-                    value={value || ""}
-                    onChange={onChange}
-                    placeholder="مثال: قناتي في اليوتيوب"
-                    disabled={formLoading}
-                    className={
-                      errors.secondLinkTitle ? "border-destructive" : ""
-                    }
-                  />
-                )}
-              />
-              {errors.secondLinkTitle && (
-                <p className="text-sm text-destructive mt-1" role="alert">
-                  {errors.secondLinkTitle.message}
-                </p>
-              )}
-            </div>
-
-            <div>
-              <Label htmlFor="secondLinkUrl" className="text-sm font-medium">
-                رابط الرابط الثاني
-              </Label>
-              <Controller
-                control={control}
-                name="secondLinkUrl"
-                render={({ field: { onChange, value } }) => (
-                  <Input
-                    id="secondLinkUrl"
-                    type="url"
-                    value={value || ""}
-                    onChange={onChange}
-                    placeholder="https://www.google.com"
-                    disabled={formLoading}
-                    className={errors.secondLinkUrl ? "border-destructive" : ""}
-                  />
-                )}
-              />
-              {errors.secondLinkUrl && (
-                <p className="text-sm text-destructive mt-1" role="alert">
-                  {errors.secondLinkUrl.message}
-                </p>
-              )}
-            </div>
-          </div>
-        </div>
-
-        {/* Image Upload */}
-        <div>
-          <ImageField
-            name="image"
-            type="image"
-            label="الصورة"
-            placeholder="اختر صورة (PNG, JPEG, WebP - حد أقصى 5MB)"
-            control={control as unknown as Control<Record<string, unknown>>}
-            errors={errors}
-            disabled={formLoading}
-          />
-          <p className="text-xs text-muted-foreground mt-1">
-            الأبعاد المثلى: 800×600 بكسل أو أكبر
-          </p>
+          {hasUserChanges && (
+            <Badge variant="outline" className="bg-amber-50 text-amber-700 border-amber-200 mr-auto">
+              <Settings className="w-3 h-3 ml-1" />
+              يوجد تغييرات غير محفوظة
+            </Badge>
+          )}
         </div>
       </div>
 
-      {/* Form Actions - Only show when user has made changes */}
-      {hasUserChanges && (
-        <div className="flex gap-3 pt-6 border-t animate-in fade-in-0 slide-in-from-bottom-2 duration-200">
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {/* Titles Combined */}
+          <Card className="shadow-sm border-0">
+            <CardHeader className="pb-3">
+              <CardTitle className="flex items-center gap-2 text-gray-800 text-sm font-medium">
+                <Menu className="w-4 h-4 text-blue-600" />
+                العناوين
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="space-y-2">
+                <Label className="text-sm font-medium text-card-foreground">
+                  العنوان الرئيسي
+                </Label>
+                <Controller
+                  control={control}
+                  name="mainTitle"
+                  render={({ field: { onChange, value } }) => (
+                    <Input
+                      type="text"
+                      value={value || ""}
+                      onChange={onChange}
+                      placeholder="أدخل العنوان الجذاب"
+                      disabled={formLoading}
+                      className={`${
+                        errors.mainTitle
+                          ? "border-destructive focus-visible:border-destructive focus-visible:ring-destructive/20"
+                          : "!border-border !shadow-none focus-visible:ring-0 focus-visible:border-border"
+                      } h-10 !bg-transparent`}
+                      dir="rtl"
+                    />
+                  )}
+                />
+                {errors.mainTitle && (
+                  <p className="text-sm text-destructive">
+                    {errors.mainTitle.message}
+                  </p>
+                )}
+              </div>
+
+              <div className="space-y-2">
+                <Label className="text-sm font-medium text-card-foreground">
+                  العنوان الفرعي
+                </Label>
+                <Controller
+                  control={control}
+                  name="subTitle"
+                  render={({ field: { onChange, value } }) => (
+                    <Input
+                      type="text"
+                      value={value || ""}
+                      onChange={onChange}
+                      placeholder="أدخل العنوان الفرعي"
+                      disabled={formLoading}
+                      className={`${
+                        errors.subTitle
+                          ? "border-destructive focus-visible:border-destructive focus-visible:ring-destructive/20"
+                          : "!border-border !shadow-none focus-visible:ring-0 focus-visible:border-border"
+                      } h-10 !bg-transparent`}
+                      dir="rtl"
+                    />
+                  )}
+                />
+                {errors.subTitle && (
+                  <p className="text-sm text-destructive">
+                    {errors.subTitle.message}
+                  </p>
+                )}
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* First Link */}
+          <Card className="shadow-sm border-0">
+            <CardHeader className="pb-3">
+              <CardTitle className="flex items-center gap-2 text-gray-800 text-sm font-medium">
+                <Link2 className="w-4 h-4 text-orange-600" />
+                الرابط الأول
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              <div className="space-y-2">
+                <Label className="text-sm font-medium text-card-foreground">
+                  عنوان الرابط
+                </Label>
+                <Controller
+                  control={control}
+                  name="firstLinkTitle"
+                  render={({ field: { onChange, value } }) => (
+                    <Input
+                      type="text"
+                      value={value || ""}
+                      onChange={onChange}
+                      placeholder="عنوان الرابط"
+                      disabled={formLoading}
+                      className={`${
+                        errors.firstLinkTitle
+                          ? "border-destructive focus-visible:border-destructive focus-visible:ring-destructive/20"
+                          : "!border-border !shadow-none focus-visible:ring-0 focus-visible:border-border"
+                      } h-10 !bg-transparent`}
+                      dir="rtl"
+                    />
+                  )}
+                />
+                {errors.firstLinkTitle && (
+                  <p className="text-sm text-destructive">
+                    {errors.firstLinkTitle.message}
+                  </p>
+                )}
+              </div>
+
+              <div className="space-y-2">
+                <Label className="text-sm font-medium text-card-foreground">
+                  رابط URL
+                </Label>
+                <Controller
+                  control={control}
+                  name="firstLinkUrl"
+                  render={({ field: { onChange, value } }) => (
+                    <Input
+                      type="url"
+                      value={value || ""}
+                      onChange={onChange}
+                      placeholder="https://example.com"
+                      disabled={formLoading}
+                      className={`${
+                        errors.firstLinkUrl
+                          ? "border-destructive focus-visible:border-destructive focus-visible:ring-destructive/20"
+                          : "!border-border !shadow-none focus-visible:ring-0 focus-visible:border-border"
+                      } h-10 !bg-transparent`}
+                      dir="ltr"
+                    />
+                  )}
+                />
+                {errors.firstLinkUrl && (
+                  <p className="text-sm text-destructive">
+                    {errors.firstLinkUrl.message}
+                  </p>
+                )}
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Second Link */}
+          <Card className="shadow-sm border-0">
+            <CardHeader className="pb-3">
+              <CardTitle className="flex items-center gap-2 text-gray-800 text-sm font-medium">
+                <Link2 className="w-4 h-4 text-purple-600" />
+                الرابط الثاني
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              <div className="space-y-2">
+                <Label className="text-sm font-medium text-card-foreground">
+                  عنوان الرابط
+                </Label>
+                <Controller
+                  control={control}
+                  name="secondLinkTitle"
+                  render={({ field: { onChange, value } }) => (
+                    <Input
+                      type="text"
+                      value={value || ""}
+                      onChange={onChange}
+                      placeholder="عنوان الرابط"
+                      disabled={formLoading}
+                      className={`${
+                        errors.secondLinkTitle
+                          ? "border-destructive focus-visible:border-destructive focus-visible:ring-destructive/20"
+                          : "!border-border !shadow-none focus-visible:ring-0 focus-visible:border-border"
+                      } h-10 !bg-transparent`}
+                      dir="rtl"
+                    />
+                  )}
+                />
+                {errors.secondLinkTitle && (
+                  <p className="text-sm text-destructive">
+                    {errors.secondLinkTitle.message}
+                  </p>
+                )}
+              </div>
+
+              <div className="space-y-2">
+                <Label className="text-sm font-medium text-card-foreground">
+                  رابط URL
+                </Label>
+                <Controller
+                  control={control}
+                  name="secondLinkUrl"
+                  render={({ field: { onChange, value } }) => (
+                    <Input
+                      type="url"
+                      value={value || ""}
+                      onChange={onChange}
+                      placeholder="https://example.com"
+                      disabled={formLoading}
+                      className={`${
+                        errors.secondLinkUrl
+                          ? "border-destructive focus-visible:border-destructive focus-visible:ring-destructive/20"
+                          : "!border-border !shadow-none focus-visible:ring-0 focus-visible:border-border"
+                      } h-10 !bg-transparent`}
+                      dir="ltr"
+                    />
+                  )}
+                />
+                {errors.secondLinkUrl && (
+                  <p className="text-sm text-destructive">
+                    {errors.secondLinkUrl.message}
+                  </p>
+                )}
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Description and Image - Second Row */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* Description */}
+          <Card className="shadow-sm border-0">
+            <CardHeader className="pb-3">
+              <CardTitle className="flex items-center gap-2 text-gray-800 text-sm font-medium">
+                <Menu className="w-4 h-4 text-indigo-600" />
+                الوصف التفصيلي
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-2">
+              <TextareaField
+                name="description"
+                type="textarea"
+                label=""
+                placeholder="اكتب وصفاً جذاباً للصفحة الرئيسية..."
+                control={control}
+                errors={errors}
+                disabled={formLoading}
+                rows={4}
+                maxLength={500}
+              />
+            </CardContent>
+          </Card>
+
+          {/* Hero Image */}
+          <Card className="shadow-sm border-0">
+            <CardHeader className="pb-3">
+              <CardTitle className="flex items-center gap-2 text-gray-800 text-sm font-medium">
+                <ImageIcon className="w-4 h-4 text-purple-600" />
+                الصورة الرئيسية
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-2">
+                <ImageField
+                  name="heroImage"
+                  type="image"
+                  label=""
+                  placeholder="اختر الصورة الرئيسية"
+                  control={control as unknown as Control<Record<string, unknown>>}
+                  errors={errors}
+                  disabled={formLoading}
+                />
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Form Actions */}
+        <div className="flex justify-start gap-3 pt-4 border-t border-gray-100">
           <Button
             type="submit"
-            disabled={!isValid || formLoading}
-            className="flex-1"
+            disabled={!isValid || isSubmitting || !hasUserChanges}
+            className="px-6"
           >
-            {formLoading ? "جاري الحفظ..." : "حفظ التغييرات"}
+            {isSubmitting ? (
+              <>
+                <Loader2 className="w-4 h-4 ml-2 animate-spin" />
+                جاري الحفظ...
+              </>
+            ) : (
+              <>
+                <CheckCircle className="w-4 h-4 ml-2" />
+                حفظ التغييرات
+              </>
+            )}
           </Button>
           <Button
             type="button"
             variant="outline"
-            disabled={formLoading}
-            className="flex-1"
             onClick={handleReset}
+            disabled={isSubmitting || !hasUserChanges}
+            className="px-6"
           >
-            إلغاء
+            إلغاء التغييرات
           </Button>
         </div>
-      )}
-    </form>
+      </form>
+    </div>
   );
 };
 

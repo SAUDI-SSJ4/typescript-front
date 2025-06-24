@@ -3,9 +3,12 @@ import { Link } from "react-router-dom";
 import { Badge } from "../ui/badge";
 import { Star } from "lucide-react";
 
-function CourseCard({ course }: { course: Course }) {
+function CourseCard({ course, href }: { course: Course; href?: string }) {
   return (
-    <Link to={`/courses/${course.slug}`} className="flex flex-col h-full">
+    <Link
+      to={href ?? `/courses/${course.slug}`}
+      className="flex flex-col h-full"
+    >
       {/* Course Image */}
       <div className="aspect-video relative">
         <img

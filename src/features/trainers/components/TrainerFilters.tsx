@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
@@ -8,26 +8,30 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Search, Filter, X } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Filter, X, ChevronDown, Search } from "lucide-react";
 
 interface TrainerFiltersProps {
-  searchTerm: string;
-  onSearchChange: (term: string) => void;
   selectedSpecialization: string;
   onSpecializationChange: (specialization: string) => void;
   minCoursesCount: number;
   onMinCoursesCountChange: (count: number) => void;
   onClearFilters: () => void;
+  table?: any; // للتحكم في الأعمدة
 }
 
 function TrainerFilters({
-  searchTerm,
-  onSearchChange,
   selectedSpecialization,
   onSpecializationChange,
   minCoursesCount,
   onMinCoursesCountChange,
   onClearFilters,
+  table,
 }: TrainerFiltersProps) {
   const specializations = [
     "الكل",
@@ -40,10 +44,10 @@ function TrainerFilters({
   ];
 
   const hasActiveFilters =
-    searchTerm || selectedSpecialization !== "الكل" || minCoursesCount > 0;
+    selectedSpecialization !== "الكل" || minCoursesCount > 0;
 
   return (
-    <div className="bg-white rounded-lg border border-gray-200 p-4 space-y-4">
+    <div className="bg-white rounded-lg border-0 shadow-sm p-4 space-y-4">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <Filter className="w-5 h-5 text-gray-600" />
@@ -62,14 +66,16 @@ function TrainerFilters({
         )}
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         {/* Search */}
         <div className="relative">
           <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
           <Input
-            placeholder="البحث عن مدرب..."
-            value={searchTerm}
-            onChange={(e) => onSearchChange(e.target.value)}
+            placeholder="البحث في المدربين..."
+            value={(table?.getColumn("name")?.getFilterValue() as string) ?? ""}
+            onChange={(event) =>
+              table?.getColumn("name")?.setFilterValue(event.target.value)
+            }
             className="pr-10"
           />
         </div>
@@ -107,6 +113,43 @@ function TrainerFilters({
             <SelectItem value="5">5 دورات على الأقل</SelectItem>
           </SelectContent>
         </Select>
+
+        {/* Columns Filter */}
+        {table && (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" className="w-full">
+                الأعمدة <ChevronDown className="ml-2 h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              {table
+                .getAllColumns()
+                .filter((column: any) => column.getCanHide())
+                .map((column: any) => {
+                  const columnHeaders = {
+                    image: "الصورة",
+                    name: "اسم المدرب",
+                    email: "البريد الإلكتروني",
+                    phone: "رقم الهاتف",
+                    coursesCount: "عدد الدورات",
+                  };
+                  return (
+                    <DropdownMenuCheckboxItem
+                      key={column.id}
+                      checked={column.getIsVisible()}
+                      onCheckedChange={(value) =>
+                        column.toggleVisibility(!!value)
+                      }
+                    >
+                      {columnHeaders[column.id as keyof typeof columnHeaders] ||
+                        column.id}
+                    </DropdownMenuCheckboxItem>
+                  );
+                })}
+            </DropdownMenuContent>
+          </DropdownMenu>
+        )}
       </div>
 
       {/* Active Filters */}
@@ -115,15 +158,6 @@ function TrainerFilters({
           <span className="text-sm font-medium text-gray-600">
             الفلاتر النشطة:
           </span>
-          {searchTerm && (
-            <Badge variant="secondary" className="gap-1">
-              البحث: {searchTerm}
-              <X
-                className="w-3 h-3 cursor-pointer"
-                onClick={() => onSearchChange("")}
-              />
-            </Badge>
-          )}
           {selectedSpecialization !== "الكل" && (
             <Badge variant="secondary" className="gap-1">
               التخصص: {selectedSpecialization}

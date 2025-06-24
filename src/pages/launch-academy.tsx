@@ -1,123 +1,56 @@
 import About from "@/features/launch-academy/components/About";
 import Hero from "@/features/launch-academy/components/Hero";
 import WhyUs from "@/features/launch-academy/components/WhyUs";
-import Certification from "@/features/launch-academy/components/Certification";
 import Stats from "@/features/launch-academy/components/Stats";
 import GoalVision from "@/features/launch-academy/components/GoalVision";
-// import Clients from "@/features/launch-academy/components/Clients";
 import Layout from "@/features/launch-academy/components/Layout";
 import Pricing from "@/features/launch-academy/components/Pricing";
 import FAQs from "@/components/shared/faqs";
-import { motion } from "framer-motion";
-
-const sectionVariants = {
-  hidden: { opacity: 0, y: 50 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: {
-      duration: 0.6,
-      ease: "easeOut",
-    },
-  },
-};
 
 const faqItems = [
   {
-    id: crypto.randomUUID(),
-    question: "كيف يمكنني إنشاء أكاديميتي الخاصة على منصة سيان؟",
-    answer:
-      "يمكنك إنشاء أكاديميتك الخاصة بسهولة من خلال التسجيل على المنصة واختيار الباقة المناسبة لاحتياجاتك، ثم اتباع خطوات الإعداد البسيطة التي تتضمن تخصيص الملف التعريفي، وإضافة المحتوى التعليمي، وتعيين المدربين والإداريين إذا لزم الأمر.",
+    id: "1",
+    question: "هل يمكنني البدء بدون أي خبرة تقنية؟",
+    answer: "بالطبع! صممنا منصة سيان لتكون سهلة الاستخدام تماماً. لا تحتاج لأي خبرة تقنية - فقط اتبع خطوات الإعداد البسيطة وستكون جاهزاً للبدء في 5 دقائق. لدينا أيضاً فريق دعم متاح 24/7 لمساعدتك.",
   },
   {
-    id: crypto.randomUUID(),
-    question: "ما نوع المحتوى الذي يمكنني تقديمه عبر أكاديميتي؟",
-    answer:
-      "تتيح لك منصة سيان تقديم مجموعة متنوعة من المحتوى التعليمي بما في ذلك مقاطع الفيديو، والملفات الصوتية، والعروض التقديمية، والمستندات النصية، والاختبارات التفاعلية، ودورات تدريبية كاملة. كما يمكنك تنظيم المحتوى في وحدات ودروس لتسهيل عملية التعلم.",
+    id: "2",
+    question: "كم من الوقت يستغرق إنشاء أكاديميتي وبدء تحقيق الدخل؟",
+    answer: "يمكنك إنشاء أكاديميتك في أقل من 5 دقائق والبدء في رفع المحتوى فوراً. معظم مستخدمينا يحققون مبيعاتهم الأولى خلال أسبوع واحد من الإطلاق. المنصة تسوق لك تلقائياً أمام آلاف الطلاب المهتمين.",
   },
   {
-    id: crypto.randomUUID(),
-    question: "هل تقدم المنصة شهادات معتمدة؟",
-    answer:
-      "نعم، منصة سيان معتمدة من المركز الوطني للتعليم الإلكتروني في المملكة العربية السعودية، مما يتيح لك إصدار شهادات معتمدة للمتعلمين بعد إكمال الدورات التدريبية بنجاح. هذه الشهادات معترف بها رسمياً وتضيف قيمة حقيقية لمحتواك التعليمي.",
+    id: "3",
+    question: "هل يمكنني تجربة المنصة مجاناً قبل الدفع؟",
+    answer: "نعم! يمكنك البدء مجاناً تماماً بدون بطاقة ائتمانية. الباقة المجانية تتيح لك رفع المحتوى وبدء البيع فوراً. يمكنك الترقية لاحقاً عندما تحقق نمواً في أكاديميتك.",
   },
   {
-    id: crypto.randomUUID(),
-    question: "هل توجد عمولة على مبيعات الدورات؟",
-    answer:
-      "تعتمد العمولة على نوع الباقة التي تشترك بها. الباقة المجانية تحتوي على نسبة عمولة أعلى، بينما تقل هذه النسبة في الباقات المدفوعة. يمكنك الاطلاع على تفاصيل العمولات المحددة لكل باقة من صفحة التسعير، وتختلف النسب بحسب حجم الأكاديمية ومستوى الاشتراك.",
+    id: "4",
+    question: "ماذا لو لم أكن متأكداً من نوع المحتوى الذي يجب أن أقدمه؟",
+    answer: "لا تقلق! لدينا مكتبة شاملة من النصائح وأمثلة لقصص نجاح حقيقية. كما نوفر استشارات مجانية لمساعدتك في تحديد أفضل محتوى يناسب خبرتك ويحقق لك أكبر عائد. ابدأ بأي موضوع تجيده وطور تدريجياً.",
   },
+  {
+    id: "5",
+    question: "هل أحتاج لجمهور كبير قبل البدء؟",
+    answer: "لا على الإطلاق! منصة سيان تضم أكثر من 50,000 طالب نشط يبحثون عن محتوى جديد يومياً. نحن نساعدك في الوصول لجمهورك المستهدف من خلال أدوات التسويق المدمجة والظهور في نتائج البحث.",
+  },
+  {
+    id: "6",
+    question: "كم يمكنني أن أكسب من أكاديميتي؟",
+    answer: "الأرباح تختلف حسب جودة المحتوى ونشاطك، لكن متوسط مستخدمينا يحققون 15,000-50,000 ريال شهرياً. بعض مستخدمينا الناجحين يحققون أكثر من 100,000 ريال شهرياً. الأهم هو البدء والتطوير التدريجي.",
+  }
 ];
 
 function LaunchAcademy() {
   return (
     <Layout>
       <main>
-        <motion.div
-          variants={sectionVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.3 }}
-        >
-          <Hero />
-        </motion.div>
-        <motion.div
-          variants={sectionVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.3 }}
-        >
-          <About />
-        </motion.div>
-        <motion.div
-          variants={sectionVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.3 }}
-        >
-          <WhyUs />
-        </motion.div>
-        <motion.div
-          variants={sectionVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.3 }}
-        >
-          <Certification />
-        </motion.div>
-        <motion.div
-          variants={sectionVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.3 }}
-        >
-          <Stats />
-        </motion.div>
-        <motion.div
-          variants={sectionVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.3 }}
-        >
-          <GoalVision />
-        </motion.div>
-        {/* <Clients /> */}
-        <motion.div
-          variants={sectionVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.3 }}
-        >
-          <Pricing />
-        </motion.div>
-        <motion.div
-          variants={sectionVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.3 }}
-        >
-          <FAQs faqItems={faqItems} />
-        </motion.div>
+        <Hero />
+        <About />
+        <WhyUs />
+        <Stats />
+        <GoalVision />
+        <Pricing />
+        <FAQs faqItems={faqItems} />
       </main>
     </Layout>
   );

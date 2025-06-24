@@ -1,7 +1,8 @@
 import { Button } from "@/components/ui/button";
 import { Chart } from "@/components/ui/chart";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Pages, Routes } from "@/constants/enums";
-import { TrendingUp, Users, Clock, Calendar } from "lucide-react";
+import { TrendingUp, Users, Clock, Calendar, ShoppingCart } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 function AcademyDashboard() {
@@ -13,9 +14,9 @@ function AcademyDashboard() {
         <RecentCourses />
       </div>
 
-      {/* Revenue and Monthly Metrics Row */}
+      {/* Sales and Monthly Metrics Row */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <RevenueChart />
+        <SalesTable />
         <MonthlyMetrics />
       </div>
     </div>
@@ -172,88 +173,54 @@ function RecentCourses() {
   );
 }
 
-function RevenueChart() {
-  const data = {
-    labels: ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11"],
-    datasets: [
-      {
-        label: "إجمالي الإيرادات",
-        data: [12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1],
-        backgroundColor: "rgba(34, 197, 94, 0.8)",
-        borderColor: "rgba(34, 197, 94, 1)",
-        borderWidth: 2,
-        borderRadius: 8,
-        borderSkipped: false,
-        maxBarThickness: 20,
-      },
-    ],
-  };
-
-  const options = {
-    responsive: true,
-    maintainAspectRatio: false,
-    plugins: {
-      legend: {
-        display: false,
-      },
-      tooltip: {
-        backgroundColor: "rgba(0, 0, 0, 0.8)",
-        titleColor: "#fff",
-        bodyColor: "#fff",
-        borderColor: "rgba(34, 197, 94, 1)",
-        borderWidth: 1,
-      },
+function SalesTable() {
+  const salesData = [
+    {
+      id: 1,
+      date: "2024-01-15",
+      course: "دورة تطوير تطبيقات Flutter",
+      student: "أحمد محمد علي",
+      amount: "1,500",
     },
-    scales: {
-      x: {
-        grid: {
-          display: false,
-        },
-        ticks: {
-          color: "#6b7280",
-          font: {
-            size: 12,
-          },
-        },
-        border: {
-          color: "#e5e7eb",
-        },
-      },
-      y: {
-        grid: {
-          color: "rgba(229, 231, 235, 0.8)",
-          lineWidth: 1,
-        },
-        ticks: {
-          color: "#6b7280",
-          beginAtZero: true,
-          stepSize: 1,
-          font: {
-            size: 12,
-          },
-        },
-        border: {
-          color: "#e5e7eb",
-        },
-      },
+    {
+      id: 2,
+      date: "2024-01-14",
+      course: "دورة تصميم واجهات المستخدم",
+      student: "فاطمة أحمد",
+      amount: "1,200",
     },
-    elements: {
-      bar: {
-        borderRadius: 4,
-        borderSkipped: false,
-      },
+    {
+      id: 3,
+      date: "2024-01-13",
+      course: "دورة التسويق الرقمي",
+      student: "محمد سالم",
+      amount: "900",
     },
-  };
+    {
+      id: 4,
+      date: "2024-01-12",
+      course: "دورة البرمجة بـ JavaScript",
+      student: "نور الهدى",
+      amount: "1,100",
+    },
+    {
+      id: 5,
+      date: "2024-01-11",
+      course: "دورة إدارة المشاريع",
+      student: "خالد عبدالله",
+      amount: "800",
+    },
+  ];
 
   return (
     <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
       <div className="flex items-center justify-between mb-6">
         <div>
           <h2 className="text-lg font-semibold text-gray-900 mb-1">
-            إجمالي الإيرادات
+            المبيعات خلال الشهر
           </h2>
           <div className="flex items-center gap-2">
-            <span className="text-2xl font-bold text-gray-900">﷼ 0</span>
+            <span className="text-2xl font-bold text-gray-900">﷼ 5,500</span>
             <span className="text-sm text-green-600 bg-green-100 px-2 py-1 rounded-full flex items-center gap-1">
               <TrendingUp className="w-3 h-3" />
               15%+
@@ -261,12 +228,43 @@ function RevenueChart() {
           </div>
         </div>
         <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
-          <span className="text-green-600 text-xl">💰</span>
+          <ShoppingCart className="w-5 h-5 text-green-600" />
         </div>
       </div>
 
-      <div className="h-64">
-        <Chart type="bar" data={data} options={options} height={256} />
+      <div className="overflow-hidden">
+        <Table>
+          <TableHeader>
+            <TableRow className="border-gray-50">
+              <TableHead className="text-right font-medium text-gray-600">التاريخ</TableHead>
+              <TableHead className="text-right font-medium text-gray-600">المادة المبيعة</TableHead>
+              <TableHead className="text-right font-medium text-gray-600">الطالب</TableHead>
+              <TableHead className="text-right font-medium text-gray-600">المبلغ</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {salesData.map((sale) => (
+              <TableRow key={sale.id} className="border-gray-50 hover:bg-gray-50/50">
+                <TableCell className="text-right text-sm text-gray-600">
+                  {new Date(sale.date).toLocaleDateString('ar-SA')}
+                </TableCell>
+                <TableCell className="text-right">
+                  <div className="font-medium text-gray-900 text-sm truncate max-w-[150px]">
+                    {sale.course}
+                  </div>
+                </TableCell>
+                <TableCell className="text-right text-sm text-gray-600">
+                  {sale.student}
+                </TableCell>
+                <TableCell className="text-right">
+                  <span className="font-semibold text-green-600">
+                    ﷼ {sale.amount}
+                  </span>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
       </div>
     </div>
   );

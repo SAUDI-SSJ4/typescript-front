@@ -1,10 +1,10 @@
-import Courses from "../components/Courses";
-import FAQs from "../components/faqs";
-import Features from "../components/Features";
-import Hero from "../components/Hero";
-import Layout from "../components/Layout";
-import Testimonials from "../components/Testimonials";
+import FAQs from "../features/home/components/faqs";
+import Features from "../features/home/components/Features";
+import Hero from "../features/home/components/Hero";
+import HomeLayout from "../features/home/components/HomeLayout";
+import Testimonials from "../features/home/components/Testimonials";
 import { motion } from "framer-motion";
+import Courses from "../features/home/components/Courses";
 import "swiper/css";
 import "swiper/css/navigation";
 
@@ -15,14 +15,13 @@ const sectionVariants = {
     y: 0,
     transition: {
       duration: 0.6,
-      ease: "easeOut",
     },
   },
 };
 
 function Home() {
   return (
-    <Layout>
+    <HomeLayout>
       <main className="bg-[rgb(249_250_251)]">
         <motion.div
           variants={sectionVariants}
@@ -65,7 +64,7 @@ function Home() {
           <FAQs />
         </motion.div>
       </main>
-    </Layout>
+    </HomeLayout>
   );
 }
 

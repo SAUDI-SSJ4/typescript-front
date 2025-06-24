@@ -1,46 +1,58 @@
 function About() {
   return (
-    <section className="py-14 sm:py-20 relative">
-      <div
-        style={{
-          rotate: "-180deg",
-          background:
-            "linear-gradient(136.72deg, rgba(0, 255, 206, 0.1) -16.9%, rgba(255, 255, 255, 0.173594) 34.08%, rgba(255, 255, 255, 0) 135.36%)",
-        }}
-        className="absolute inset-0 z-[-1]"
-      ></div>
-      <div className="container mx-auto px-4">
+    <section className="py-20 bg-gradient-to-br from-gray-50 to-white">
+      <div className="container">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-          {/* Text Content - Right */}
-          <div className="text-right">
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-10">
-              من نحن<span className="text-primary">؟</span>
+          {/* Text Content */}
+          <div className="space-y-8">
+            <div className="inline-flex items-center gap-2 bg-primary/10 rounded-full px-4 py-2">
+              <span>🎯</span>
+              <span className="text-sm font-medium text-primary">الفرصة الذهبية</span>
+            </div>
+
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-foreground leading-tight">
+              لماذا <span className="text-primary">الآن</span> الوقت المثالي؟
             </h2>
 
-            <div className="space-y-6 text-lg text-muted-foreground leading-relaxed">
-              <p>
-                نحن في منصة سيان نقود الطريق نحو مستقبل التعليم الرقمي. كأول
-                منصة تعليمية تسخر الذكاء الاصطناعي والتقنيات الحديثة لتطوير
-                تجربة التعليم، نحن معتمدون من المركز الوطني للتعليم الإلكتروني.
-                مهمتنا هي توفير تجارب تعليمية وتدريبية متطورة تركز على الإبداع
-                والشمولية، مصممة خصيصًا لتنمية العقول وتحقيق الريادة في المجال
-                التعليمي.
-              </p>
+            <div className="space-y-6">
+              <div className="bg-white rounded-2xl p-6 border border-border shadow-sm">
+                <h3 className="font-bold text-foreground mb-3 flex items-center gap-2">
+                  📈 السوق في نمو متسارع
+                </h3>
+                <p className="text-muted-foreground">
+                  سوق التعليم الإلكتروني في السعودية ينمو بنسبة 25% سنوياً. الطلب على التعلم الرقمي 
+                  في أعلى مستوياته والجميع يبحث عن محتوى عالي الجودة.
+                </p>
+              </div>
 
-              <p>
-                منصتنا هي الحل المثالي لكل من المعلمين والمتعلمين الساعين لتحسين
-                جودة التعليم وتحقيق نتائج أفضل.
-              </p>
+              <div className="bg-white rounded-2xl p-6 border border-border shadow-sm">
+                <h3 className="font-bold text-foreground mb-3 flex items-center gap-2">
+                  💰 دخل سلبي مضمون
+                </h3>
+                <p className="text-muted-foreground">
+                  أنشئ دورتك مرة واحدة واكسب منها مدى الحياة. لا حدود لعدد الطلاب أو 
+                  المبيعات. كل دقيقة تستثمرها اليوم ستحقق لك عائداً لسنوات قادمة.
+                </p>
+              </div>
+
+              <div className="bg-white rounded-2xl p-6 border border-border shadow-sm">
+                <h3 className="font-bold text-foreground mb-3 flex items-center gap-2">
+                  🚀 تقنيات متطورة بدون تعقيد
+                </h3>
+                <p className="text-muted-foreground">
+                  ذكاء اصطناعي يساعدك في إدارة المحتوى والتسويق التلقائي لزيادة مبيعاتك.
+                </p>
+              </div>
             </div>
           </div>
-          {/* Image Section - Left */}
-          <div>
+
+          {/* Image Section */}
+          <div className="flex justify-center">
             <img
               src="/assets/images/launch-academy/about.png"
               alt="About Us"
-              className="w-full h-auto"
+              className="w-full max-w-lg h-auto"
               loading="lazy"
-              width="600"
             />
           </div>
         </div>

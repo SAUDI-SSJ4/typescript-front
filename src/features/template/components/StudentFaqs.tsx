@@ -4,14 +4,8 @@ import StudentFaqsTable from "./StudentFaqsTable";
 
 function StudentFaqs() {
   return (
-    <div className="flex flex-col gap-6">
-      <div className="bg-white p-4 lg:p-6 rounded-xl shadow-sm border border-gray-100 flex items-center justify-between">
-        <h1 className="text-2xl font-bold flex gap-4 items-center text-foreground">
-          <HelpCircle className="text-primary" />
-          الاسئلة الشائعة
-        </h1>
-        <StudentFaqsForm />
-      </div>
+    <div className="space-y-6">
+      <Header />
       <StudentFaqsTable
         faqs={[
           {
@@ -36,3 +30,21 @@ function StudentFaqs() {
 }
 
 export default StudentFaqs;
+
+function Header() {
+  return (
+    <div className="flex flex-col sm:space-y-0 sm:flex-row sm:items-center sm:justify-between gap-4 bg-white p-4 lg:p-6 rounded-xl shadow-sm border border-gray-100">
+      <div className="flex flex-col sm:flex-row sm:items-center gap-3 lg:gap-4">
+        <div className="flex items-center gap-2 text-gray-600">
+          <HelpCircle className="w-5 h-5 text-blue-600" />
+          <span className="font-medium text-sm lg:text-base">
+            الأسئلة الشائعة
+          </span>
+        </div>
+      </div>
+      <div className="flex items-center gap-4">
+        <StudentFaqsForm />
+      </div>
+    </div>
+  );
+}

@@ -22,14 +22,8 @@ function DigitalProducts() {
   ];
 
   return (
-    <div className="p-6 space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between bg-white p-6 rounded-lg shadow-sm">
-        <div className="flex items-center gap-3">
-          <Package className="w-10 h-10 text-gray-400" />
-          <h1 className="text-2xl font-bold text-gray-900">المنتجات الرقمية</h1>
-        </div>
-      </div>
+    <div className="space-y-6">
+      <Header />
 
       {/* Search and Sort Controls */}
       <div className="flex items-center gap-4 flex-wrap">
@@ -107,3 +101,18 @@ function DigitalProducts() {
 }
 
 export default DigitalProducts;
+
+function Header() {
+  return (
+    <div className="flex flex-col sm:space-y-0 sm:flex-row sm:items-center sm:justify-between gap-4 bg-white p-4 lg:p-6 rounded-xl shadow-sm border border-gray-100">
+      <div className="flex flex-col sm:flex-row sm:items-center gap-3 lg:gap-4">
+        <div className="flex items-center gap-2 text-gray-600">
+          <Package className="w-5 h-5 text-blue-600" />
+          <span className="font-medium text-sm lg:text-base">
+            المنتجات الرقمية
+          </span>
+        </div>
+      </div>
+    </div>
+  );
+}

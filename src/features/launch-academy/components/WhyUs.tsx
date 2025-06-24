@@ -12,8 +12,7 @@ function WhyUs() {
         />
       ),
       title: "نقلة نوعية في المبيعات",
-      description:
-        "استفد من أدواتنا الذكية لتعزيز مبيعاتك وتحسين أداء الطلاب في سيان، مما يساعدك على تحقيق أهدافك التجارية بفعالية.",
+      description: "استفد من أدواتنا الذكية لتعزيز مبيعاتك وتحسين أداء الطلاب، مما يساعدك على تحقيق أهدافك التجارية بفعالية.",
     },
     {
       icon: (
@@ -24,9 +23,8 @@ function WhyUs() {
           className="w-10 h-10"
         />
       ),
-      title: "دعم فني بلا توقف",
-      description:
-        "تمتع بالمطمئنة مع دعمنا الفني المتاح على مدار الساعة، مهما كان استفسارك أو تحديث.",
+      title: "دعم فني متواصل",
+      description: "تمتع بالطمأنينة مع دعمنا الفني المتاح على مدار الساعة، مهما كان استفسارك أو تحديثك.",
     },
     {
       icon: (
@@ -38,8 +36,7 @@ function WhyUs() {
         />
       ),
       title: "الريادة مع الذكاء الاصطناعي",
-      description:
-        "اختر منصة سيان الرائدة في تقديم تجارب تعليمية ذكية ومتطورة، معنا التعليم ليس فقط عملية تعلم، بل تجربة متطورة تتجاوز التوقعات",
+      description: "منصة سيان الرائدة في تقديم تجارب تعليمية ذكية ومتطورة تتجاوز التوقعات.",
     },
     {
       icon: (
@@ -50,9 +47,8 @@ function WhyUs() {
           className="w-10 h-10"
         />
       ),
-      title: "بناني المواد التعليمية الاحترافي",
-      description:
-        "نظام سيان يتيح بناء مواد تعليمية ذات جودة عالية وتفاعلية، مستفيداً من تكنولوجيا الذكاء الاصطناعي لتحقيق أقصى استفادة تعليمية",
+      title: "بناء المواد التعليمية الاحترافي",
+      description: "نظام يتيح بناء مواد تعليمية عالية الجودة وتفاعلية باستخدام الذكاء الاصطناعي.",
     },
     {
       icon: (
@@ -64,8 +60,7 @@ function WhyUs() {
         />
       ),
       title: "توسيع آفاق النجاح",
-      description:
-        "اغتنم فرصة التسويق والبيع لمحتواك الرقمية عبر منصة تتيح لك الوصول إلى جمهور أوسع",
+      description: "اغتنم فرصة التسويق والبيع لمحتواك الرقمي عبر منصة تتيح لك الوصول إلى جمهور أوسع.",
     },
     {
       icon: (
@@ -77,28 +72,16 @@ function WhyUs() {
         />
       ),
       title: "تحسين تجربة التعليم",
-      description:
-        "استكشف قوة الذكاء الاصطناعي في تعزيز فهم الطلاب وتلبية احتياجاتهم التعليمية بدقة",
+      description: "استكشف قوة الذكاء الاصطناعي في تعزيز فهم الطلاب وتلبية احتياجاتهم التعليمية بدقة.",
     },
   ];
 
   return (
-    <section className="py-14 sm:py-20 relative">
-      <div
-        style={{
-          rotate: "-180deg",
-          background:
-            "linear-gradient(136.72deg, rgba(0, 255, 206, 0.1) -16.9%, rgba(255, 255, 255, 0.173594) 34.08%, rgba(255, 255, 255, 0) 135.36%)",
-        }}
-        className="absolute inset-0 z-[-1]"
-      ></div>
-      <div className="container mx-auto px-4">
-        {/* Section Header */}
-        <h2 className="text-3xl mb-10 md:text-4xl lg:text-5xl font-bold text-foreground">
-          لماذا نحن<span className="text-primary">؟</span>
+    <section className="py-20 bg-white">
+      <div className="container">
+        <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-12">
+          لماذا <span className="text-primary">نحن</span>؟
         </h2>
-
-        {/* Features Grid */}
         <Features features={features} />
       </div>
     </section>

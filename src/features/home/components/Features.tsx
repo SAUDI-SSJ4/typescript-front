@@ -20,8 +20,8 @@ const features = [
   },
   {
     icon: "/assets/icons/features/certificate.svg",
-    title: "شهادات معتمدة",
-    description: "احصل على شهادات معتمدة عند إكمال الدورات",
+    title: "شهادة حضور",
+    description: "احصل على شهادة حضور عند إكمال الدورات",
   },
 ];
 

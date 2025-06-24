@@ -29,7 +29,7 @@ function StatisticsCards({ userType }: { userType: UserType }) {
       iconColor: "bg-purple-500",
       bgColor: "#8b5cf60f",
       className: "text-gray-900",
-      link: "/dashboard/digital-products",
+      link: "",
     },
     {
       id: "students",
@@ -38,7 +38,7 @@ function StatisticsCards({ userType }: { userType: UserType }) {
       iconColor: "bg-green-500",
       bgColor: "#59c9020f",
       className: "text-gray-900",
-      link: "/dashboard/students",
+      link: "",
     },
     {
       id: "sales",
@@ -47,7 +47,7 @@ function StatisticsCards({ userType }: { userType: UserType }) {
       percentage: "10% منذ آخر شهر",
       bgColor: "",
       className: "bg-gradient-to-r from-cyan-400 to-cyan-500 text-white",
-      link: "/dashboard/sales",
+      link: "/dashboard/wallet",
     },
   ];
   const studentCards: StatCard[] = [

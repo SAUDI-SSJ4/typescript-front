@@ -12,14 +12,14 @@ import EmployeeTraining from "@/pages/employee-training";
 import Ai from "@/pages/ai";
 import { dashboardRoutes } from "./DashboardRoutes";
 import { authRoutes } from "./AuthRoutes";
-import { academyRoutes } from "./AcademyRoutes";
+import { academyRoutes } from "./academy-routes";
 
 export const router = createBrowserRouter(
   createRoutesFromElements(
     <>
       <Route index element={<Home />} />
       <Route path="about" element={<About />} />
-      <Route path="courses/:slug" element={<CourseDetails />} />
+      <Route path="courses/:courseSlug" element={<CourseDetails />} />
       <Route path="launch-academy" element={<LaunchAcademy />} />
       <Route path="ai" element={<Ai />} />
       <Route path="employee-training" element={<EmployeeTraining />} />

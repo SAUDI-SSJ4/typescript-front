@@ -1,4 +1,8 @@
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
 import {
   Dialog,
   DialogContent,
@@ -8,129 +12,99 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import { PlusCircle } from "lucide-react";
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  studentFaqSchema,
-  type StudentFaqFormData,
-} from "@/validations/template";
+import { Plus, CheckCircle } from "lucide-react";
 
-function StudentFaqsForm() {
-  const [open, setOpen] = useState(false);
+const StudentFaqsForm = () => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [question, setQuestion] = useState("");
+  const [answer, setAnswer] = useState("");
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors, isSubmitting },
-    reset,
-  } = useForm<StudentFaqFormData>({
-    resolver: zodResolver(studentFaqSchema),
-    defaultValues: {
-      question: "",
-      answer: "",
-    },
-  });
-
-  const onSubmit = async (data: StudentFaqFormData) => {
-    try {
-      console.log("Student FAQ Data:", data);
-      // TODO: Add your API call here to submit the FAQ
-      // await submitFaq(data);
-
-      setOpen(false);
-      reset();
-    } catch (error) {
-      console.error("Error submitting FAQ:", error);
+  const handleSubmit = () => {
+    if (question.trim() && answer.trim()) {
+      // Handle form submission logic here
+      console.log("FAQ Data:", { question: question.trim(), answer: answer.trim() });
+      
+      // Reset form and close dialog
+      setQuestion("");
+      setAnswer("");
+      setIsOpen(false);
     }
   };
 
-  const handleClose = () => {
-    setOpen(false);
-    reset();
+  const resetForm = () => {
+    setQuestion("");
+    setAnswer("");
   };
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-lg">
-          <PlusCircle />
-          إضافة سؤال شائع جديد
+        <Button className="gap-2">
+          <Plus className="w-4 h-4" />
+          إضافة سؤال جديد
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[500px] max-h-[90vh] overflow-y-auto">
+      <DialogContent className="sm:max-w-[600px]" dir="rtl">
         <DialogHeader>
-          <DialogTitle className="text-right text-xl font-bold">
-            إضافة سؤال شائع جديد
-          </DialogTitle>
-          <DialogDescription className="text-right text-gray-600">
-            قم بإضافة سؤال شائع مع إجابته التفصيلية
+          <DialogTitle className="text-right">إضافة سؤال شائع جديد</DialogTitle>
+          <DialogDescription className="text-right">
+            أضف سؤالاً جديداً مع إجابته ليظهر في قائمة الأسئلة الشائعة
           </DialogDescription>
         </DialogHeader>
-
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-          {/* Question Field */}
+        <div className="grid gap-4 py-4">
           <div className="space-y-2">
-            <Label htmlFor="question" className="text-right block">
-              السؤال الشائع
+            <Label htmlFor="question" className="text-sm font-medium text-card-foreground">
+              السؤال
             </Label>
             <Input
               id="question"
-              {...register("question")}
-              placeholder="مثال: ما هي مدة المادة التعليمية"
-              className="text-right"
+              value={question}
+              onChange={(e) => setQuestion(e.target.value)}
+              placeholder="اكتب السؤال هنا..."
+              className="!border-border !shadow-none focus-visible:ring-0 focus-visible:border-border h-10 !bg-transparent"
               dir="rtl"
             />
-            {errors.question && (
-              <span className="text-red-500 text-sm text-right block">
-                {errors.question.message}
-              </span>
-            )}
           </div>
-
-          {/* Answer Field */}
           <div className="space-y-2">
-            <Label htmlFor="answer" className="text-right block">
-              الإجابة التفصيلية
+            <Label htmlFor="answer" className="text-sm font-medium text-card-foreground">
+              الإجابة
             </Label>
             <Textarea
               id="answer"
-              {...register("answer")}
-              placeholder="اكتب إجابة شاملة ومفصلة للسؤال..."
-              className="text-right min-h-[120px]"
+              value={answer}
+              onChange={(e) => setAnswer(e.target.value)}
+              placeholder="اكتب الإجابة هنا..."
+              rows={4}
+              className="!border-border !shadow-none focus-visible:ring-0 focus-visible:border-border !bg-transparent resize-none"
               dir="rtl"
             />
-            {errors.answer && (
-              <span className="text-red-500 text-sm text-right block">
-                {errors.answer.message}
-              </span>
-            )}
-            <p className="text-sm text-gray-500 text-right">
-              قدم إجابة واضحة ومفصلة تساعد المستخدمين على فهم الموضوع
-            </p>
           </div>
-
-          <DialogFooter className="flex gap-2 justify-start">
-            <Button
-              type="button"
-              variant="outline"
-              onClick={handleClose}
-              disabled={isSubmitting}
-            >
-              إلغاء
-            </Button>
-            <Button type="submit" disabled={isSubmitting}>
-              {isSubmitting ? "جاري الحفظ..." : "حفظ السؤال"}
-            </Button>
-          </DialogFooter>
-        </form>
+        </div>
+        <DialogFooter className="gap-2">
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => {
+              resetForm();
+              setIsOpen(false);
+            }}
+            className="flex-1 shadow-sm"
+          >
+            إلغاء
+          </Button>
+          <Button
+            type="button"
+            onClick={handleSubmit}
+            disabled={!question.trim() || !answer.trim()}
+            className="flex-1 gap-2"
+          >
+            <CheckCircle className="w-4 h-4" />
+            إضافة السؤال
+          </Button>
+        </DialogFooter>
       </DialogContent>
     </Dialog>
   );
-}
+};
 
 export default StudentFaqsForm;
