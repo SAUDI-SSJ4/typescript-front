@@ -1,5 +1,5 @@
 import { useParams, useNavigate } from "react-router-dom";
-import { useState } from "react";
+// import { useState } from "react";
 import { ArrowRight, Download, ExternalLink, Share2, Copy, Calendar, User, BookOpen, Award } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -11,7 +11,7 @@ import { toast } from "sonner";
 function CertificateView() {
   const { certificateId } = useParams<{ certificateId: string }>();
   const navigate = useNavigate();
-  const [showQRCode, setShowQRCode] = useState(false);
+  // const [showQRCode, setShowQRCode] = useState(false);
 
   const { data: certificateData, isPending, isError } = useCertificate(
     certificateId ? parseInt(certificateId) : 0
@@ -50,7 +50,7 @@ function CertificateView() {
       });
     } else {
       // Fallback to clipboard
-      navigator.clipboard.writeText(shareUrl);
+      navigator.clipboard.writeText(shareUrl || "");
       toast.success("تم نسخ رابط الشهادة");
     }
   };
@@ -58,7 +58,7 @@ function CertificateView() {
   const handleCopyLink = () => {
     if (!certificate) return;
     
-    navigator.clipboard.writeText(certificate.verification_url);
+    navigator.clipboard.writeText(certificate.verification_url || "");
     toast.success("تم نسخ رابط التحقق");
   };
 

@@ -14,6 +14,12 @@ export const academyMainMenuSchema = z.object({
   secondary_color: z
     .string()
     .regex(/^#[0-9A-F]{6}$/i, { message: "يجب أن يكون اللون بصيغة صحيحة" }),
+  mainTitle: z.string().optional(),
+  subTitle: z.string().optional(),
+  firstLinkTitle: z.string().optional(),
+  firstLinkUrl: z.string().optional(),
+  secondLinkTitle: z.string().optional(),
+  secondLinkUrl: z.string().optional(),
 });
 
 export type AcademyMainMenuForm = z.infer<typeof academyMainMenuSchema>;

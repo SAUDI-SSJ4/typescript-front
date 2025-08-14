@@ -2,9 +2,9 @@ import { CheckCircle, ShoppingBag, ArrowRight, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { PaymentAPI, type Payment } from "@/services/payment-api";
+import { PaymentAPI } from "@/services/payment-api";
 import { toast } from "sonner";
-import { Skeleton } from "@/components/ui/skeleton";
+// import { Skeleton } from "@/components/ui/skeleton";
 
 interface PaymentSuccessData {
   invoice?: any;

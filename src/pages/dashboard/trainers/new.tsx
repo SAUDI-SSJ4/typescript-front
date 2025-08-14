@@ -7,7 +7,7 @@ import { toast } from "sonner";
 function AddNewTrainer() {
   const navigate = useNavigate();
 
-  const handleSubmit = (data: ITrainerForm) => {
+  const handleSubmit = (_data: ITrainerForm) => {
     // The API call is now handled in the AddTrainerForm component
     toast.success("تم إضافة المدرب بنجاح");
     navigate("/dashboard/trainers");

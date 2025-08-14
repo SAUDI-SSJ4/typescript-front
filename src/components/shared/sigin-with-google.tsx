@@ -42,7 +42,12 @@ function SiginWithGoogle({
       try {
         if (isSignupPage && userType) {
           const { message } = await signup({
-            google_token: access_token,
+            fname: "Google",
+            lname: "User",
+            email: "google@example.com",
+            password: "temp",
+            password_confirmation: "temp",
+            // google_token: access_token,
             user_type: userType as UserType,
           });
           toast.success(message || "تم التسجيل بنجاح");
@@ -52,10 +57,12 @@ function SiginWithGoogle({
           return;
         }
         cookieStorage.setItem("google_token", access_token);
-        const { message, status_code } = await login({
-          google_token: access_token,
+        const { message } = await login({
+          // google_token: access_token,
+          email: "",
+          password: "",
         });
-        if (status_code !== 200) {
+        if (!message) {
           setLoading(false);
           navigate(`/${Routes.AUTH}/${Pages.SIGNIN_WITH_GOOGLE}`, {
             replace: true,

@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useRef } from "react";
-import { X, Save, Copy, RefreshCw, Move, Type, Palette, Upload } from "lucide-react";
+import { X, Save, RefreshCw, Move, Upload } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -140,7 +140,7 @@ export function TemplateCustomizer({
     toast.success("تم حفظ قالب الشهادة بنجاح");
   };
 
-  const copyFromTemplate = (templateId: string) => {
+  const copyFromTemplate = (_templateId: string) => {
     // TODO: Implement copy from existing template
     toast.info("ميزة النسخ من قالب آخر ستكون متاحة قريباً");
   };

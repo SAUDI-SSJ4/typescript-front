@@ -1,19 +1,19 @@
 import { Plus, Settings, Eye, Trash2, Image, FileText, Palette } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
+// import { useState } from "react";
 import { useCertificateTemplates } from "@/features/dashboard/certificates/hooks/useCertificatesQueries";
 import { 
   useDeleteCertificateTemplate 
 } from "@/features/dashboard/certificates/hooks/useCertificatesMutations";
-import { useCurrentUserProfile } from "@/features/dashboard/profile/hooks";
-import { getAcademyDetails } from "@/lib/academy";
-import type { User } from "@/types/user";
+// import { useCurrentUserProfile } from "@/features/dashboard/profile/hooks";
+// import { getAcademyDetails } from "@/lib/academy";
+// import type { User } from "@/types/user";
 import type { CertificateTemplate } from "@/types/certificate";
 import { toast } from "sonner";
 
 function CertificateTemplates() {
-  const { data: user } = useCurrentUserProfile();
-  const academy = getAcademyDetails(user as User);
+  // const { data: user } = useCurrentUserProfile();
+  // const academy = getAcademyDetails(user as User);
   
   const { data: templatesData, isPending, isError } = useCertificateTemplates();
   const deleteTemplate = useDeleteCertificateTemplate();
@@ -129,7 +129,7 @@ function TemplateCard({
         {template.background_image ? (
           <img 
             src={template.background_image}
-            alt={template.template_name}
+            alt={template.template_name || template.name}
             className="w-full h-full object-cover"
           />
         ) : (
@@ -143,8 +143,8 @@ function TemplateCard({
         
         {/* Template Type Badge */}
         <div className="absolute top-3 right-3">
-          <span className={`px-2 py-1 rounded-full text-xs font-medium ${getTemplateTypeColor(template.template_type)}`}>
-            {getTemplateTypeText(template.template_type)}
+          <span className={`px-2 py-1 rounded-full text-xs font-medium ${getTemplateTypeColor(template.template_type || 'default')}`}>
+            {getTemplateTypeText(template.template_type || 'default')}
           </span>
         </div>
 
@@ -160,9 +160,9 @@ function TemplateCard({
         {/* Status Badge */}
         <div className="absolute bottom-3 right-3">
           <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-            template.is_active ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"
+            template.is_active !== false ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"
           }`}>
-            {template.is_active ? "نشط" : "غير نشط"}
+            {template.is_active !== false ? "نشط" : "غير نشط"}
           </span>
         </div>
       </div>
@@ -170,7 +170,7 @@ function TemplateCard({
       {/* Template Content */}
       <div className="p-4">
         <h3 className="font-semibold text-gray-900 mb-2 line-clamp-2">
-          {template.template_name}
+          {template.template_name || template.name}
         </h3>
         
         {/* Template Details */}

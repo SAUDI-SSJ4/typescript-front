@@ -24,8 +24,8 @@ interface UserInfo {
   email: string;
   phone: string;
   gender?: string;
-  avatar?: string;
-  coverImage?: string;
+  avatar?: string | File;
+  coverImage?: string | File;
 }
 
 interface EditUserInfoModalProps {
@@ -130,7 +130,7 @@ export function EditUserInfoModal({
         coverImage: data.coverImage instanceof File ? data.coverImage : undefined,
       };
 
-      onSave(userInfo);
+      onSave(userInfo as UserInfo & { avatar?: File; coverImage?: File });
       toast.success("تم تحديث المعلومات بنجاح!");
       setOpen(false);
     } catch (error) {
@@ -146,7 +146,7 @@ export function EditUserInfoModal({
     setOpen(false);
   };
 
-  const validateCoverImageDimensions = async (file: File): Promise<boolean> => {
+  const validateCoverImageDimensions = async (_file: File): Promise<boolean> => {
     // No restrictions on cover image dimensions - accept any image
     return true;
   };
@@ -233,7 +233,7 @@ export function EditUserInfoModal({
                   src={
                     typeof watchedValues.coverImage === "string" && watchedValues.coverImage
                       ? watchedValues.coverImage
-                      : getImageUrl(userInfo.coverImage) || ""
+                      : getImageUrl(typeof userInfo.coverImage === 'string' ? userInfo.coverImage : '') || ""
                   }
                   alt="Cover"
                   className="w-full h-full object-cover transition-all duration-200 group-hover:opacity-80"
@@ -270,7 +270,7 @@ export function EditUserInfoModal({
                   src={
                     typeof watchedValues.avatar === "string" && watchedValues.avatar
                       ? watchedValues.avatar
-                      : getImageUrl(userInfo.avatar) || undefined
+                      : getImageUrl(typeof userInfo.avatar === 'string' ? userInfo.avatar : '') || undefined
                   }
                   alt="Profile"
                 />

@@ -37,8 +37,8 @@ export function UserMenu({ align }: { align?: "start" | "end" | "center" }) {
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" className="relative h-10 w-10 rounded-full">
               <Avatar className="h-10 w-10">
-                {user?.avatar && (
-                  <AvatarImage src={user.avatar} alt={user.fname} />
+                {(user as any)?.avatar && (
+                  <AvatarImage src={(user as any).avatar} alt={user.fname} />
                 )}
                 <AvatarFallback className="bg-primary text-white">
                   {user?.fname?.charAt(0)}

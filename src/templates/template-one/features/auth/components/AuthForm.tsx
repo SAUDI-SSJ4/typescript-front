@@ -54,17 +54,17 @@ const AuthForm: React.FC<{ slug: string }> = ({ slug }) => {
             data.phone_number
           );
 
-          const { status_code, message } = await signup({
+          const { message } = await signup({
             fname: data.fname as string,
             lname: data.lname as string,
             email: data.email as string,
             phone_number: data.phone_number as string,
             password: data.password as string,
-            confirm_password: data.confirm_password as string,
+            password_confirmation: data.confirm_password as string,
             user_type: data.user_type as UserType,
-            profile_picture: data.profile_picture as File,
+            // profile_picture: data.profile_picture as File,
           });
-          if (status_code === 201) {
+          if (message) {
             toast.success(message);
             navigate(Routes.DASHBOARD);
           }

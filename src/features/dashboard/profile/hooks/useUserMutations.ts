@@ -7,7 +7,7 @@ import {
   type UserProfileData,
 } from "../services/userService";
 import { userKeys } from "@/lib/query-keys";
-import type { User } from "@/types/user";
+// import type { User } from "@/types/user";
 
 // Type for API error response
 interface ApiError {
@@ -33,7 +33,7 @@ export const useUpdateUserProfile = () => {
 
       // Also update specific profile cache if it exists
       queryClient.setQueryData(
-        userKeys.profileById(updatedProfile.id),
+        userKeys.profileById(updatedProfile.id.toString()),
         updatedProfile
       );
 
@@ -68,7 +68,7 @@ export const useUpdateProfilePicture = () => {
 
       // Also update specific profile cache if it exists
       queryClient.setQueryData(
-        userKeys.profileById(updatedProfile.id),
+        userKeys.profileById(updatedProfile.id.toString()),
         updatedProfile
       );
 
@@ -102,7 +102,7 @@ export const useDeleteProfilePicture = () => {
 
       // Also update specific profile cache if it exists
       queryClient.setQueryData(
-        userKeys.profileById(updatedProfile.id),
+        userKeys.profileById(updatedProfile.id.toString()),
         updatedProfile
       );
 

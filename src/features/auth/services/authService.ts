@@ -1,6 +1,6 @@
 import { api } from "@/lib/axios";
-import { appendFormData } from "@/lib/formdata";
-import { authCookies } from "@/lib/cookies";
+// import { appendFormData } from "@/lib/formdata";
+// import { authCookies } from "@/lib/cookies";
 import { API_ENDPOINTS } from "@/lib/api-config";
 import type {
   AuthResponse,

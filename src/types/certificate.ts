@@ -9,6 +9,13 @@ export interface Certificate {
   template_id?: number;
   status: 'active' | 'revoked';
   metadata?: Record<string, any>;
+  verification_url?: string;
+  course_title?: string;
+  student_name?: string;
+  completion_percentage?: number;
+  download_count?: number;
+  view_count?: number;
+  last_downloaded_at?: string;
 }
 
 export interface StudentCertificate extends Certificate {
@@ -16,6 +23,8 @@ export interface StudentCertificate extends Certificate {
   course_thumbnail?: string;
   academy_name: string;
   verification_url: string;
+  student_name?: string;
+  completion_percentage?: number;
 }
 
 export interface CertificateTemplate {
@@ -27,6 +36,9 @@ export interface CertificateTemplate {
   layout_config: Record<string, any>;
   created_at: string;
   updated_at: string;
+  template_name?: string;
+  template_type?: string;
+  is_active?: boolean;
 }
 
 export interface CertificateTemplatePayload {
@@ -54,6 +66,11 @@ export interface CertificatesListResponse {
   data: {
     certificates: StudentCertificate[];
     total: number;
+    statistics?: {
+      total_certificates: number;
+      active_certificates: number;
+      completed_courses: number;
+    };
   };
   message: string;
 }

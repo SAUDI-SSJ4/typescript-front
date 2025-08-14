@@ -22,6 +22,8 @@ export enum UserType {
 export interface LoginCredentials {
   email: string;
   password: string;
+  google_token?: string;
+  user_type?: UserType;
 }
 
 export interface RegisterData {
@@ -33,6 +35,8 @@ export interface RegisterData {
   phone_number?: string;
   gender?: string;
   user_type: UserType;
+  confirm_password?: string;
+  google_token?: string;
 }
 
 export interface AuthResponse {
@@ -43,6 +47,7 @@ export interface AuthResponse {
     token_type: string;
   };
   message: string;
+  status_code?: number;
 }
 
 export interface OTPVerificationData {

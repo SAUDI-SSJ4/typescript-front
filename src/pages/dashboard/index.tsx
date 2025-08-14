@@ -8,7 +8,7 @@ import { useCurrentUserProfile } from "@/features/dashboard/profile/hooks";
 function Dashboard() {
   const { data: user } = useCurrentUserProfile();
 
-  const userType = user?.user_type || UserType.STUDENT;
+  const userType = (user as any)?.user_type || UserType.STUDENT;
 
   return (
     <div className="space-y-6">

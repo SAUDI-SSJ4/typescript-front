@@ -1,4 +1,4 @@
-import { GraduationCap, Download, Calendar, Award, Search, ChevronDown, Eye, Trash2, ExternalLink, Settings, Palette } from "lucide-react";
+import { GraduationCap, Download, Calendar, Award, Search, ChevronDown, Eye, Trash2, ExternalLink, Palette } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -14,9 +14,9 @@ import {
   useDownloadCertificate, 
   useRevokeCertificate 
 } from "@/features/dashboard/certificates/hooks/useCertificatesMutations";
-import { useCurrentUserProfile } from "@/features/dashboard/profile/hooks";
-import { getAcademyDetails } from "@/lib/academy";
-import type { User } from "@/types/user";
+// import { useCurrentUserProfile } from "@/features/dashboard/profile/hooks";
+// import { getAcademyDetails } from "@/lib/academy";
+// import type { User } from "@/types/user";
 import type { StudentCertificate } from "@/types/certificate";
 import { toast } from "sonner";
 import { TemplateCustomizer } from "@/features/dashboard/certificates/components/TemplateCustomizer";
@@ -24,14 +24,14 @@ import { TemplateCustomizer } from "@/features/dashboard/certificates/components
 function Certificates() {
   const [searchQuery, setSearchQuery] = useState("");
   const [sortBy, setSortBy] = useState("الأحدث");
-  const [selectedCourseId, setSelectedCourseId] = useState<string | undefined>();
-  const [currentPage, setCurrentPage] = useState(1);
+  const [selectedCourseId] = useState<string | undefined>();
+  const [currentPage] = useState(1);
   const [customizerOpen, setCustomizerOpen] = useState(false);
   const [selectedCourse, setSelectedCourse] = useState<{id: string, title: string} | null>(null);
   
   const navigate = useNavigate();
-  const { data: user } = useCurrentUserProfile();
-  const academy = getAcademyDetails(user as User);
+  // const { data: user } = useCurrentUserProfile();
+  // const academy = getAcademyDetails(user as User);
   
   const { data: certificatesData, isPending, isError } = useCertificates(
     selectedCourseId,

@@ -7,14 +7,14 @@ import type { Table as TanstackTable } from "@tanstack/react-table";
 import { useAcademyCourses } from "@/features/dashboard/courses/hooks/useCoursesQueries";
 import { useCurrentUserProfile } from "@/features/dashboard/profile/hooks";
 import { getAcademyDetails } from "@/lib/academy";
-import type { User } from "@/types/user";
+// import type { User } from "@/types/user";
 import type { Course } from "@/types/couse";
 import CourseTable from "@/features/dashboard/courses/components/CourseTable";
 import CourseFilters from "@/features/dashboard/courses/components/CourseFilters";
 
 function AcademyCourses() {
   const { data: user } = useCurrentUserProfile();
-  const academy = getAcademyDetails(user as User);
+  const academy = getAcademyDetails(user as any);
   const academyId = academy?.academy_id || 0; // Provide a default value of 0
   const { data: courses, isPending, error } = useAcademyCourses(academyId);
   const [table, setTable] = useState<TanstackTable<Course> | null>(null);

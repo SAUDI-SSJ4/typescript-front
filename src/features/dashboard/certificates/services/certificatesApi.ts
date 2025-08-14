@@ -76,7 +76,7 @@ export const certificatesApi = {
   ): Promise<CertificateTemplateResponse> => {
     // Create FormData for file uploads
     const formData = new FormData();
-    appendFormData(formData, templateData);
+    appendFormData(formData, templateData as any);
 
     const response = await api.post("/certificates/templates", formData, {
       headers: {
@@ -93,7 +93,7 @@ export const certificatesApi = {
     templateData: Partial<CertificateTemplatePayload>
   ): Promise<CertificateTemplateResponse> => {
     const formData = new FormData();
-    appendFormData(formData, templateData);
+    appendFormData(formData, templateData as any);
 
     const response = await api.put(`/certificates/templates/${id}`, formData, {
       headers: {

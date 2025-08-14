@@ -131,11 +131,11 @@ const OtpField: React.FC<OtpFieldProps> = ({
               // Only send request when all inputs are filled with valid numbers
               if (otp.length === numInputs && /^\d+$/.test(otp)) {
                 try {
-                  const { status_code, message } = await verifyAccount({
+                  const { message } = await verifyAccount({
                     email: verifiedEmail,
                     otp,
                   });
-                  if (status_code === 200) {
+                  if (message) {
                     toast.success(message);
                     navigate(`/${Routes.DASHBOARD}`, {
                       replace: true,
