@@ -78,4 +78,35 @@ export const authService = {
     const response = await api.post("/auth/password/reset-with-token", data);
     return response.data;
   },
+
+  // Sign up (alias for register)
+  async signup(userData: RegisterData): Promise<AuthResponse> {
+    const formData = new FormData();
+    formData.append('fname', userData.fname);
+    formData.append('lname', userData.lname);
+    formData.append('email', userData.email);
+    formData.append('password', userData.password);
+    formData.append('password_confirmation', userData.password_confirmation);
+    formData.append('user_type', userData.user_type);
+    if (userData.phone_number) formData.append('phone_number', userData.phone_number);
+    if (userData.gender) formData.append('gender', userData.gender);
+    
+    return this.register(formData);
+  },
+
+  // Verify account
+  async verifyAccount(data: OTPVerificationData): Promise<AuthResponse> {
+    return this.verifyOTP(data);
+  },
+
+  // Resend OTP
+  async resendOtp(data: { email: string }): Promise<any> {
+    const response = await api.post("/auth/otp/resend", data);
+    return response.data;
+  },
+
+  // Reset password
+  async resetPassword(data: PasswordResetData): Promise<any> {
+    return this.resetPasswordWithToken(data);
+  },
 };

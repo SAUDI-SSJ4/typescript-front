@@ -1,5 +1,23 @@
 import { z } from "zod";
 
+export const academyMainMenuSchema = z.object({
+  platform_name: z
+    .string()
+    .min(2, { message: "اسم الأكاديمية يجب أن يكون أكثر من حرفين" })
+    .max(100, { message: "اسم الأكاديمية يجب أن يكون أقل من 100 حرف" }),
+  logo: z
+    .instanceof(File, { message: "شعار الأكاديمية مطلوب" })
+    .optional(),
+  primary_color: z
+    .string()
+    .regex(/^#[0-9A-F]{6}$/i, { message: "يجب أن يكون اللون بصيغة صحيحة" }),
+  secondary_color: z
+    .string()
+    .regex(/^#[0-9A-F]{6}$/i, { message: "يجب أن يكون اللون بصيغة صحيحة" }),
+});
+
+export type AcademyMainMenuForm = z.infer<typeof academyMainMenuSchema>;
+
 export const academyMainSettingsSchema = z.object({
   platform_name: z
     .string()

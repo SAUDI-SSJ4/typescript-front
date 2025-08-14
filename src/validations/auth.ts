@@ -59,7 +59,7 @@ const userData = {
         // Convert + to 00 for backend compatibility
         let formattedNumber = phoneNumber.number;
         if (formattedNumber.startsWith('+')) {
-          formattedNumber = '00' + formattedNumber.substring(1);
+          formattedNumber = ('00' + formattedNumber.substring(1)) as any;
         }
         return formattedNumber;
       }

@@ -1,5 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { walletApi, WithdrawalRequestPayload } from "../services/walletApi";
+import { walletApi } from "../services/walletApi";
+import type { WithdrawalRequestPayload } from "../services/walletApi";
 import { toast } from "sonner";
 
 // Hook for creating withdrawal requests

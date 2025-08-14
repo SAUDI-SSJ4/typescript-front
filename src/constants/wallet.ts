@@ -1,4 +1,4 @@
-import { TransactionType, TransactionColor, ChartData } from '@/types/wallet';
+import type { TransactionType, TransactionColor } from '@/types/wallet';
 
 // Transaction Type Colors Mapping
 export const TRANSACTION_TYPE_COLORS: Record<TransactionType, TransactionColor> = {
