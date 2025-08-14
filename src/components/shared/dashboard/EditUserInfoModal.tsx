@@ -42,11 +42,28 @@ export function EditUserInfoModal({
   const [open, setOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
+  // إصلاح مشكلة VITE_API_URL
+  const getApiUrl = () => {
+    const envUrl = import.meta.env.VITE_API_URL;
+    if (!envUrl) {
+      console.warn("VITE_API_URL not defined, using default 127.0.0.1:8000");
+      return "http://127.0.0.1:8000";
+    }
+    
+    try {
+      new URL(envUrl);
+      return envUrl;
+    } catch (error) {
+      console.warn("Invalid VITE_API_URL, using default 127.0.0.1:8000:", error);
+      return "http://127.0.0.1:8000";
+    }
+  };
+
+  const apiUrl = getApiUrl();
+
   // Function to create full image URL
   const getImageUrl = (imagePath?: string) => {
     if (!imagePath) return undefined;
-    const apiUrl = import.meta.env.VITE_API_URL;
-    if (!apiUrl) return undefined;
     try {
       const origin = new URL(apiUrl).origin;
       return `${origin}/static/${imagePath}`;

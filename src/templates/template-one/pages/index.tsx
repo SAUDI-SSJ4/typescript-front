@@ -32,7 +32,7 @@ function Home() {
   return (
     !isPending &&
     academyInfo && (
-      <HomeLayout settings={academyInfo.data.settings}>
+      <HomeLayout settings={academyInfo.data?.settings}>
         <main className="bg-[rgb(249_250_251)]">
           <motion.div
             variants={sectionVariants}
@@ -40,7 +40,7 @@ function Home() {
             whileInView="visible"
             viewport={{ once: true, amount: 0.3 }}
           >
-            <Hero hero={academyInfo?.data.hero} />
+            <Hero hero={academyInfo.data?.hero} />
           </motion.div>
           <motion.div
             variants={sectionVariants}
@@ -48,7 +48,7 @@ function Home() {
             whileInView="visible"
             viewport={{ once: true, amount: 0.3 }}
           >
-            <Features about={academyInfo.data.about} />
+            <Features about={academyInfo.data?.about} />
           </motion.div>
           <motion.div
             variants={sectionVariants}
@@ -58,7 +58,7 @@ function Home() {
           >
             <Courses />
           </motion.div>
-          {academyInfo.data.faqs.length > 0 && (
+          {academyInfo.data?.faqs && academyInfo.data.faqs.length > 0 && (
             <motion.div
               variants={sectionVariants}
               initial="hidden"
@@ -68,7 +68,7 @@ function Home() {
               <Testimonials opinions={academyInfo.data.opinions} />
             </motion.div>
           )}
-          {academyInfo.data.faqs.length > 0 && (
+          {academyInfo.data?.faqs && academyInfo.data.faqs.length > 0 && (
             <motion.div
               variants={sectionVariants}
               initial="hidden"

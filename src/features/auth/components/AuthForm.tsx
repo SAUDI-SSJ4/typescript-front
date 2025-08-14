@@ -147,7 +147,9 @@ const AuthForm: React.FC<{
   );
 
   const formLoading = isSubmitting || isLoading;
-  const shouldShowGoogleButton = slug === Pages.SIGNUP || slug === Pages.SIGNIN;
+  const googleConfigured = !!import.meta.env.VITE_GOOGLE_CLIENT_ID;
+  const shouldShowGoogleButton =
+    googleConfigured && (slug === Pages.SIGNUP || slug === Pages.SIGNIN);
   return (
     <>
       {shouldShowGoogleButton && (

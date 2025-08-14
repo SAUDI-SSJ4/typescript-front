@@ -16,7 +16,7 @@ function AcademyCourses() {
   const { data: user } = useCurrentUserProfile();
   const academy = getAcademyDetails(user as User);
   const academyId = academy?.academy_id || 0; // Provide a default value of 0
-  const { data: courses, isPending } = useAcademyCourses(academyId);
+  const { data: courses, isPending, error } = useAcademyCourses(academyId);
   const [table, setTable] = useState<TanstackTable<Course> | null>(null);
 
   if (isPending) {
@@ -26,17 +26,30 @@ function AcademyCourses() {
       </div>
     );
   }
-  console.log("courses?.data.courses", courses?.data.courses);
-  return (
-    !isPending &&
-    courses && (
-      <div className="space-y-6">
-        <Header />
-        {/* <CourseStats courses={dummyCourses} /> */}
-        <CourseFilters courses={courses?.data.courses} table={table} />
-        <CourseTable courses={courses?.data.courses} onTableReady={setTable} />
+
+  if (error) {
+    return (
+      <div className="flex items-center justify-center h-full">
+        <span className="text-red-500">حدث خطأ في تحميل الدورات. يرجى المحاولة مرة أخرى.</span>
       </div>
-    )
+    );
+  }
+
+  if (!courses?.data?.courses) {
+    return (
+      <div className="flex items-center justify-center h-full">
+        <span className="text-gray-500">لا توجد دورات متاحة</span>
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-6">
+      <Header />
+      {/* <CourseStats courses={dummyCourses} /> */}
+      <CourseFilters courses={courses.data.courses} table={table} />
+      <CourseTable courses={courses.data.courses} onTableReady={setTable} />
+    </div>
   );
 }
 

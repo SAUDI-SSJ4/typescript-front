@@ -17,42 +17,12 @@ interface EducationalMaterialsChartProps {
 export function EducationalMaterialsChart({
   data,
 }: EducationalMaterialsChartProps): React.ReactElement {
-  // Default sample data if no data provided
-  const defaultData = {
-    labels: [
-      "يناير",
-      "فبراير",
-      "مارس",
-      "أبريل",
-      "مايو",
-      "يونيو",
-      "يوليو",
-      "أغسطس",
-      "سبتمبر",
-      "أكتوبر",
-      "نوفمبر",
-      "ديسمبر",
-    ],
-    datasets: [
-      {
-        label: "المواد التعليمية المسجلة",
-        data: [9.8, 3.9, 4.9, 5.9, 9.8, 2.9, 2.9, 2.9, 2.9, 3.9, 0.9, 1.9],
-        backgroundColor: "rgba(139, 92, 246, 0.8)",
-        borderColor: "rgba(139, 92, 246, 1)",
-        borderWidth: 0,
-        borderRadius: 20,
-        borderSkipped: false,
-        maxBarThickness: 15,
-      },
-    ],
-  };
-
-  const chartData = data || defaultData;
-
-  // Check if we have actual data or if it's empty
-  const hasData = chartData.datasets.some((dataset) =>
+  // Only show chart if data is provided and has actual values
+  const hasData = data && data.datasets.some((dataset) =>
     dataset.data.some((value) => value > 0)
   );
+
+  const chartData = data;
 
   const chartOptions = {
     responsive: true,
@@ -143,7 +113,8 @@ export function EducationalMaterialsChart({
           <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
             <span className="text-purple-600 text-2xl">📊</span>
           </div>
-          <p className="text-gray-500">لا توجد بيانات لعرضها</p>
+          <p className="text-gray-500 font-medium">لا توجد مواد تعليمية مسجلة</p>
+          <p className="text-gray-400 text-sm mt-1">ابدأ بالتسجيل في مادة لرؤية الإحصائيات</p>
         </div>
       </div>
     );
@@ -152,7 +123,7 @@ export function EducationalMaterialsChart({
   return (
     <Chart
       type="bar"
-      data={chartData}
+      data={chartData!}
       options={chartOptions}
       height={400}
       className="w-full"

@@ -1,79 +1,78 @@
 import { useShoppingCart } from "@/store/shopping-cart";
-import { toast } from "sonner";
 import type { Course } from "@/types/couse";
 
 export const useCart = () => {
   const {
     items,
+    loading,
+    total,
+    count,
+    currency,
     addItem,
     removeItem,
-    updateQuantity,
     clearCart,
+    fetchCart,
     getItemById,
+    getTotalPrice,
+    getItemsCount,
     toggleCart,
     setIsOpen,
   } = useShoppingCart();
 
-  // Calculate computed values
-  const totalItems = items.reduce((total, item) => total + item.quantity, 0);
-  const totalPrice = items.reduce(
-    (total, item) => total + item.course.price * item.quantity,
-    0
-  );
-
   // Helper function to check if a course is in the cart
   const isInCart = (courseId: string): boolean => {
-    return items.some((item) => item.course.id === courseId);
+    return items.some((item) => item.item_id === courseId);
   };
 
-  // Helper function to get quantity of a specific course in cart
-  const getQuantity = (courseId: string): number => {
-    const item = getItemById(courseId);
-    return item ? item.quantity : 0;
+  // Helper function to get cart item for a specific course
+  const getCartItem = (courseId: string) => {
+    return items.find((item) => item.item_id === courseId);
   };
 
-  // Helper function to add course with notification/feedback
-  const addToCart = (course: Course) => {
-    addItem(course);
-    toast.success(`تم إضافة "${course.title}" إلى السلة`);
+  // Helper function to add course to cart
+  const addToCart = async (course: Course) => {
+    await addItem("course", course.id);
   };
 
-  // Helper function to remove course with notification/feedback
-  const removeFromCart = (courseId: string) => {
-    const item = getItemById(courseId);
-    if (item) {
-      removeItem(courseId);
-      toast.info(`تم حذف "${item.course.title}" من السلة`);
+  // Helper function to remove course from cart
+  const removeFromCart = async (courseId: string) => {
+    const cartItem = getCartItem(courseId);
+    if (cartItem) {
+      await removeItem(cartItem.cart_id);
     }
   };
 
   // Toggle item in cart (add if not present, remove if present)
-  const toggleInCart = (course: Course) => {
+  const toggleInCart = async (course: Course) => {
     if (isInCart(course.id)) {
-      removeFromCart(course.id);
+      await removeFromCart(course.id);
     } else {
-      addToCart(course);
+      await addToCart(course);
     }
   };
 
   return {
     // State
     items,
-    totalItems,
-    totalPrice,
+    loading,
+    total,
+    count,
+    currency,
+    totalItems: getItemsCount(),
+    totalPrice: getTotalPrice(),
 
     // Actions
     addToCart,
     removeFromCart,
-    updateQuantity,
     clearCart,
     toggleInCart,
     toggleCart,
     setIsOpen,
+    fetchCart,
 
     // Helpers
     isInCart,
-    getQuantity,
+    getCartItem,
     getItemById,
   };
 };

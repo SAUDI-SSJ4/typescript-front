@@ -11,6 +11,7 @@ import {
   Menu,
   ShoppingCart,
   X,
+  BarChart3,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -85,6 +86,14 @@ function StudentSidebar({
         href: "/dashboard/my-courses",
         icon: (
           <BookOpen className="w-5 h-5" />
+        ),
+      },
+      {
+        id: "statistics",
+        title: "إحصائيات الطالب",
+        href: "/dashboard/statistics",
+        icon: (
+          <BarChart3 className="w-5 h-5" />
         ),
       },
       {

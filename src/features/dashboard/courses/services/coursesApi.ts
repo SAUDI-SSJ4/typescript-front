@@ -104,14 +104,15 @@ export const coursesApi = {
     await api.delete(`/academy/courses/${id}`);
   },
 
-  // Publish/Unpublish course
-  toggleCourseStatus: async (
-    id: string,
-    isPublished: boolean
-  ): Promise<Course> => {
-    const response = await api.patch(`/courses/${id}/status`, {
-      isPublished,
-    });
-    return response.data.course;
+  // Publish course
+  publishCourse: async (id: string): Promise<CourseResponse> => {
+    const response = await api.patch(`/academy/courses/${id}/publish`);
+    return response.data;
+  },
+
+  // Unpublish course (back to draft)
+  unpublishCourse: async (id: string): Promise<CourseResponse> => {
+    const response = await api.patch(`/academy/courses/${id}/unpublish`);
+    return response.data;
   },
 };

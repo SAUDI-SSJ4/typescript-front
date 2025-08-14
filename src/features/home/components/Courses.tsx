@@ -37,11 +37,11 @@ export default function Courses() {
       selectedTypes.join(",");
   }
 
-  const { data: courses, isPending } =
+  const { data: courses, isPending, error } =
     usePublicCourses({
       filters,
     });
-  const { data: categories } =
+  const { data: categories, isPending: categoriesPending } =
     useCategories();
 
   const handleCategoryChange = (
@@ -84,10 +84,18 @@ export default function Courses() {
           )
     );
   };
-  if (isPending) {
+  if (isPending || categoriesPending) {
     return (
       <div className="text-center">
         جارٍ تحميل الدورات...
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="text-center text-red-500">
+        حدث خطأ في تحميل الدورات. يرجى المحاولة مرة أخرى.
       </div>
     );
   }
@@ -145,35 +153,41 @@ export default function Courses() {
                 التصنيف
               </h3>
               <div className="space-y-2">
-                {categories?.data?.map(
-                  (category) => (
-                    <label
-                      key={category.id}
-                      className="flex items-center gap-2"
-                    >
-                      <input
-                        type="checkbox"
-                        className="rounded"
-                        checked={selectedCategories.includes(
-                          String(
-                            category.id
-                          )
-                        )}
-                        onChange={(e) =>
-                          handleCategoryChange(
+                {categories?.data && categories.data.length > 0 ? (
+                  categories.data.map(
+                    (category) => (
+                      <label
+                        key={category.id}
+                        className="flex items-center gap-2"
+                      >
+                        <input
+                          type="checkbox"
+                          className="rounded"
+                          checked={selectedCategories.includes(
                             String(
                               category.id
-                            ),
-                            e.target
-                              .checked
-                          )
-                        }
-                      />
-                      <span className="text-sm">
-                        {category.title}
-                      </span>
-                    </label>
+                            )
+                          )}
+                          onChange={(e) =>
+                            handleCategoryChange(
+                              String(
+                                category.id
+                              ),
+                              e.target
+                                .checked
+                            )
+                          }
+                        />
+                        <span className="text-sm">
+                          {category.title}
+                        </span>
+                      </label>
+                    )
                   )
+                ) : (
+                  <p className="text-sm text-muted-foreground">
+                    لا توجد تصنيفات متاحة
+                  </p>
                 )}
               </div>
               <h3 className="font-semibold text-lg text-card-foreground">
@@ -240,13 +254,15 @@ export default function Courses() {
               </div>
             </div>
           </aside>
-          {!isPending && courses && (
+          {courses?.data?.courses && courses.data.courses.length > 0 ? (
             <CoursesList
-              courses={
-                courses?.data.courses
-              }
+              courses={courses.data.courses}
             />
-          )}
+          ) : !isPending ? (
+            <div className="md:col-span-3 text-center text-muted-foreground">
+              لا توجد دورات متاحة
+            </div>
+          ) : null}
         </div>
       </div>
     </section>

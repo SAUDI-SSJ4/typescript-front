@@ -1,84 +1,80 @@
 import { api } from "@/lib/axios";
 import { appendFormData } from "@/lib/formdata";
+import { authCookies } from "@/lib/cookies";
+import { API_ENDPOINTS } from "@/lib/api-config";
 import type {
   AuthResponse,
-  LoginRequest,
-  SignupRequest,
   User,
+  LoginCredentials,
+  RegisterData,
+  OTPVerificationData,
+  OTPRequestData,
   TokenRefreshResponse,
-} from "@/types/user";
+  PasswordResetData,
+} from "@/types/auth";
 
 export const authService = {
-  // Login user
-  async login(credentials: LoginRequest): Promise<AuthResponse> {
-    const response = await api.post<AuthResponse>("/auth/login", credentials);
-    console.log(response);
+  // Login
+  async login(credentials: LoginCredentials): Promise<AuthResponse> {
+    const response = await api.post<AuthResponse>(API_ENDPOINTS.LOGIN, credentials);
     return response.data;
   },
 
-  // Register user
-  async signup(userData: SignupRequest): Promise<AuthResponse> {
-    const formData = new FormData();
-    appendFormData(formData, userData);
-
-    const response = await api.post<AuthResponse>("/auth/register", formData, {
+  // Register
+  async register(formData: FormData): Promise<AuthResponse> {
+    const response = await api.post<AuthResponse>(API_ENDPOINTS.REGISTER, formData, {
       headers: {
         "Content-Type": "multipart/form-data",
       },
     });
     return response.data;
   },
+
   // Forgot password
-  async forgotPassword(email: string): Promise<AuthResponse> {
+  async forgotPassword(email: string): Promise<any> {
     const response = await api.post("/auth/password/forgot", {
       email,
       redirect_url: `${location.origin}/auth/reset-password`,
     });
     return response.data;
   },
-  // Verify account
-  async verifyAccount(data: {
-    email: string;
-    otp: string;
-  }): Promise<AuthResponse> {
+
+  // Verify OTP
+  async verifyOTP(data: OTPVerificationData): Promise<AuthResponse> {
     const response = await api.post<AuthResponse>("/auth/otp/verify", data);
     return response.data;
   },
-  // Resend OTP
-  async resendOtp(email: string): Promise<AuthResponse> {
+
+  // Request OTP
+  async requestOTP(data: OTPRequestData): Promise<any> {
     const response = await api.post<AuthResponse>("/auth/otp/request", {
-      email,
-      expires_in_minutes: 1,
-      purpose: "email_verification",
+      email: data.email,
+      purpose: data.purpose,
     });
     return response.data;
   },
 
   // Get current user
   async getCurrentUser(): Promise<User> {
-    const response = await api.get<User>("/auth/me");
+    const response = await api.get<User>(API_ENDPOINTS.ME);
     return response.data;
   },
 
-  // Logout user
+  // Logout
   async logout(): Promise<void> {
-    await api.post("/auth/logout");
+    await api.post(API_ENDPOINTS.LOGOUT);
   },
 
   // Refresh token
   async refreshToken(refreshToken: string): Promise<TokenRefreshResponse> {
-    const response = await api.post<TokenRefreshResponse>("/auth/refresh", {
+    const response = await api.post<TokenRefreshResponse>(API_ENDPOINTS.REFRESH, {
       refresh_token: refreshToken,
     });
     return response.data;
   },
 
-  // Reset password
-  async resetPassword(data: {
-    new_password: string;
-    confirm_password: string;
-    verification_token: string;
-  }): Promise<AuthResponse> {
+  // Reset password with token
+  async resetPasswordWithToken(data: PasswordResetData): Promise<any> {
     const response = await api.post("/auth/password/reset-with-token", data);
     return response.data;
   },

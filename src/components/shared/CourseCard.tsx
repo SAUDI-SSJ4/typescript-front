@@ -1,20 +1,38 @@
 import type { Course } from "@/types/couse";
 import { Link } from "react-router-dom";
 import { Badge } from "../ui/badge";
-import { Check, ShoppingCart, Star } from "lucide-react";
+import { Check, ShoppingCart, Star, Loader2 } from "lucide-react";
 import { useCart } from "@/hooks/useCart";
 import { Button } from "../ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import RemoteImage from "./RemoteImage";
+import { useState } from "react";
 
 function CourseCard({ course, href }: { course: Course; href?: string }) {
-  const { addToCart, isInCart } = useCart();
+  const { addToCart, isInCart, loading } = useCart();
   const courseInCart = isInCart(course.id);
+  const [addedToCart, setAddedToCart] = useState(false);
 
-  const handleAddToCart = (e: React.MouseEvent) => {
+  const handleAddToCart = async (e: React.MouseEvent) => {
     e.preventDefault(); // Prevent navigation when clicking the button
     e.stopPropagation();
-    addToCart(course);
+    
+    // Check if already in cart or loading to prevent duplicate requests
+    if (courseInCart || loading) {
+      return;
+    }
+    
+    try {
+      await addToCart(course);
+      setAddedToCart(true);
+      
+      // Reset the added state after 3 seconds
+      setTimeout(() => {
+        setAddedToCart(false);
+      }, 3000);
+    } catch (error) {
+      console.error('Failed to add to cart:', error);
+    }
   };
 
   return (
@@ -100,14 +118,26 @@ function CourseCard({ course, href }: { course: Course; href?: string }) {
       ) : (
         <Button
           onClick={handleAddToCart}
-          disabled={courseInCart}
-          className={`w-full ${
-            courseInCart
+          disabled={courseInCart || loading}
+          className={`w-full transition-all duration-300 ${
+            addedToCart
+              ? "bg-green-100 hover:bg-green-200 text-green-700 border-green-300"
+              : courseInCart
               ? "bg-green-500 hover:bg-green-600"
               : "bg-primary hover:bg-primary/90"
           }`}
         >
-          {courseInCart ? (
+          {loading ? (
+            <>
+              <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+              جاري الإضافة...
+            </>
+          ) : addedToCart ? (
+            <>
+              <Check className="w-4 h-4 mr-2" />
+              تمت الإضافة للسلة
+            </>
+          ) : courseInCart ? (
             <>
               <Check className="w-4 h-4 mr-2" />
               في العربة

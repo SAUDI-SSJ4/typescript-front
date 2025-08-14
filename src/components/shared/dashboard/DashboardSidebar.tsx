@@ -12,12 +12,12 @@ interface DashboardSidebarProps {
 }
 
 const baseSidebarItems = [
-  {
-    id: "dashboard",
-    title: "لوحة التحكم",
-    href: "/dashboard",
-    icon: <Home className="w-5 h-5" />,
-  },
+    {
+      id: "dashboard",
+      title: "لوحة التحكم",
+      href: "/dashboard",
+      icon: <Home className="w-5 h-5" />,
+    },
 ];
 
 function DashboardSidebar({
@@ -28,7 +28,7 @@ function DashboardSidebar({
 }: DashboardSidebarProps) {
   // Render appropriate sidebar based on user type
   if (user.user_type === UserType.ACADEMY) {
-    return (
+      return (
       <AcademySidebar
         baseSidebarItems={baseSidebarItems}
         isMobile={isMobile}
@@ -36,10 +36,10 @@ function DashboardSidebar({
         onClose={onClose}
         user={user}
       />
-    );
-  }
+      );
+    }
 
-  return (
+    return (
     <StudentSidebar
       baseSidebarItems={baseSidebarItems}
       isMobile={isMobile}

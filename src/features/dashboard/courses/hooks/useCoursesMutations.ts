@@ -111,3 +111,51 @@ export const useDeleteCourse = () => {
     },
   });
 };
+
+// Hook for publishing a course
+export const usePublishCourse = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (courseId: string) => coursesApi.publishCourse(courseId),
+    onSuccess: (response: CourseResponse) => {
+      // Invalidate all courses-related queries to ensure freshness
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.courses.all,
+      });
+
+      toast.success(response.message || "تم نشر الدورة بنجاح!");
+    },
+    onError: (error: ApiError) => {
+      const errorMessage =
+        error?.response?.data?.message ||
+        "حدث خطأ أثناء نشر الدورة";
+      toast.error(errorMessage);
+      console.error("Error publishing course:", error);
+    },
+  });
+};
+
+// Hook for unpublishing a course (back to draft)
+export const useUnpublishCourse = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (courseId: string) => coursesApi.unpublishCourse(courseId),
+    onSuccess: (response: CourseResponse) => {
+      // Invalidate all courses-related queries to ensure freshness
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.courses.all,
+      });
+
+      toast.success(response.message || "تم إرجاع الدورة إلى المسودة بنجاح!");
+    },
+    onError: (error: ApiError) => {
+      const errorMessage =
+        error?.response?.data?.message ||
+        "حدث خطأ أثناء إرجاع الدورة إلى المسودة";
+      toast.error(errorMessage);
+      console.error("Error unpublishing course:", error);
+    },
+  });
+};

@@ -7,6 +7,7 @@ import Profile from "@/pages/dashboard/profile";
 import Purchases from "@/pages/dashboard/purchases";
 import Settings from "@/pages/dashboard/settings";
 import ShoppingCart from "@/pages/dashboard/shopping-cart";
+import PaymentSuccess from "@/pages/dashboard/payment-success";
 import Wallet from "@/pages/dashboard/wallet";
 import { Route } from "react-router-dom";
 import AcademyCourses from "../pages/dashboard/courses";
@@ -17,6 +18,9 @@ import { templateRoutes } from "./TemplateRoutes";
 import { DashboardLayout } from "@/features/dashboard/components/DashboardLayout";
 import { ProtectedRoute } from "@/components/shared/GuardRoute";
 import ManageCourse from "@/pages/dashboard/courses/mange";
+
+import CertificateView from "@/pages/dashboard/certificate-view";
+import StudentStatistics from "@/pages/dashboard/student-statistics";
 
 export const dashboardRoutes = (
   <Route
@@ -40,10 +44,15 @@ export const dashboardRoutes = (
 
     <Route path="digital-products" element={<DigitalProducts />} />
     <Route path="certificates" element={<Certificates />} />
+    <Route path="certificates/:certificateId" element={<CertificateView />} />
+    
     <Route path="favorites" element={<Favorites />} />
+    {/* Student Statistics */}
+    <Route path="statistics" element={<StudentStatistics />} />
     {/* Other Routes */}
     <Route path="purchases" element={<Purchases />} />
     <Route path="shopping-cart" element={<ShoppingCart />} />
+    <Route path="payment-success" element={<PaymentSuccess />} />
     <Route path="wallet" element={<Wallet />} />
     {/* Shopping Cart Routes */}
     <Route

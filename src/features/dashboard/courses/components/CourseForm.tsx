@@ -7,7 +7,7 @@ import { courseSchema, type ICourseForm } from "@/validations/course";
 import { toast } from "sonner";
 import { ArrowRight, Trash2, Edit, X, Edit2, Plus } from "lucide-react";
 import { useState, useEffect, useCallback } from "react";
-import { useCreateCourse, useUpdateCourse } from "../hooks/useCoursesMutations";
+import { useCreateCourse, useUpdateCourse, usePublishCourse, useUnpublishCourse } from "../hooks/useCoursesMutations";
 import { useNavigate } from "react-router-dom";
 import type { CoursePayload } from "../services/coursesApi";
 import { CourseLevels } from "@/constants/enums";
@@ -17,8 +17,10 @@ import * as z from "zod";
 import CourseContent from "./couse-content";
 import { Loader } from "@/components/shared";
 import ProgressSteps from "./ProgressSteps";
+import { API_BASE_URL } from "@/lib/api-config";
 
-const url = import.meta.env.VITE_API_URL;
+// استخدام التكوين المركزي
+const url = API_BASE_URL;
 const origin = new URL(url).origin;
 
 // Local storage key for persisting form data
@@ -68,8 +70,10 @@ const CourseForm = ({ course }: { course?: Course }) => {
   // React Query mutation for creating course
   const createCourseMutation = useCreateCourse();
   const updateCourseMutation = useUpdateCourse();
+  const publishCourseMutation = usePublishCourse();
+  const unpublishCourseMutation = useUnpublishCourse();
   const navigate = useNavigate();
-  const { data: categories } = useCategories();
+  const { data: categories, isPending: categoriesPending, error: categoriesError } = useCategories();
   // State for managing media change forms
   const [showImageChangeForm, setShowImageChangeForm] = useState(false);
   const [showVideoChangeForm, setShowVideoChangeForm] = useState(false);
@@ -99,7 +103,7 @@ const CourseForm = ({ course }: { course?: Course }) => {
     return (
       savedData || {
         title: "",
-        category: categories?.data?.[0]?.id
+        category: categories?.data && categories.data.length > 0
           ? String(categories.data[0].id)
           : "",
         instructor: "",
@@ -228,6 +232,36 @@ const CourseForm = ({ course }: { course?: Course }) => {
       reset(getSavedFormData());
       setCurrentStep(1);
       toast.success("تم حذف المسودة بنجاح");
+    }
+  };
+
+  // Handle course publishing
+  const handlePublishCourse = async () => {
+    if (!course) return;
+    
+    try {
+      await publishCourseMutation.mutateAsync(course.id);
+      // Optionally navigate or refresh data
+    } catch (error) {
+      console.error("Error publishing course:", error);
+    }
+  };
+
+  // Handle course unpublishing (back to draft)
+  const handleUnpublishCourse = async () => {
+    if (!course) return;
+    
+    if (
+      confirm(
+        "هل تريد حقاً إرجاع الدورة إلى المسودة؟ سيتم إخفاؤها عن الطلاب."
+      )
+    ) {
+      try {
+        await unpublishCourseMutation.mutateAsync(course.id);
+        // Optionally navigate or refresh data
+      } catch (error) {
+        console.error("Error unpublishing course:", error);
+      }
     }
   };
 
@@ -445,18 +479,39 @@ const CourseForm = ({ course }: { course?: Course }) => {
                   />
                 </div>
                 <div>
-                  <FormFields
-                    name="category"
-                    label="الفئة"
-                    type="select"
-                    placeholder="اختر فئة المادة"
-                    options={categories?.data.map((category) => ({
-                      label: category.title,
-                      value: String(category.id),
-                    }))}
-                    control={control}
-                    errors={errors}
-                  />
+                  {categoriesPending ? (
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium text-foreground">
+                        الفئة
+                      </label>
+                      <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                        <Loader className="w-4 h-4" />
+                        جارٍ تحميل الفئات...
+                      </div>
+                    </div>
+                  ) : categoriesError ? (
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium text-foreground">
+                        الفئة
+                      </label>
+                      <div className="text-sm text-red-500">
+                        حدث خطأ في تحميل الفئات
+                      </div>
+                    </div>
+                  ) : (
+                    <FormFields
+                      name="category"
+                      label="الفئة"
+                      type="select"
+                      placeholder="اختر فئة المادة"
+                      options={categories?.data ? categories.data.map((category) => ({
+                        label: category.title,
+                        value: String(category.id),
+                      })) : []}
+                      control={control}
+                      errors={errors}
+                    />
+                  )}
                 </div>
               </div>
 
@@ -649,7 +704,32 @@ const CourseForm = ({ course }: { course?: Course }) => {
                       {formLoading && <Loader />}
                     </Button>
                   )}
-                  {course && <Button type="button">نشر الدورة</Button>}
+                  {course && (
+                    <>
+                      {course.course_state === "published" ? (
+                        <Button 
+                          type="button"
+                          onClick={handleUnpublishCourse}
+                          disabled={unpublishCourseMutation.isPending}
+                          variant="outline"
+                          className="flex items-center gap-2"
+                        >
+                          إرجاع إلى المسودة
+                          {unpublishCourseMutation.isPending && <Loader />}
+                        </Button>
+                      ) : (
+                        <Button 
+                          type="button"
+                          onClick={handlePublishCourse}
+                          disabled={publishCourseMutation.isPending}
+                          className="flex items-center gap-2"
+                        >
+                          نشر الدورة
+                          {publishCourseMutation.isPending && <Loader />}
+                        </Button>
+                      )}
+                    </>
+                  )}
                 </div>
               )}
             </div>

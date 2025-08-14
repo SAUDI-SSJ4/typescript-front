@@ -53,15 +53,28 @@ const userData = {
       message: "رقم الهاتف غير صحيح",
     })
     .transform((phone) => {
-      // Clean the phone number - extract only digits from national number
+      // Clean the phone number and convert + to 00 for backend compatibility
       if (isValidPhoneNumber(phone)) {
         const phoneNumber = parsePhoneNumber(phone);
-        return phoneNumber.nationalNumber;
+        // Convert + to 00 for backend compatibility
+        let formattedNumber = phoneNumber.number;
+        if (formattedNumber.startsWith('+')) {
+          formattedNumber = '00' + formattedNumber.substring(1);
+        }
+        return formattedNumber;
       }
-      // Fallback: remove all non-digits
-      return phone.replace(/\D/g, "");
+      // Fallback: convert + to 00 manually
+      let cleanedPhone = phone.replace(/[^\d+]/g, "");
+      if (cleanedPhone.startsWith('+')) {
+        cleanedPhone = '00' + cleanedPhone.substring(1);
+      }
+      return cleanedPhone;
     })
-    .refine((cleanPhone) => /^[0-9]{10,15}$/.test(cleanPhone), {
+    .refine((cleanPhone) => {
+      // Check if the converted number (with 00) is 10-15 digits
+      const digitsOnly = cleanPhone.replace(/[^\d]/g, "");
+      return digitsOnly.length >= 10 && digitsOnly.length <= 15;
+    }, {
       message: "رقم الهاتف يجب أن يكون بين 10-15 رقم",
     }),
   email: z

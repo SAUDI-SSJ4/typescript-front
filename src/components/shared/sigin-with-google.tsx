@@ -20,6 +20,23 @@ function SiginWithGoogle({
   const { login, signup } = useAuth();
   const isSignupPage = window.location.pathname.includes("signup");
   const [loading, setLoading] = useState(false);
+  
+  // Check if Google OAuth is configured
+  const isGoogleOAuthConfigured = !!import.meta.env.VITE_GOOGLE_CLIENT_ID;
+  
+  if (!isGoogleOAuthConfigured) {
+    return (
+      <button
+        type="button"
+        disabled
+        className="bg-gray-300 flex items-center justify-center gap-2 w-full h-12 rounded-md cursor-not-allowed opacity-50"
+      >
+        <img src="/google.svg" alt="Google" className="w-5 h-5" />
+        <span className="text-gray-600">Google OAuth غير مُكوّن</span>
+      </button>
+    );
+  }
+  
   const sigin = useGoogleLogin({
     onSuccess: async ({ access_token }) => {
       try {
