@@ -1,70 +1,117 @@
-import { ShoppingCart as ShoppingCartIcon, Trash2, CreditCard, Smartphone } from "lucide-react";
+import { ShoppingCart as ShoppingCartIcon, Trash2, Loader2, AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useState } from "react";
-
-// Dummy cart items data
-const initialCartItems = [
-  {
-    id: 1,
-    title: "البرمجة المتقدمة بـ JavaScript",
-    type: "course",
-    instructor: "خالد أحمد",
-    image: "https://images.unsplash.com/photo-1627398242454-45a1465c2479?w=400&h=240&fit=crop&crop=center",
-    price: 399,
-    originalPrice: 599,
-    duration: "20 ساعة",
-    rating: 4.9,
-    studentsCount: 3500,
-    level: "متقدم",
-  },
-  {
-    id: 2,
-    title: "مجموعة أيقونات التجارة الإلكترونية",
-    type: "product",
-    creator: "استوديو التصميم",
-    image: "https://images.unsplash.com/photo-1611224923853-80b023f02d71?w=400&h=240&fit=crop&crop=center",
-    price: 89,
-    originalPrice: 129,
-    downloads: 1200,
-    rating: 4.7,
-    reviews: 234,
-    format: "SVG, PNG",
-  },
-  {
-    id: 3,
-    title: "تصميم تطبيقات الهاتف المحمول",
-    type: "course",
-    instructor: "نورا محمد",
-    image: "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=400&h=240&fit=crop&crop=center",
-    price: 299,
-    originalPrice: 449,
-    duration: "15 ساعة",
-    rating: 4.8,
-    studentsCount: 2100,
-    level: "متوسط",
-  },
-];
+import { useState, useEffect } from "react";
+import { useShoppingCart } from "@/store/shopping-cart";
+import { PaymentAPI } from "@/services/payment-api";
+import { useNavigate, useLocation } from "react-router-dom";
+import { toast } from "sonner";
+import { Skeleton } from "@/components/ui/skeleton";
+import RemoteImage from "@/components/shared/RemoteImage";
 
 function ShoppingCart() {
-  const [cartItems, setCartItems] = useState(initialCartItems);
-  const [discountCode, setDiscountCode] = useState("");
-  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState("visa-mada");
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { 
+    items, 
+    loading, 
+    total, 
+    count, 
+    currency,
+    removeItem, 
+    clearCart, 
+    fetchCart 
+  } = useShoppingCart();
 
-  const removeItem = (id: number) => {
-    setCartItems(items => items.filter(item => item.id !== id));
+  const [discountCode, setDiscountCode] = useState("");
+  const [processingCheckout, setProcessingCheckout] = useState(false);
+  const [paymentError, setPaymentError] = useState<string | null>(null);
+
+  // Check for payment error from navigation state
+  useEffect(() => {
+    if (location.state?.error) {
+      setPaymentError(location.state.error);
+      toast.error(location.state.error);
+      // Clear the error from navigation state
+      navigate(location.pathname, { replace: true, state: {} });
+    }
+  }, [location.state, navigate, location.pathname]);
+
+  // Fetch cart on component mount
+  useEffect(() => {
+    fetchCart();
+  }, [fetchCart]);
+
+  // Check if user is academy (not allowed to purchase)
+  const isAcademyUser = () => {
+    const token = localStorage.getItem('access_token') || sessionStorage.getItem('access_token');
+    if (!token) return false;
+    
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      return payload.user_type === 'academy';
+    } catch {
+      return false;
+    }
   };
 
-  const getTotalPrice = () => {
-    return cartItems.reduce((total, item) => total + item.price, 0);
+  const handleRemoveItem = async (cartId: string) => {
+    await removeItem(cartId);
+  };
+
+  const handleClearCart = async () => {
+    if (window.confirm("هل أنت متأكد من رغبتك في مسح جميع العناصر من السلة؟")) {
+      await clearCart();
+    }
+  };
+
+  const handleCheckout = async () => {
+    if (items.length === 0) {
+      toast.error("السلة فارغة");
+      return;
+    }
+
+    setProcessingCheckout(true);
+    try {
+      
+      // 271: Process checkout with custom success and back URLs for payment gateway
+      const checkoutResponse = await PaymentAPI.processCheckout({
+        coupon_code: discountCode || undefined,
+        success_url: `${window.location.origin}/dashboard/payment-success`,
+        back_url: `${window.location.origin}/dashboard/shopping-cart`,
+      });
+
+      
+      // style: look for redirect_url directly in response
+      if (checkoutResponse.redirect_url) {
+
+        
+        toast.success("تم إنشاء فاتورة الدفع! سيتم توجيهك لبوابة الدفع...");
+        
+        // Go directly to Moyasar like style
+        window.location.href = checkoutResponse.redirect_url;
+      } else {
+
+        toast.error("لم يتم الحصول على رابط الدفع من بوابة الدفع");
+      }
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "فشل في معالجة الطلب");
+    } finally {
+      setProcessingCheckout(false);
+    }
   };
 
   const getTotalOriginalPrice = () => {
-    return cartItems.reduce((total, item) => total + item.originalPrice, 0);
+    return items.reduce((total, item) => total + (item.item_details.original_price || item.item_details.price), 0);
   };
 
   const getSavings = () => {
-    return getTotalOriginalPrice() - getTotalPrice();
+    // حساب الخصم الحقيقي للعناصر التي لديها خصم
+    return items.reduce((totalSavings, item) => {
+      const originalPrice = item.item_details.original_price || item.item_details.price;
+      const currentPrice = item.item_details.price;
+      return totalSavings + (originalPrice > currentPrice ? originalPrice - currentPrice : 0);
+    }, 0);
   };
 
 
@@ -77,39 +124,107 @@ function ShoppingCart() {
     return type === "course" ? "bg-blue-100 text-blue-700" : "bg-purple-100 text-purple-700";
   };
 
-  const getLevelColor = (level: string) => {
-    switch (level) {
-      case "مبتدئ":
-        return "bg-green-100 text-green-700";
-      case "متوسط":
-        return "bg-yellow-100 text-yellow-700";
-      case "متقدم":
-        return "bg-red-100 text-red-700";
-      default:
-        return "bg-gray-100 text-gray-700";
-    }
-  };
+
+
+  if (loading) {
+    return (
+      <div className="space-y-6">
+        <Header />
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div className="lg:col-span-2 space-y-4">
+            {[1, 2, 3].map((i) => (
+              <Skeleton key={i} className="h-24 w-full" />
+            ))}
+          </div>
+          <div className="lg:col-span-1">
+            <Skeleton className="h-96 w-full" />
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (items.length === 0) {
+    return (
+      <div className="space-y-6">
+        <Header />
+        <div className="flex flex-col items-center justify-center py-16 text-center">
+          <ShoppingCartIcon className="w-16 h-16 text-gray-300 mb-4" />
+          <h3 className="text-lg font-semibold text-gray-900 mb-2">السلة فارغة</h3>
+          <p className="text-gray-600 mb-6">لم تقم بإضافة أي منتجات إلى السلة بعد</p>
+          {isAcademyUser() && (
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6 max-w-md">
+              <p className="text-blue-800 text-sm">
+                💡 <strong>ملاحظة:</strong> سلة التسوق مخصصة للطلاب فقط. كصاحب أكاديمية، يمكنك إنشاء وإدارة الدورات من لوحة التحكم.
+              </p>
+            </div>
+          )}
+          <Button 
+            onClick={() => navigate("/")}
+            className="bg-blue-600 hover:bg-blue-700 text-white"
+          >
+            تصفح المنتجات
+          </Button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
       <Header />
 
+      {/* Payment Error Alert */}
+      {paymentError && (
+        <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+          <div className="flex items-start">
+            <AlertCircle className="w-5 h-5 text-red-600 mt-0.5 mr-3 flex-shrink-0" />
+            <div className="flex-1">
+              <h4 className="text-red-800 font-semibold mb-1">فشل في عملية الدفع</h4>
+              <p className="text-red-700 text-sm">{paymentError}</p>
+              <div className="mt-3 flex gap-2">
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() => setPaymentError(null)}
+                  className="text-red-700 border-red-300 hover:bg-red-100"
+                >
+                  إغلاق
+                </Button>
+                {location.state?.transaction_id && (
+                  <Button
+                    size="sm"
+                    onClick={() => navigate(`/dashboard/payment-success?transaction_id=${location.state.transaction_id}`)}
+                    className="bg-red-600 hover:bg-red-700 text-white"
+                  >
+                    إعادة المحاولة
+                  </Button>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Cart Items */}
         <div className="lg:col-span-2 space-y-4">
-          {cartItems.map((item) => (
-            <div key={item.id} className="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden">
+          {items.map((item, index) => (
+            <div key={`${item.cart_id}-${index}`} className="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden">
               <div className="flex">
                 {/* Item Image */}
                 <div className="w-32 h-24 relative overflow-hidden">
-                  <img 
-                    src={item.image} 
-                    alt={item.title}
+                  <RemoteImage
+                    src={item.item_details.image_url || "courses/default-course.jpg"}
+                    alt={item.item_details.title}
                     className="w-full h-full object-cover"
+                    onError={() => {
+                      console.error("Failed to load image:", item.item_details.image_url);
+                    }}
                   />
                   <div className="absolute top-2 right-2">
-                    <span className={`px-2 py-1 rounded-full text-xs font-medium ${getTypeColor(item.type)}`}>
-                      {getTypeLabel(item.type)}
+                    <span className={`px-2 py-1 rounded-full text-xs font-medium ${getTypeColor(item.item_details.type)}`}>
+                      {getTypeLabel(item.item_details.type)}
                     </span>
                   </div>
                 </div>
@@ -119,26 +234,40 @@ function ShoppingCart() {
                   <div className="flex justify-between items-start mb-2">
                     <div className="flex-1">
                       <h3 className="font-semibold text-gray-900 line-clamp-1 mb-2">
-                        {item.title}
+                        {item.item_details.title}
                       </h3>
                       
                       <div className="flex items-center gap-4 text-sm text-gray-600">
-                        {item.type === "course" ? (
+                        {item.item_details.type === "course" ? (
                           <>
-                            {item.level && (
-                              <span className={`px-2 py-1 rounded-full text-xs font-medium ${getLevelColor(item.level)}`}>
-                                {item.level}
+                            {item.item_details.academy_name && (
+                              <span className="text-blue-600">
+                                {item.item_details.academy_name}
                               </span>
                             )}
-                            <span>{item.duration}</span>
-                            <span>{item.rating}</span>
-                            <span>{item.studentsCount}</span>
+                            {item.item_details.instructor_name && (
+                              <span>{item.item_details.instructor_name}</span>
+                            )}
+                            {item.item_details.duration && (
+                              <span>{item.item_details.duration}</span>
+                            )}
+                            {item.item_details.rating && (
+                              <span>{item.item_details.rating} ⭐</span>
+                            )}
+                            {item.item_details.students_count && (
+                              <span>{item.item_details.students_count} طالب</span>
+                            )}
                           </>
                         ) : (
                           <>
-                            <span>{item.downloads} تحميل</span>
-                            <span>{item.rating} ({item.reviews})</span>
-                            <span>{item.format}</span>
+                            {item.item_details.academy_name && (
+                              <span className="text-purple-600">
+                                {item.item_details.academy_name}
+                              </span>
+                            )}
+                            {item.item_details.rating && (
+                              <span>{item.item_details.rating} ⭐</span>
+                            )}
                           </>
                         )}
                       </div>
@@ -148,18 +277,49 @@ function ShoppingCart() {
                       <Button
                         variant="ghost"
                         size="sm"
-                        onClick={() => removeItem(item.id)}
-                        className="text-red-600"
+                        onClick={() => handleRemoveItem(item.cart_id)}
+                        className="text-red-600 hover:bg-red-50"
+                        disabled={loading}
                       >
-                        <Trash2 className="w-4 h-4" />
+                        {loading ? (
+                          <Loader2 className="w-4 h-4 animate-spin" />
+                        ) : (
+                          <Trash2 className="w-4 h-4" />
+                        )}
                       </Button>
-                      <span className="text-lg font-bold text-blue-600">{item.price} ريال</span>
+                      <div className="text-right">
+                        <span className="text-lg font-bold text-blue-600">
+                          {item.item_details.price} {currency}
+                        </span>
+                        {item.item_details.original_price && item.item_details.original_price > item.item_details.price && (
+                          <div className="text-sm text-gray-500 line-through">
+                            {item.item_details.original_price} {currency}
+                          </div>
+                        )}
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
           ))}
+          
+          {/* Clear Cart Button */}
+          <div className="flex justify-end pt-4">
+            <Button
+              variant="outline"
+              onClick={handleClearCart}
+              className="text-red-600 border-red-300 hover:bg-red-50"
+              disabled={loading}
+            >
+              {loading ? (
+                <Loader2 className="w-4 h-4 animate-spin mr-2" />
+              ) : (
+                <Trash2 className="w-4 h-4 mr-2" />
+              )}
+              مسح السلة
+            </Button>
+          </div>
         </div>
 
         {/* Order Summary */}
@@ -190,93 +350,56 @@ function ShoppingCart() {
 
             <div className="space-y-3 mb-4">
               <div className="flex justify-between text-sm">
+                <span className="text-gray-600">عدد العناصر:</span>
+                <span className="font-medium">{count}</span>
+              </div>
+              <div className="flex justify-between text-sm">
                 <span className="text-gray-600">المجموع:</span>
-                <span className="font-medium">{getTotalOriginalPrice()} ريال</span>
+                <span className="font-medium">{getTotalOriginalPrice()} {currency}</span>
               </div>
-              <div className="flex justify-between text-sm text-green-600">
-                <span>الخصم:</span>
-                <span className="font-medium">-{getSavings()} ريال</span>
-              </div>
+              {getSavings() > 0 && (
+                <div className="flex justify-between text-sm text-green-600">
+                  <span>الخصم:</span>
+                  <span className="font-medium">-{getSavings()} {currency}</span>
+                </div>
+              )}
               <div className="border-t pt-3">
                 <div className="flex justify-between text-lg font-bold">
                   <span>المجموع الكلي:</span>
-                  <span className="text-blue-600">{getTotalPrice()} ريال</span>
+                  <span className="text-blue-600">{total || getTotalOriginalPrice() - getSavings()} {currency}</span>
                 </div>
               </div>
+
             </div>
 
-            {/* Payment Methods */}
-            <div className="mb-6">
-              <h4 className="text-sm font-medium text-gray-700 mb-3">طريقة الدفع</h4>
-              <div className="grid grid-cols-2 gap-3">
-                <label className="flex items-center p-3 bg-gray-50 rounded-lg cursor-pointer hover:bg-blue-50">
-                  <input
-                    type="radio"
-                    name="payment"
-                    value="visa-mada"
-                    checked={selectedPaymentMethod === "visa-mada"}
-                    onChange={(e) => setSelectedPaymentMethod(e.target.value)}
-                    className="mr-3"
-                  />
-                  <CreditCard className="w-4 h-4 text-gray-600 ml-3" />
-                  <span className="text-sm">فيزا / مدى</span>
-                </label>
 
-                <label className="flex items-center p-3 bg-gray-50 rounded-lg cursor-not-allowed opacity-50">
-                  <input
-                    type="radio"
-                    name="payment"
-                    value="apple-pay"
-                    checked={selectedPaymentMethod === "apple-pay"}
-                    onChange={(e) => setSelectedPaymentMethod(e.target.value)}
-                    className="mr-3"
-                    disabled
-                  />
-                  <Smartphone className="w-4 h-4 text-gray-600 ml-3" />
-                  <span className="text-sm">Apple Pay</span>
-                </label>
-
-                <label className="flex items-center p-3 bg-gray-50 rounded-lg cursor-not-allowed opacity-50">
-                  <input
-                    type="radio"
-                    name="payment"
-                    value="samsung-pay"
-                    checked={selectedPaymentMethod === "samsung-pay"}
-                    onChange={(e) => setSelectedPaymentMethod(e.target.value)}
-                    className="mr-3"
-                    disabled
-                  />
-                  <Smartphone className="w-4 h-4 text-gray-600 ml-3" />
-                  <span className="text-sm">Samsung Pay</span>
-                </label>
-
-                <label className="flex items-center p-3 bg-gray-50 rounded-lg cursor-not-allowed opacity-50">
-                  <input
-                    type="radio"
-                    name="payment"
-                    value="tamara"
-                    checked={selectedPaymentMethod === "tamara"}
-                    onChange={(e) => setSelectedPaymentMethod(e.target.value)}
-                    className="mr-3"
-                    disabled
-                  />
-                  <CreditCard className="w-4 h-4 text-gray-600 ml-3" />
-                  <span className="text-sm">تمارا</span>
-                </label>
-              </div>
-            </div>
 
             <div className="space-y-3">
+              {isAcademyUser() && (
+                <div className="bg-amber-50 border border-amber-200 rounded-lg p-3 mb-4">
+                  <p className="text-amber-800 text-sm text-center">
+                    ⚠️ أصحاب الأكاديميات لا يمكنهم الشراء. سلة التسوق مخصصة للطلاب فقط.
+                  </p>
+                </div>
+              )}
               <Button 
                 className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 font-medium rounded-lg"
-                disabled={!selectedPaymentMethod}
+                disabled={processingCheckout || items.length === 0 || isAcademyUser()}
+                onClick={handleCheckout}
               >
-                الدفع الآن
+                {processingCheckout ? (
+                  <>
+                    <Loader2 className="w-4 h-4 animate-spin mr-2" />
+                    جاري المعالجة...
+                  </>
+                ) : (
+                  isAcademyUser() ? 'غير متاح لأصحاب الأكاديميات' : 'الدفع الآن'
+                )}
               </Button>
               <Button 
                 variant="outline" 
                 className="w-full border-gray-300 text-gray-600 hover:bg-gray-50 py-3 font-medium rounded-lg"
-                onClick={() => window.location.href = "/"}
+                onClick={() => navigate("/")}
               >
                 متابعة التسوق
               </Button>

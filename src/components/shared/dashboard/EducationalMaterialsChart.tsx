@@ -1,56 +1,61 @@
 import React from "react";
 import { Chart } from "@/components/ui/chart";
+import { useEnrolledCourses } from "@/features/dashboard/educational-materials/hooks/useEducationalMaterials";
 
-interface EducationalMaterialsChartProps {
-  data?: {
-    labels: string[];
-    datasets: {
-      label: string;
-      data: number[];
-      backgroundColor: string;
-      borderColor: string;
-      borderWidth: number;
-    }[];
-  };
-}
+export function EducationalMaterialsChart(): React.ReactElement {
+  const { data: coursesData, isLoading } = useEnrolledCourses();
 
-export function EducationalMaterialsChart({
-  data,
-}: EducationalMaterialsChartProps): React.ReactElement {
-  // Default sample data if no data provided
-  const defaultData = {
-    labels: [
-      "يناير",
-      "فبراير",
-      "مارس",
-      "أبريل",
-      "مايو",
-      "يونيو",
-      "يوليو",
-      "أغسطس",
-      "سبتمبر",
-      "أكتوبر",
-      "نوفمبر",
-      "ديسمبر",
-    ],
-    datasets: [
-      {
-        label: "المواد التعليمية المسجلة",
-        data: [9.8, 3.9, 4.9, 5.9, 9.8, 2.9, 2.9, 2.9, 2.9, 3.9, 0.9, 1.9],
-        backgroundColor: "rgba(139, 92, 246, 0.8)",
-        borderColor: "rgba(139, 92, 246, 1)",
-        borderWidth: 0,
-        borderRadius: 20,
-        borderSkipped: false,
-        maxBarThickness: 15,
-      },
-    ],
-  };
+  // Transform data for chart
+  const chartData = React.useMemo(() => {
+    if (!coursesData?.courses || coursesData.courses.length === 0) {
+      return null;
+    }
 
-  const chartData = data || defaultData;
+    // Group courses by academy
+    const academyStats = coursesData.courses.reduce((acc, course) => {
+      const academyName = course.academy_name;
+      if (!acc[academyName]) {
+        acc[academyName] = {
+          count: 0,
+          totalProgress: 0,
+          totalSpent: 0
+        };
+      }
+      acc[academyName].count++;
+      acc[academyName].totalProgress += course.progress;
+      acc[academyName].totalSpent += course.price_paid;
+      return acc;
+    }, {} as Record<string, { count: number; totalProgress: number; totalSpent: number }>);
 
-  // Check if we have actual data or if it's empty
-  const hasData = chartData.datasets.some((dataset) =>
+    const labels = Object.keys(academyStats);
+    const courseCounts = labels.map(academy => academyStats[academy].count);
+    const averageProgress = labels.map(academy => 
+      Math.round(academyStats[academy].totalProgress / academyStats[academy].count)
+    );
+
+    return {
+      labels,
+      datasets: [
+        {
+          label: "عدد الدورات",
+          data: courseCounts,
+          backgroundColor: "rgba(59, 130, 246, 0.8)",
+          borderColor: "rgba(59, 130, 246, 1)",
+          borderWidth: 2,
+        },
+        {
+          label: "متوسط التقدم %",
+          data: averageProgress,
+          backgroundColor: "rgba(34, 197, 94, 0.8)",
+          borderColor: "rgba(34, 197, 94, 1)",
+          borderWidth: 2,
+        }
+      ]
+    };
+  }, [coursesData]);
+
+  // Only show chart if data is provided and has actual values
+  const hasData = chartData && chartData.datasets.some((dataset) =>
     dataset.data.some((value) => value > 0)
   );
 
@@ -111,7 +116,6 @@ export function EducationalMaterialsChart({
           color: "#6b7280",
           beginAtZero: true,
           stepSize: 1,
-          max: 10,
           font: {
             size: 12,
             family: "Cairo, sans-serif",
@@ -136,6 +140,19 @@ export function EducationalMaterialsChart({
     },
   };
 
+  if (isLoading) {
+    return (
+      <div className="h-64 bg-gray-50 rounded-lg flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <div className="w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+          </div>
+          <p className="text-gray-500 font-medium">جاري تحميل البيانات...</p>
+        </div>
+      </div>
+    );
+  }
+
   if (!hasData) {
     return (
       <div className="h-64 bg-gray-50 rounded-lg flex items-center justify-center">
@@ -143,7 +160,8 @@ export function EducationalMaterialsChart({
           <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
             <span className="text-purple-600 text-2xl">📊</span>
           </div>
-          <p className="text-gray-500">لا توجد بيانات لعرضها</p>
+          <p className="text-gray-500 font-medium">لا توجد مواد تعليمية مسجلة</p>
+          <p className="text-gray-400 text-sm mt-1">ابدأ بالتسجيل في مادة لرؤية الإحصائيات</p>
         </div>
       </div>
     );
@@ -152,7 +170,7 @@ export function EducationalMaterialsChart({
   return (
     <Chart
       type="bar"
-      data={chartData}
+      data={chartData!}
       options={chartOptions}
       height={400}
       className="w-full"

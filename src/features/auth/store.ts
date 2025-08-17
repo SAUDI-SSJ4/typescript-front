@@ -1,10 +1,10 @@
 import { create } from "zustand";
 import type {
-  User,
-  LoginRequest,
-  SignupRequest,
+  LoginCredentials,
+  RegisterData,
   AuthResponse,
-} from "@/types/user";
+} from "@/types/auth";
+import type { User } from "@/types/user";
 import { authService } from "./services/authService";
 import { authCookies } from "@/lib/cookies";
 import { Routes, UserType } from "@/constants/enums";
@@ -20,13 +20,13 @@ interface AuthState {
   // Actions
   setUser: (user: User | null) => void;
   setLoading: (loading: boolean) => void;
-  login: (credentials: LoginRequest) => Promise<AuthResponse>;
-  signup: (userData: SignupRequest) => Promise<AuthResponse>;
+  login: (credentials: LoginCredentials) => Promise<AuthResponse>;
+  signup: (userData: RegisterData) => Promise<AuthResponse>;
   logout: () => Promise<void>;
   refreshUser: () => Promise<void>;
   refreshTokens: () => Promise<void>;
   clearAuth: () => void;
-  forgotPassword: (email: string) => Promise<AuthResponse>;
+  forgotPassword: (email: string) => Promise<any>;
   verifyAccount: ({
     email,
     otp,
@@ -34,12 +34,13 @@ interface AuthState {
     email: string;
     otp: string;
   }) => Promise<AuthResponse>;
-  resendOtp: (email: string) => Promise<AuthResponse>;
-  resetPasswprd: (data: {
-    new_password: string;
-    confirm_password: string;
-    verification_token: string;
-  }) => Promise<AuthResponse>;
+  resendOtp: (data: { email: string }) => Promise<any>;
+  resetPassword: (data: {
+    email: string;
+    otp: string;
+    password: string;
+    password_confirmation: string;
+  }) => Promise<any>;
   // Computed
   isStudent: () => boolean;
   isAcademy: () => boolean;
@@ -54,7 +55,7 @@ const initializeAuthState = () => {
     accessToken,
     refreshToken,
     isLoading: false,
-    isAuthenticated: Boolean(accessToken && refreshToken && user),
+    isAuthenticated: Boolean(accessToken && user), // تبسيط: لا نحتاج refreshToken للفحص
   };
 };
 
@@ -77,22 +78,27 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
     set(() => ({ isLoading: true }));
 
     try {
+      console.log("Attempting login with:", { email: credentials.email });
       const data = await authService.login(credentials);
+      console.log("Login response:", data);
 
       set(() => ({
-        user: data.user_data,
+        user: data.user_data as unknown as User,  // Fixed: access user_data directly
+        accessToken: data.access_token,           // Fixed: access access_token directly
+        refreshToken: data.refresh_token,         // Fixed: access refresh_token directly
         isAuthenticated: true,
         isLoading: false,
       }));
 
       // Store in cookies
       authCookies.setAuthData(
-        data.access_token,
-        data.refresh_token,
-        data.user_data
+        data.access_token,                        // Fixed: access access_token directly
+        data.refresh_token,                       // Fixed: access refresh_token directly
+        data.user_data as any                    // Fixed: access user_data directly
       );
       return data;
     } catch (error) {
+      console.error("Login error:", error);
       set(() => ({ isLoading: false }));
       throw error;
     }
@@ -102,22 +108,27 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
     set(() => ({ isLoading: true }));
 
     try {
+      console.log("Attempting signup with:", { email: userData.email });
       const response = await authService.signup(userData);
+      console.log("Signup response:", response);
 
       set(() => ({
-        user: response.user_data,
+        user: response.user_data as unknown as User,  // Fixed: access user_data directly
+        accessToken: response.access_token,           // Fixed: access access_token directly
+        refreshToken: response.refresh_token,         // Fixed: access refresh_token directly
         isAuthenticated: true,
         isLoading: false,
       }));
 
       // Store in cookies
       authCookies.setAuthData(
-        response.access_token,
-        response.refresh_token,
-        response.user_data
+        response.access_token,                        // Fixed: access access_token directly
+        response.refresh_token,                       // Fixed: access refresh_token directly
+        response.user_data as any                    // Fixed: access user_data directly
       );
       return response;
     } catch (error) {
+      console.error("Signup error:", error);
       set(() => ({ isLoading: false }));
       throw error;
     }
@@ -146,20 +157,26 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
 
   refreshUser: async () => {
     const { accessToken } = get();
-    if (!accessToken) return;
+    if (!accessToken) {
+      console.log("No access token found, skipping user refresh");
+      return;
+    }
 
     set(() => ({ isLoading: true }));
 
     try {
+      console.log("Refreshing user data...");
       const user = await authService.getCurrentUser();
+      console.log("User refresh successful:", user);
+
       set(() => ({
-        user,
+        user: user as unknown as User,
         isAuthenticated: true,
         isLoading: false,
       }));
 
       // Update user data in cookies
-      authCookies.setUser(user);
+      authCookies.setUser(user as any);
     } catch (error) {
       console.error("Failed to refresh user:", error);
       // If refresh fails, clear auth state
@@ -170,6 +187,7 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
   refreshTokens: async () => {
     const { refreshToken } = get();
     if (!refreshToken) {
+      console.log("No refresh token found, clearing auth state");
       get().clearAuth();
       return;
     }
@@ -178,7 +196,7 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
       const response = await authService.refreshToken(refreshToken);
 
       // Update tokens in cookies
-      authCookies.setTokens(response.access_token, response.refresh_token);
+      authCookies.setTokens(response.data.access_token, response.data.access_token);
     } catch (error) {
       console.error("Failed to refresh tokens:", error);
       // If token refresh fails, clear auth state
@@ -228,19 +246,19 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
 
       // Update auth state with verified user data and tokens
       set(() => ({
-        user: response.data.data?.user_data,
-        accessToken: response.data.data?.access_token,
-        refreshToken: response.data.data?.refresh_token,
+        user: response.user_data as unknown as User,  // Fixed: access user_data directly
+        accessToken: response.access_token,           // Fixed: access access_token directly
+        refreshToken: response.refresh_token,         // Fixed: access refresh_token directly
         isAuthenticated: true,
         isLoading: false,
       }));
 
       // Store in cookies
-      if (response.data.data) {
+      if (response) {
         authCookies.setAuthData(
-          response.data.data?.access_token,
-          response.data.data?.refresh_token,
-          response.data.data?.user_data
+          response.access_token,                     // Fixed: access access_token directly
+          response.refresh_token,                    // Fixed: access refresh_token directly
+          response.user_data as any                 // Fixed: access user_data directly
         );
       }
 
@@ -262,7 +280,7 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
       throw error;
     }
   },
-  resetPasswprd: async (data) => {
+  resetPassword: async (data) => {
     set(() => ({ isLoading: true }));
 
     try {
@@ -299,4 +317,4 @@ export const useVerifyAccount = () =>
 
 export const useResnedOtp = () => useAuthStore((state) => state.resendOtp);
 export const useResetPassword = () =>
-  useAuthStore((state) => state.resetPasswprd);
+  useAuthStore((state) => state.resetPassword);

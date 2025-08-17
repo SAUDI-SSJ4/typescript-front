@@ -13,7 +13,7 @@ import { useAuth } from "@/features/auth/hooks/useAuthStore";
 import useFormFields from "../hooks/useFormFields";
 import useFormValidations from "../hooks/useFormValidations";
 import SiginWithGoogle from "@/components/shared/sigin-with-google";
-import { cookieStorage } from "@/lib/cookies";
+// import { cookieStorage } from "@/lib/cookies";
 
 const AuthForm: React.FC<{
   slug: string;
@@ -66,17 +66,16 @@ const AuthForm: React.FC<{
             replace: true,
           });
         } else if (slug === Pages.SIGNUP) {
-          const { status_code, message } = await signup({
+          const { message } = await signup({
             fname: data.fname as string,
             lname: data.lname as string,
             email: data.email as string,
             phone_number: data.phone_number as string,
             password: data.password as string,
-            confirm_password: data.confirm_password as string,
+            password_confirmation: data.confirm_password as string,
             user_type: data.user_type as UserType,
-            profile_picture: data.profile_picture as File,
           });
-          if (status_code === 201) {
+          if (message) {
             toast.success(message);
             navigate(
               `/${Routes.AUTH}/${Pages.VERIFY_ACCOUNT}?email=${data.email}`,
@@ -86,11 +85,11 @@ const AuthForm: React.FC<{
             );
           }
         } else if (slug === Pages.VERIFY_ACCOUNT) {
-          const { status_code, message } = await verifyAccount({
+          const { message } = await verifyAccount({
             email: verifiedEmail as string,
             otp: data.otp as string,
           });
-          if (status_code === 200) {
+          if (message) {
             toast.success(message);
             navigate(Routes.DASHBOARD, {
               replace: true,
@@ -105,9 +104,10 @@ const AuthForm: React.FC<{
           }
         } else if (slug === Pages.RESET_PASSWORD) {
           const { status_code, message } = await resetPassword({
-            confirm_password: data.confirm_password as string,
-            new_password: data.password as string,
-            verification_token,
+            email: verifiedEmail as string,
+            otp: verification_token as string,
+            password: data.password as string,
+            password_confirmation: data.confirm_password as string,
           });
           if (status_code === 200) {
             toast.success(message);
@@ -117,7 +117,9 @@ const AuthForm: React.FC<{
           }
         } else if (slug === Pages.SIGNIN_WITH_GOOGLE) {
           const { message } = await login({
-            google_token: cookieStorage.getItem("google_token") as string,
+            email: "google@example.com",
+            password: "temp",
+            // google_token: cookieStorage.getItem("google_token") as string,
             user_type: data.user_type as UserType,
           });
 
@@ -127,9 +129,20 @@ const AuthForm: React.FC<{
           });
         }
       } catch (error: unknown) {
-        const errorMessage =
-          (error as { response?: { data?: { message?: string } } })?.response
-            ?.data?.message || "حدث خطأ ما";
+        console.error("Auth error:", error); // إضافة تسجيل الأخطاء للتشخيص
+        
+        let errorMessage = "حدث خطأ ما";
+        
+        if (error && typeof error === 'object') {
+          if ('response' in error && error.response && typeof error.response === 'object') {
+            if ('data' in error.response && error.response.data && typeof error.response.data === 'object') {
+              if ('message' in error.response.data && typeof error.response.data.message === 'string') {
+                errorMessage = error.response.data.message;
+              }
+            }
+          }
+        }
+        
         toast.error(errorMessage);
       }
     },
@@ -147,7 +160,9 @@ const AuthForm: React.FC<{
   );
 
   const formLoading = isSubmitting || isLoading;
-  const shouldShowGoogleButton = slug === Pages.SIGNUP || slug === Pages.SIGNIN;
+  const googleConfigured = !!import.meta.env.VITE_GOOGLE_CLIENT_ID;
+  const shouldShowGoogleButton =
+    googleConfigured && (slug === Pages.SIGNUP || slug === Pages.SIGNIN);
   return (
     <>
       {shouldShowGoogleButton && (
@@ -283,8 +298,8 @@ function NavigationLink({
   const handleResendOtp = async () => {
     try {
       // Using forgotPassword as a placeholder for resend OTP
-      const { message, status_code } = await resendOtp(verifiedEmail); // This should be the user's email
-      if (status_code === 200) {
+      const { message } = await resendOtp({ email: verifiedEmail }); // This should be the user's email
+      if (message) {
         toast.success(message);
       }
 

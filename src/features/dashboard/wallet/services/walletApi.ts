@@ -67,9 +67,9 @@ export const walletApi = {
     if (dateRange) params.date_range = dateRange;
     if (searchQuery) params.search = searchQuery;
     
-    console.log('Fetching transactions with params:', params);
-    console.log('Access token exists:', !!tokens.accessToken);
-    console.log('Refresh token exists:', !!tokens.refreshToken);
+    // console.log('Fetching transactions with params:', params);
+    // console.log('Access token exists:', !!tokens.accessToken);
+    // console.log('Refresh token exists:', !!tokens.refreshToken);
     
     // Check if tokens exist
     if (!tokens.accessToken || !tokens.refreshToken) {
@@ -78,7 +78,7 @@ export const walletApi = {
     }
     
     try {
-      console.log('Making request to /wallet/transactions');
+      // console.log('Making request to /wallet/transactions');
       
       const response = await api.get("/wallet/transactions", {
         params,
@@ -87,7 +87,7 @@ export const walletApi = {
           "X-Academy-Refresh-Token": tokens.refreshToken || "",
         },
       });
-      console.log('API response:', response.data);
+      // console.log('API response:', response.data);
       return response.data;
     } catch (error: any) {
       console.error('Error fetching transactions:', {
@@ -106,15 +106,15 @@ export const walletApi = {
     const tokens = authCookies.getTokens();
     
     try {
-      console.log('Making request to /wallet/balance');
+      // console.log('Making request to /wallet/balance');
       
       const response = await api.get("/wallet/balance", {
         headers: {
           "X-Academy-Access-Token": tokens.accessToken || "",
-          "X-Academy-Refresh-Token": tokens.refreshToken || "",
+          "X-Academy-Refresh-Token": tokens.accessToken || "",
         },
       });
-      console.log('Wallet balance response:', response.data);
+      // console.log('Wallet balance response:', response.data);
       return response.data;
     } catch (error: any) {
       console.error('Error fetching wallet balance:', {
@@ -133,15 +133,15 @@ export const walletApi = {
     const tokens = authCookies.getTokens();
     
     try {
-      console.log('Making request to /wallet/withdrawal-requests');
+      // console.log('Making request to /wallet/withdrawal-requests');
       
       const response = await api.get("/wallet/withdrawal-requests", {
         headers: {
           "X-Academy-Access-Token": tokens.accessToken || "",
-          "X-Academy-Refresh-Token": tokens.refreshToken || "",
+          "X-Academy-Refresh-Token": tokens.accessToken || "",
         },
       });
-      console.log('Withdrawal requests response:', response.data);
+      // console.log('Withdrawal requests response:', response.data);
       return response.data;
     } catch (error: any) {
       console.error('Error fetching withdrawal requests:', {
@@ -162,16 +162,16 @@ export const walletApi = {
     const tokens = authCookies.getTokens();
     
     try {
-      console.log('Making request to /wallet/withdrawal-requests');
-      console.log('Withdrawal request payload:', payload);
+      // console.log('Making request to /wallet/withdrawal-requests');
+      // console.log('Withdrawal request payload:', payload);
       
       const response = await api.post("/wallet/withdrawal-requests", payload, {
         headers: {
           "X-Academy-Access-Token": tokens.accessToken || "",
-          "X-Academy-Refresh-Token": tokens.refreshToken || "",
+          "X-Academy-Refresh-Token": tokens.accessToken || "",
         },
       });
-      console.log('Create withdrawal request response:', response.data);
+      // console.log('Create withdrawal request response:', response.data);
       return response.data;
     } catch (error: any) {
       console.error('Error creating withdrawal request:', {

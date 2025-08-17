@@ -3,13 +3,15 @@ import StatisticsCards from "@/features/dashboard/components/StatisticsCards";
 import StudentDashboard from "@/features/dashboard/components/StudentDashboard";
 import AcademyDashboard from "@/features/dashboard/components/AcademyDashboard";
 import { LayoutDashboard } from "lucide-react";
-import { useCurrentUserProfile } from "@/features/dashboard/profile/hooks";
+import { useAuthStore } from "@/features/auth/store";
 import { Loader } from "@/components/shared";
 
 function Dashboard() {
-  const { data: user, isPending } = useCurrentUserProfile();
+  const { user, isAuthenticated } = useAuthStore();
 
-  if (isPending) {
+  const userType = user?.user_type || UserType.STUDENT;
+
+  if (!isAuthenticated || !user) {
     return (
       <div className="element-center">
         <Loader />
@@ -18,18 +20,15 @@ function Dashboard() {
   }
 
   return (
-    !isPending &&
-    user && (
-      <div className="space-y-6">
-        <Header />
-        <StatisticsCards userType={user.user_type} />
-        {user.user_type === UserType.ACADEMY ? (
-          <AcademyDashboard />
-        ) : (
-          <StudentDashboard />
-        )}
-      </div>
-    )
+    <div className="space-y-6">
+      <Header />
+      <StatisticsCards userType={user.user_type} />
+      {user.user_type === UserType.ACADEMY ? (
+        <AcademyDashboard />
+      ) : (
+        <StudentDashboard />
+      )}
+    </div>
   );
 }
 

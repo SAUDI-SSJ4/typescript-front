@@ -107,6 +107,33 @@ const columns: ColumnDef<Course>[] = [
     },
   },
   {
+    accessorKey: "course_state",
+    header: "الحالة",
+    cell: ({ row }) => {
+      const state = row.getValue("course_state") as string;
+      const stateColors = {
+        draft: "bg-gray-100 text-gray-800 border-gray-200",
+        published: "bg-green-100 text-green-800 border-green-200",
+        archived: "bg-red-100 text-red-800 border-red-200",
+      };
+      const stateLabels = {
+        draft: "مسودة",
+        published: "منشور",
+        archived: "مؤرشف",
+      };
+      return (
+        <Badge
+          className={`${
+            stateColors[state as keyof typeof stateColors] ||
+            "bg-gray-100 text-gray-800 border-gray-200"
+          }`}
+        >
+          {stateLabels[state as keyof typeof stateLabels] || state}
+        </Badge>
+      );
+    },
+  },
+  {
     accessorKey: "instructor",
     header: "اسم المدرب",
     cell: ({ row }) => (
@@ -234,6 +261,21 @@ function CourseTable({ courses, onTableReady }: CourseTableProps) {
                   }`}
                 >
                   {row.getValue("level")}
+                </Badge>
+                <Badge
+                  className={`text-xs ${
+                    row.getValue("course_state") === "published"
+                      ? "bg-green-100 text-green-800"
+                      : row.getValue("course_state") === "archived"
+                      ? "bg-red-100 text-red-800"
+                      : "bg-gray-100 text-gray-800"
+                  }`}
+                >
+                  {row.getValue("course_state") === "published"
+                    ? "منشور"
+                    : row.getValue("course_state") === "archived"
+                    ? "مؤرشف"
+                    : "مسودة"}
                 </Badge>
               </div>
 

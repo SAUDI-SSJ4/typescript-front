@@ -39,7 +39,7 @@ const StudentFaqsEditForm = ({ faq, open, onOpenChange }: StudentFaqsEditFormPro
     if (question.trim() && answer.trim() && faq) {
       try {
         await updateFAQMutation.mutateAsync({
-          id: faq.id,
+          id: faq.id.toString(),
           data: {
             question: question.trim(),
             answer: answer.trim(),

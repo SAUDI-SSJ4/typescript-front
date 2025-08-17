@@ -209,4 +209,30 @@ export const queryKeys = {
       delete: (id: string) => [...queryKeys.exam.all, "delete", id] as const,
     },
   },
+
+  certificates: {
+    all: ["certificates"] as const,
+    lists: () => [...queryKeys.certificates.all, "list"] as const,
+    list: (filters: Record<string, any>) => [...queryKeys.certificates.lists(), filters] as const,
+    details: () => [...queryKeys.certificates.all, "detail"] as const,
+    detail: (id: number) => [...queryKeys.certificates.details(), id] as const,
+    preview: (id: number) => [...queryKeys.certificates.all, "preview", id] as const,
+    verify: (token: string) => [...queryKeys.certificates.all, "verify", token] as const,
+    
+    // Template related keys
+    templates: () => [...queryKeys.certificates.all, "templates"] as const,
+    template: (id: number) => [...queryKeys.certificates.templates(), id] as const,
+    templatePreview: (id: number) => [...queryKeys.certificates.all, "template-preview", id] as const,
+
+    // Mutation keys for certificate operations
+    mutations: {
+      generate: () => [...queryKeys.certificates.all, "generate"] as const,
+      download: (id: number) => [...queryKeys.certificates.all, "download", id] as const,
+      revoke: (id: number) => [...queryKeys.certificates.all, "revoke", id] as const,
+      createTemplate: () => [...queryKeys.certificates.all, "create-template"] as const,
+      updateTemplate: (id: number) => [...queryKeys.certificates.all, "update-template", id] as const,
+      deleteTemplate: (id: number) => [...queryKeys.certificates.all, "delete-template", id] as const,
+      updateFields: (id: number) => [...queryKeys.certificates.all, "update-fields", id] as const,
+    },
+  },
 };

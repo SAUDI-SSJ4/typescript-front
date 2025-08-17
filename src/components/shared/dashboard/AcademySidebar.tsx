@@ -103,14 +103,7 @@ function AcademySidebar({
           badge: "قريباً",
           comingSoon: true,
         },
-        {
-          id: "certificates-editing",
-          title: "تحرير الشهادات",
-          href: "/dashboard/certificates-editing",
-          icon: <Award className="w-4 h-4" />,
-          badge: "قريباً",
-          comingSoon: true,
-        },
+
         {
           id: "content-digital-products",
           title: "المنتجات الرقمية",
@@ -160,12 +153,10 @@ function AcademySidebar({
           comingSoon: true,
         },
         {
-          id: "certificates-management",
+          id: "certificates",
           title: "الشهادات",
-          href: "/dashboard/certificates-management",
+          href: "/dashboard/certificates",
           icon: <Award className="w-4 h-4" />,
-          badge: "قريباً",
-          comingSoon: true,
         },
         {
           id: "comments",

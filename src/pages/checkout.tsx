@@ -72,23 +72,23 @@ function CheckoutPage() {
               </CardHeader>
               <CardContent className="space-y-4">
                 {items.map((item) => (
-                  <div key={item.id} className="flex gap-4">
+                  <div key={item.cart_id} className="flex gap-4">
                     <img
-                      src={item.course.image}
-                      alt={item.course.title}
+                      src={item.item_details.image_url || '/placeholder-course.jpg'}
+                      alt={item.item_details.title}
                       className="w-16 h-16 object-contain bg-gray-50 rounded-md"
                     />
                     <div className="flex-1">
                       <h4 className="font-medium line-clamp-2">
-                        {item.course.title}
+                        {item.item_details.title}
                       </h4>
                       <p className="text-sm text-muted-foreground">
-                        المحاضر: {item.course.trainer ? `${item.course.trainer.fname} ${item.course.trainer.lname}` : 'غير محدد'}
+                        المحاضر: {item.item_details.instructor_name || 'غير محدد'}
                       </p>
                       <div className="flex justify-between items-center mt-2">
-                        <span className="text-sm">الكمية: {item.quantity}</span>
+                        <span className="text-sm">الكمية: 1</span>
                         <span className="font-semibold">
-                          {formatPrice((item.course.price || 0) * item.quantity)}
+                          {formatPrice(item.item_details.price)}
                         </span>
                       </div>
                     </div>

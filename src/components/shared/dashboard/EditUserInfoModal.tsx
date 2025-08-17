@@ -24,8 +24,8 @@ interface UserInfo {
   email: string;
   phone: string;
   gender?: string;
-  avatar?: string;
-  coverImage?: string;
+  avatar?: string | File;
+  coverImage?: string | File;
 }
 
 interface EditUserInfoModalProps {
@@ -47,11 +47,28 @@ export function EditUserInfoModal({
   const [open, setOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
+  // إصلاح مشكلة VITE_API_URL
+  const getApiUrl = () => {
+    const envUrl = import.meta.env.VITE_API_URL;
+    if (!envUrl) {
+      console.warn("VITE_API_URL not defined, using default 127.0.0.1:8000");
+      return "http://127.0.0.1:8000";
+    }
+    
+    try {
+      new URL(envUrl);
+      return envUrl;
+    } catch (error) {
+      console.warn("Invalid VITE_API_URL, using default 127.0.0.1:8000:", error);
+      return "http://127.0.0.1:8000";
+    }
+  };
+
+  const apiUrl = getApiUrl();
+
   // Function to create full image URL
   const getImageUrl = (imagePath?: string) => {
     if (!imagePath) return undefined;
-    const apiUrl = import.meta.env.VITE_API_URL;
-    if (!apiUrl) return undefined;
     try {
       const origin = new URL(apiUrl).origin;
       return `${origin}/static/${imagePath}`;
@@ -119,7 +136,7 @@ export function EditUserInfoModal({
           data.coverImage instanceof File ? data.coverImage : undefined,
       };
 
-      onSave(userInfo);
+      onSave(userInfo as UserInfo & { avatar?: File; coverImage?: File });
       toast.success("تم تحديث المعلومات بنجاح!");
       setOpen(false);
     } catch (error) {
@@ -135,10 +152,10 @@ export function EditUserInfoModal({
     setOpen(false);
   };
 
-  // const validateCoverImageDimensions = async (file: File): Promise<boolean> => {
-  //   // No restrictions on cover image dimensions - accept any image
-  //   return true;
-  // };
+  const validateCoverImageDimensions = async (_file: File): Promise<boolean> => {
+    // No restrictions on cover image dimensions - accept any image
+    return true;
+  };
 
   const handleAvatarChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -223,7 +240,7 @@ export function EditUserInfoModal({
                     typeof watchedValues.coverImage === "string" &&
                     watchedValues.coverImage
                       ? watchedValues.coverImage
-                      : getImageUrl(userInfo.coverImage) || ""
+                      : getImageUrl(typeof userInfo.coverImage === 'string' ? userInfo.coverImage : '') || ""
                   }
                   alt="Cover"
                   className="w-full h-full object-cover transition-all duration-200 group-hover:opacity-80"
@@ -261,7 +278,7 @@ export function EditUserInfoModal({
                     typeof watchedValues.avatar === "string" &&
                     watchedValues.avatar
                       ? watchedValues.avatar
-                      : getImageUrl(userInfo.avatar) || undefined
+                      : getImageUrl(typeof userInfo.avatar === 'string' ? userInfo.avatar : '') || undefined
                   }
                   alt="Profile"
                 />

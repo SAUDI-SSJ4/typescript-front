@@ -52,7 +52,10 @@ function StudentFaqs() {
   return (
     <div className="space-y-6">
       <Header />
-      <StudentFaqsTable faqs={faqs} />
+      <StudentFaqsTable faqs={faqs.map(faq => ({
+        ...faq,
+        id: faq.id.toString()
+      }))} />
     </div>
   );
 }

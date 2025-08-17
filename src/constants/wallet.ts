@@ -1,4 +1,4 @@
-import { type TransactionColor, type TransactionType } from "@/types/wallet";
+import type { TransactionType, TransactionColor } from '@/types/wallet';
 
 // Transaction Type Colors Mapping
 export const TRANSACTION_TYPE_COLORS: Record<

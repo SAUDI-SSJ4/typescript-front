@@ -120,7 +120,7 @@ function WithdrawalModal({
       });
 
       // You can add a toast notification here
-      console.log("Withdrawal request submitted successfully");
+              // console.log("Withdrawal request submitted successfully");
     } catch (error) {
       console.error("Error submitting withdrawal request:", error);
     } finally {

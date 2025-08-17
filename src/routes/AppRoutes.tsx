@@ -10,6 +10,7 @@ import CourseDetails from "@/pages/courses/[slug]";
 import LaunchAcademy from "@/pages/launch-academy";
 import EmployeeTraining from "@/pages/employee-training";
 import Ai from "@/pages/ai";
+import MockPayment from "@/pages/mock-payment";
 
 import { dashboardRoutes } from "./DashboardRoutes";
 import { authRoutes } from "./AuthRoutes";
@@ -34,6 +35,7 @@ export const router = createBrowserRouter(
           <Route path="launch-academy" element={<LaunchAcademy />} />
           <Route path="ai" element={<Ai />} />
           <Route path="employee-training" element={<EmployeeTraining />} />
+          <Route path="mock-payment" element={<MockPayment />} />
 
           {dashboardRoutes}
           {authRoutes}

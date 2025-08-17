@@ -1,7 +1,21 @@
 import AddTrainerForm from "@/features/trainers/components/AddTrainerForm";
 import { UserPlus } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 
 function AddNewTrainer() {
+  const navigate = useNavigate();
+
+  const handleSubmit = (_data: any) => {
+    // The API call is now handled in the AddTrainerForm component
+    toast.success("تم إضافة المدرب بنجاح");
+    navigate("/dashboard/trainers");
+  };
+
+  const handleCancel = () => {
+    navigate("/dashboard/trainers");
+  };
+
   return (
     <div className="space-y-6">
       <Header />

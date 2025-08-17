@@ -368,7 +368,10 @@ function StudentFaqsTable({ faqs }: StudentFaqsTableProps) {
       </Dialog>
 
       <StudentFaqsEditForm
-        faq={selectedFaq}
+        faq={selectedFaq ? {
+          ...selectedFaq,
+          id: parseInt(selectedFaq.id)
+        } : null}
         open={editDialogOpen}
         onOpenChange={setEditDialogOpen}
       />

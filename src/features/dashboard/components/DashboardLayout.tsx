@@ -36,7 +36,9 @@ export function DashboardLayout() {
       <div className="min-h-screen bg-background flex">
         <DashboardSidebar user={{
           ...user,
-          user_type: user.user_type as UserType
+          id: user.id.toString(),
+          user_type: (user as any).user_type || UserType.STUDENT,
+          verified: (user as any).verified || false
         } as User} />
         <DashboardSidebar
           isMobile={true}
@@ -44,7 +46,9 @@ export function DashboardLayout() {
           onClose={() => setIsMobileSidebarOpen(false)}
           user={{
             ...user,
-            user_type: user.user_type as UserType
+            id: user.id.toString(),
+            user_type: (user as any).user_type || UserType.STUDENT,
+            verified: (user as any).verified || false
           } as User}
         />
         <div className="flex-1 flex flex-col">

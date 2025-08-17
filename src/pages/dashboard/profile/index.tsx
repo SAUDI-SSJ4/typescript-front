@@ -12,10 +12,28 @@ function Profile() {
   
   const [coverImage, setCoverImage] = useState<string | undefined>(undefined);
 
+  // إصلاح مشكلة VITE_API_URL
+  const getApiUrl = () => {
+    const envUrl = import.meta.env.VITE_API_URL;
+    if (!envUrl) {
+      console.warn("VITE_API_URL not defined, using default 127.0.0.1:8000");
+      return "http://127.0.0.1:8000";
+    }
+    
+    try {
+      new URL(envUrl);
+      return envUrl;
+    } catch (error) {
+      console.warn("Invalid VITE_API_URL, using default 127.0.0.1:8000:", error);
+      return "http://127.0.0.1:8000";
+    }
+  };
+
+  const apiUrl = getApiUrl();
+
   // Function to create full image URL
   const getImageUrl = (imagePath?: string) => {
     if (!imagePath) return undefined;
-    const apiUrl = import.meta.env.VITE_API_URL;
     if (!apiUrl) return undefined;
     try {
       const origin = new URL(apiUrl).origin;
@@ -81,15 +99,15 @@ function Profile() {
     email: userProfile.email,
     phone: userProfile.phone_number,
     gender: userProfile.gender,
-    avatar: userProfile.avatar, // Keep original path for modal
-    coverImage: userProfile.banner, // Keep original path for modal
+    avatar: (userProfile as any).avatar || userProfile.avatar_url, // Keep original path for modal
+    coverImage: (userProfile as any).banner || userProfile.banner_url, // Keep original path for modal
   };
 
   // For display purposes, create URLs
   const displayInfo = {
     ...userInfo,
-    avatar: getImageUrl(userProfile.avatar) || coverImage,
-    coverImage: getImageUrl(userProfile.banner) || coverImage,
+    avatar: getImageUrl((userProfile as any).avatar || userProfile.avatar_url) || coverImage,
+    coverImage: getImageUrl((userProfile as any).banner || userProfile.banner_url) || coverImage,
   };
 
   const handleCoverImageUpload = async (
@@ -179,7 +197,10 @@ function Profile() {
           </div>
           <div className="absolute top-4 left-4">
             <EditUserInfoModal
-              userInfo={userInfo}
+              userInfo={{
+                ...userInfo,
+                phone: userInfo.phone || ""
+              }}
               onSave={handleSaveUserInfo}
             />
           </div>

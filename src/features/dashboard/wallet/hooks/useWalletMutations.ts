@@ -1,8 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import {
-  walletApi,
-  type WithdrawalRequestPayload,
-} from "../services/walletApi";
+import { walletApi } from "../services/walletApi";
+import type { WithdrawalRequestPayload } from "../services/walletApi";
 import { toast } from "sonner";
 
 interface ApiError {

@@ -29,6 +29,11 @@ export type User = {
   user_type: UserType;
   verified: boolean;
   avatar?: string;
+  avatar_url?: string;
+  banner?: string;
+  banner_url?: string;
+  phone_number?: string;
+  gender?: string;
   academy_memberships?: AcademyMembership[];
   phone_number: string;
   gender: string;

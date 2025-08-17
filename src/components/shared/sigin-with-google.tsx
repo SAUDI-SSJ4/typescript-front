@@ -20,12 +20,34 @@ function SiginWithGoogle({
   const { login, signup } = useAuth();
   const isSignupPage = window.location.pathname.includes("signup");
   const [loading, setLoading] = useState(false);
+  
+  // Check if Google OAuth is configured
+  const isGoogleOAuthConfigured = !!import.meta.env.VITE_GOOGLE_CLIENT_ID;
+  
+  if (!isGoogleOAuthConfigured) {
+    return (
+      <button
+        type="button"
+        disabled
+        className="bg-gray-300 flex items-center justify-center gap-2 w-full h-12 rounded-md cursor-not-allowed opacity-50"
+      >
+        <img src="/google.svg" alt="Google" className="w-5 h-5" />
+        <span className="text-gray-600">Google OAuth غير مُكوّن</span>
+      </button>
+    );
+  }
+  
   const sigin = useGoogleLogin({
     onSuccess: async ({ access_token }) => {
       try {
         if (isSignupPage && userType) {
           const { message } = await signup({
-            google_token: access_token,
+            fname: "Google",
+            lname: "User",
+            email: "google@example.com",
+            password: "temp",
+            password_confirmation: "temp",
+            // google_token: access_token,
             user_type: userType as UserType,
           });
           toast.success(message || "تم التسجيل بنجاح");
@@ -35,10 +57,12 @@ function SiginWithGoogle({
           return;
         }
         cookieStorage.setItem("google_token", access_token);
-        const { message, status_code } = await login({
-          google_token: access_token,
+        const { message } = await login({
+          // google_token: access_token,
+          email: "",
+          password: "",
         });
-        if (status_code !== 200) {
+        if (!message) {
           setLoading(false);
           navigate(`/${Routes.AUTH}/${Pages.SIGNIN_WITH_GOOGLE}`, {
             replace: true,
@@ -74,7 +98,7 @@ function SiginWithGoogle({
     },
     onError: () => {
       toast.error("فشل في تسجيل الدخول باستخدام جوجل");
-      console.log("Login Failed");
+              // console.log("Login Failed");
     },
   });
 

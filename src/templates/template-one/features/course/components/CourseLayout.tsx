@@ -4,9 +4,9 @@ import Header from "@/components/shared/header";
 function CourseLayout({ children }: { children: React.ReactNode }) {
   return (
     <>
-      <Header />
+      <Header settings={{} as any} />
       {children}
-      <Footer />
+      <Footer settings={{} as any} />
     </>
   );
 }
