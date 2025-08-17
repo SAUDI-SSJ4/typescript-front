@@ -1,4 +1,3 @@
-import { useNavigate } from "react-router-dom";
 import AddTrainerForm from "@/features/trainers/components/AddTrainerForm";
 import { UserPlus } from "lucide-react";
 
