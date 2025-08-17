@@ -1,6 +1,6 @@
 import { Route } from "react-router-dom";
 import About from "@/features/template/components/About";
-import MainMenu from "@/features/template/components/MainMenu";
+import MainMenu from "@/features/template/components/Hero";
 import MainSettings from "@/features/template/components/MainSettings";
 import StudentFaqs from "@/features/template/components/StudentFaqs";
 import StudentReviews from "@/features/template/components/StudentReviews";

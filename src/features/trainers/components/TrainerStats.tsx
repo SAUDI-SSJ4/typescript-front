@@ -53,22 +53,22 @@ function TrainerStats({ trainers }: TrainerStatsProps) {
       title: "إجمالي المدربين",
       value: totalTrainers,
       icon: <Users className="w-8 h-8" />,
-      change: "+2 هذا الشهر",
-      changeType: "positive" as const,
+      change: undefined,
+      changeType: undefined,
     },
     {
       title: "إجمالي الدورات",
       value: totalCourses,
       icon: <BookOpen className="w-8 h-8" />,
-      change: "+5 دورات جديدة",
-      changeType: "positive" as const,
+      change: undefined,
+      changeType: undefined,
     },
     {
       title: "إجمالي الطلاب",
       value: totalStudents.toLocaleString(),
       icon: <Users className="w-8 h-8" />,
-      change: "+15% من الشهر الماضي",
-      changeType: "positive" as const,
+      change: undefined,
+      changeType: undefined,
     },
   ];
 

@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -11,25 +10,29 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
-import { Download, AlertCircle, CheckCircle } from "lucide-react";
+import { Download, AlertCircle, CheckCircle, CreditCard, Wallet } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Directions } from "@/constants/enums";
 
 interface WithdrawalModalProps {
   trigger?: React.ReactNode;
   availableBalance?: number;
+  disabled?: boolean;
 }
 
 function WithdrawalModal({
   trigger,
   availableBalance = 81000019.8,
+  disabled = false,
 }: WithdrawalModalProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [formData, setFormData] = useState({
     amount: "",
+    accountType: "bank", // "bank" or "paypal"
     accountHolderName: "",
     bankName: "",
     iban: "",
+    paypalEmail: "",
     email: "",
     phoneNumber: "",
   });
@@ -57,14 +60,23 @@ function WithdrawalModal({
       newErrors.accountHolderName = "يرجى إدخال اسم صاحب الحساب";
     }
 
-    if (!formData.bankName.trim()) {
-      newErrors.bankName = "يرجى إدخال اسم البنك";
-    }
+    // Validate based on account type
+    if (formData.accountType === "bank") {
+      if (!formData.bankName.trim()) {
+        newErrors.bankName = "يرجى إدخال اسم البنك";
+      }
 
-    if (!formData.iban.trim()) {
-      newErrors.iban = "يرجى إدخال رقم الآيبان";
-    } else if (!/^SA[0-9]{22}$/.test(formData.iban.replace(/\s/g, ""))) {
-      newErrors.iban = "رقم الآيبان غير صحيح";
+      if (!formData.iban.trim()) {
+        newErrors.iban = "يرجى إدخال رقم الآيبان";
+      } else if (!/^SA[0-9]{22}$/.test(formData.iban.replace(/\s/g, ""))) {
+        newErrors.iban = "رقم الآيبان غير صحيح";
+      }
+    } else if (formData.accountType === "paypal") {
+      if (!formData.paypalEmail.trim()) {
+        newErrors.paypalEmail = "يرجى إدخال بريد بايبال الإلكتروني";
+      } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.paypalEmail)) {
+        newErrors.paypalEmail = "بريد بايبال الإلكتروني غير صحيح";
+      }
     }
 
     if (!formData.email.trim()) {
@@ -98,15 +110,17 @@ function WithdrawalModal({
       setIsOpen(false);
       setFormData({
         amount: "",
+        accountType: "bank",
         accountHolderName: "",
         bankName: "",
         iban: "",
+        paypalEmail: "",
         email: "",
         phoneNumber: "",
       });
 
       // You can add a toast notification here
-      console.log("Withdrawal request submitted successfully");
+              // console.log("Withdrawal request submitted successfully");
     } catch (error) {
       console.error("Error submitting withdrawal request:", error);
     } finally {
@@ -114,18 +128,14 @@ function WithdrawalModal({
     }
   };
 
-  const formatCurrency = (amount: number) => {
-    return amount.toLocaleString("ar-SA", {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    });
-  };
-
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogTrigger asChild>
+      <DialogTrigger asChild disabled={disabled}>
         {trigger || (
-          <Button className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold py-3 rounded-lg shadow-md transition-all duration-200 transform hover:scale-105 flex items-center justify-center gap-2">
+          <Button 
+            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-lg shadow-md flex items-center justify-center gap-2"
+            disabled={disabled}
+          >
             <Download className="w-5 h-5" />
             سحب الأرباح
           </Button>
@@ -141,9 +151,7 @@ function WithdrawalModal({
             <Download className="w-6 h-6 text-blue-600" />
             طلب تحويل الأرباح
           </DialogTitle>
-          <DialogDescription className="text-gray-600 text-center">
-            املأ البيانات التالية لطلب تحويل الأرباح إلى حسابك البنكي
-          </DialogDescription>
+
         </DialogHeader>
 
         <Separator className="my-4" />
@@ -151,10 +159,10 @@ function WithdrawalModal({
         {/* Available Balance Display */}
         <div className="bg-blue-50 p-4 rounded-lg border border-blue-200 text-center mb-6">
           <div className="text-blue-600 text-sm font-medium mb-1">
-            الرصيد المتاح للسحب
+            الرصيد المتاح
           </div>
           <div className="text-3xl font-bold text-blue-700">
-            {formatCurrency(availableBalance)} ﷼
+            80 ريال
           </div>
         </div>
 
@@ -193,83 +201,180 @@ function WithdrawalModal({
 
           <Separator />
 
-          {/* Bank Information */}
+          {/* Account Type Selection */}
           <div className="space-y-4">
             <h3 className="text-lg font-semibold text-gray-900">
-              معلومات الحساب البنكي
+              طريقة السحب
+            </h3>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <button
+                type="button"
+                onClick={() => handleInputChange("accountType", "bank")}
+                className={`p-3 border-2 rounded-lg transition-all flex items-center gap-3 ${
+                  formData.accountType === "bank"
+                    ? "border-blue-500 bg-blue-50 text-blue-700"
+                    : "border-gray-200 hover:border-blue-300"
+                }`}
+              >
+                <CreditCard className="w-6 h-6 text-blue-600" />
+                <span className="font-semibold">حساب بنكي</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => handleInputChange("accountType", "paypal")}
+                className={`p-3 border-2 rounded-lg transition-all flex items-center gap-3 ${
+                  formData.accountType === "paypal"
+                    ? "border-blue-500 bg-blue-50 text-blue-700"
+                    : "border-gray-200 hover:border-blue-300"
+                }`}
+              >
+                <Wallet className="w-6 h-6 text-blue-600" />
+                <span className="font-semibold">بايبال</span>
+              </button>
+            </div>
+          </div>
+
+          <Separator />
+
+          {/* Account Information */}
+          <div className="space-y-4">
+            <h3 className="text-lg font-semibold text-gray-900">
+              {formData.accountType === "bank" ? "معلومات الحساب البنكي" : "معلومات حساب بايبال"}
             </h3>
 
-            <div className="grid grid-cols-1 gap-4">
-              <div>
-                <Label htmlFor="accountHolderName">
-                  اسم صاحب الحساب (كما هو مسجل في البنك)
-                </Label>
-                <Input
-                  id="accountHolderName"
-                  type="text"
-                  placeholder="الاسم كاملاً"
-                  value={formData.accountHolderName}
-                  onChange={(e) =>
-                    handleInputChange("accountHolderName", e.target.value)
-                  }
-                  className={cn(
-                    "text-right",
-                    errors.accountHolderName &&
-                      "border-red-500 focus:border-red-500"
-                  )}
-                />
-                {errors.accountHolderName && (
-                  <div className="flex items-center gap-1 text-red-600 text-sm mt-1">
-                    <AlertCircle className="w-4 h-4" />
-                    {errors.accountHolderName}
+            {formData.accountType === "bank" ? (
+              // Bank Account Form
+              <div className="grid grid-cols-1 gap-4">
+                {/* Account Holder Name and Bank Name in one row */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <Label htmlFor="accountHolderName">
+                      الاسم كما هو مسجل في البنك
+                    </Label>
+                    <Input
+                      id="accountHolderName"
+                      type="text"
+                      placeholder="الاسم كاملاً"
+                      value={formData.accountHolderName}
+                      onChange={(e) =>
+                        handleInputChange("accountHolderName", e.target.value)
+                      }
+                      className={cn(
+                        "text-right",
+                        errors.accountHolderName &&
+                          "border-red-500 focus:border-red-500"
+                      )}
+                    />
+                    {errors.accountHolderName && (
+                      <div className="flex items-center gap-1 text-red-600 text-sm mt-1">
+                        <AlertCircle className="w-4 h-4" />
+                        {errors.accountHolderName}
+                      </div>
+                    )}
                   </div>
-                )}
-              </div>
 
-              <div>
-                <Label htmlFor="bankName">اسم البنك</Label>
-                <Input
-                  id="bankName"
-                  type="text"
-                  placeholder="البنك الأهلي السعودي"
-                  value={formData.bankName}
-                  onChange={(e) =>
-                    handleInputChange("bankName", e.target.value)
-                  }
-                  className={cn(
-                    "text-right",
-                    errors.bankName && "border-red-500 focus:border-red-500"
-                  )}
-                />
-                {errors.bankName && (
-                  <div className="flex items-center gap-1 text-red-600 text-sm mt-1">
-                    <AlertCircle className="w-4 h-4" />
-                    {errors.bankName}
+                  <div>
+                    <Label htmlFor="bankName">اسم البنك</Label>
+                    <Input
+                      id="bankName"
+                      type="text"
+                      placeholder="البنك الأهلي السعودي"
+                      value={formData.bankName}
+                      onChange={(e) =>
+                        handleInputChange("bankName", e.target.value)
+                      }
+                      className={cn(
+                        "text-right",
+                        errors.bankName && "border-red-500 focus:border-red-500"
+                      )}
+                    />
+                    {errors.bankName && (
+                      <div className="flex items-center gap-1 text-red-600 text-sm mt-1">
+                        <AlertCircle className="w-4 h-4" />
+                        {errors.bankName}
+                      </div>
+                    )}
                   </div>
-                )}
-              </div>
+                </div>
 
-              <div>
-                <Label htmlFor="iban">رقم الآيبان (IBAN)</Label>
-                <Input
-                  id="iban"
-                  type="text"
-                  placeholder="SAXXXXXXXXXXXXXXXXXXXX"
-                  value={formData.iban}
-                  onChange={(e) => handleInputChange("iban", e.target.value)}
-                  className={cn(
-                    "text-right font-mono",
-                    errors.iban && "border-red-500 focus:border-red-500"
+                <div>
+                  <Label htmlFor="iban">رقم الآيبان (IBAN)</Label>
+                  <Input
+                    id="iban"
+                    type="text"
+                    placeholder="SAXXXXXXXXXXXXXXXXXXXX"
+                    value={formData.iban}
+                    onChange={(e) => handleInputChange("iban", e.target.value)}
+                    className={cn(
+                      "text-right font-mono",
+                      errors.iban && "border-red-500 focus:border-red-500"
+                    )}
+                  />
+                  {errors.iban && (
+                    <div className="flex items-center gap-1 text-red-600 text-sm mt-1">
+                      <AlertCircle className="w-4 h-4" />
+                      {errors.iban}
+                    </div>
                   )}
-                />
-                {errors.iban && (
-                  <div className="flex items-center gap-1 text-red-600 text-sm mt-1">
-                    <AlertCircle className="w-4 h-4" />
-                    {errors.iban}
-                  </div>
-                )}
+                </div>
               </div>
-            </div>
+            ) : (
+              // PayPal Account Form
+              <div className="grid grid-cols-1 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <Label htmlFor="accountHolderName">
+                      الاسم كما هو مسجل في بايبال
+                    </Label>
+                    <Input
+                      id="accountHolderName"
+                      type="text"
+                      placeholder="الاسم كاملاً"
+                      value={formData.accountHolderName}
+                      onChange={(e) =>
+                        handleInputChange("accountHolderName", e.target.value)
+                      }
+                      className={cn(
+                        "text-right",
+                        errors.accountHolderName &&
+                          "border-red-500 focus:border-red-500"
+                      )}
+                    />
+                    {errors.accountHolderName && (
+                      <div className="flex items-center gap-1 text-red-600 text-sm mt-1">
+                        <AlertCircle className="w-4 h-4" />
+                        {errors.accountHolderName}
+                      </div>
+                    )}
+                  </div>
+
+                  <div>
+                    <Label htmlFor="paypalEmail">بريد بايبال الإلكتروني</Label>
+                    <Input
+                      id="paypalEmail"
+                      type="email"
+                      placeholder="example@paypal.com"
+                      value={formData.paypalEmail}
+                      onChange={(e) =>
+                        handleInputChange("paypalEmail", e.target.value)
+                      }
+                      className={cn(
+                        "text-right",
+                        errors.paypalEmail && "border-red-500 focus:border-red-500"
+                      )}
+                    />
+                    {errors.paypalEmail && (
+                      <div className="flex items-center gap-1 text-red-600 text-sm mt-1">
+                        <AlertCircle className="w-4 h-4" />
+                        {errors.paypalEmail}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
 
           <Separator />
@@ -283,7 +388,8 @@ function WithdrawalModal({
               سيتم استخدام معلومات الاتصال التالية لإشعارك بحالة الطلب:
             </div>
 
-            <div className="grid grid-cols-1 gap-4">
+            {/* Email and Phone Number in one row */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <Label htmlFor="email">البريد الإلكتروني للتواصل</Label>
                 <Input

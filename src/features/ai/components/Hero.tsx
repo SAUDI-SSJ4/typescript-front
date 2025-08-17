@@ -23,14 +23,8 @@ const floatingAnimation = {
 
 function Hero() {
   return (
-    <section
-      style={{
-        background:
-          "linear-gradient(156.58deg, rgba(15, 232, 232, 0.33) 17.14%, rgba(217, 217, 217, 0) 75.12%)",
-      }}
-      className="pt-40 md:pb-20"
-    >
-      <div className="container mx-auto px-4">
+    <section className="pt-[150px] md:pt-[200px] pb-16 md:pb-20 bg-white">
+      <div className="container">
         <div className="element-center gap-20">
           <motion.div
             className="w-32 h-32 md:w-52 md:h-52 hidden md:block"
@@ -82,8 +76,8 @@ function Hero() {
 
         {/* Text Content */}
         <div className="text-center max-w-4xl mx-auto">
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-foreground mb-10">
-            الذكاء الاصطناعي
+          <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-6">
+            <span className="text-blue-600">الذكاء</span> الاصطناعي
           </h1>
           <div className="flex flex-col gap-4 space-y-6 text-base md:text-lg text-muted-foreground leading-relaxed max-w-3xl mx-auto">
             <p>

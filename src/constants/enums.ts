@@ -14,12 +14,14 @@ export enum Routes {
   PROFILE = "profile",
   ADMIN = "admin",
   DASHBOARD = "/dashboard",
+  CONTACT = "/contact",
   DASHBOARD_PROFILE = "/dashboard/profile",
   DASHBOARD_SETTINGS = "/dashboard/settings",
 }
 
 export enum Pages {
   SIGNIN = "signin",
+  SIGNIN_WITH_GOOGLE = "sigin-with-google",
   SIGNUP = "signup",
   VERIFY_ACCOUNT = "verify-account",
   FORGOT_PASSWORD = "forgot-password",
@@ -47,6 +49,7 @@ export enum InputTypes {
   TEXTAREA = "textarea",
   FILE = "file",
   IMAGE = "image",
+  OTP = "otp",
   COLOR = "color",
   RANGE = "range",
   TEL = "tel",
@@ -106,6 +109,11 @@ export enum Environments {
   DEV = "development",
 }
 export enum UserType {
-  STUDENT = "STUDENT",
-  ACADEMY = "ACADEMY",
+  STUDENT = "student",
+  ACADEMY = "academy",
+}
+export enum CourseLevels {
+  BEGINNER = "beginner",
+  INTERMEDIATE = "intermediate",
+  ADVANCED = "advanced",
 }

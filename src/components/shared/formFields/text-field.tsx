@@ -40,9 +40,19 @@ const TextField = ({
                 : "!border-border !shadow-none focus-visible:ring-0 focus-visible:border-border"
             } h-10 !bg-transparent`}
             type={type}
-            onChange={onChange}
+            onChange={(e) => {
+              const val = e.target.value;
+              // For number inputs, convert to number or set to 0 if empty
+              if (type === "number") {
+                onChange(val === "" ? 0 : Number(val));
+              } else {
+                onChange(val);
+              }
+            }}
             onBlur={onBlur}
-            value={String(value || "")}
+            value={
+              type === "number" ? (value || 0).toString() : String(value || "")
+            }
             ref={ref}
             placeholder={placeholder || ""}
             disabled={disabled || false}

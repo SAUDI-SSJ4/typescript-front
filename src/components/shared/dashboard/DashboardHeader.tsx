@@ -12,7 +12,7 @@ export function DashboardHeader({ onMobileMenuClick }: DashboardHeaderProps) {
     <header className="bg-white border-b border-border">
       <div className="px-4 lg:px-6 py-4">
         <div className="flex items-center justify-between gap-4 lg:gap-6">
-          <UserMenu />
+          <UserMenu align="start" />
           <Searchbar />
           <Button
             variant="ghost"

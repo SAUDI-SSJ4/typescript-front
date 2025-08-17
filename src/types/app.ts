@@ -20,7 +20,8 @@ export interface IFormField {
     | "hidden"
     | "textarea"
     | "image"
-    | "file";
+    | "file"
+    | "otp";
   placeholder?: string;
   disabled?: boolean;
   autoFocus?: boolean;

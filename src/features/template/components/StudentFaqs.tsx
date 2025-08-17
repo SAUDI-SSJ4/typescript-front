@@ -1,35 +1,8 @@
 import { HelpCircle } from "lucide-react";
 import StudentFaqsForm from "./StudentFaqsForm";
 import StudentFaqsTable from "./StudentFaqsTable";
-
-function StudentFaqs() {
-  return (
-    <div className="space-y-6">
-      <Header />
-      <StudentFaqsTable
-        faqs={[
-          {
-            question: "ما هي مدة المادة التعليمية؟",
-            answer:
-              "مدة المادة التعليمية تعتمد على نوع الدورة والمحتوى المقدم. عادةً ما تتراوح بين 4 إلى 8 أسابيع.",
-          },
-          {
-            question: "كيف يمكنني الوصول إلى المحتوى التعليمي؟",
-            answer:
-              "يمكنك الوصول إلى المحتوى التعليمي من خلال منصة الدورة بعد التسجيل. ستتلقى تعليمات مفصلة عبر البريد الإلكتروني.",
-          },
-          {
-            question: "هل هناك دعم فني متاح؟",
-            answer:
-              "نعم، نحن نقدم دعمًا فنيًا على مدار الساعة عبر البريد الإلكتروني والدردشة المباشرة.",
-          },
-        ]}
-      />
-    </div>
-  );
-}
-
-export default StudentFaqs;
+import { useFAQs } from "../hooks/useFAQsQueries";
+import { Loader } from "@/components/shared";
 
 function Header() {
   return (
@@ -48,3 +21,43 @@ function Header() {
     </div>
   );
 }
+
+function StudentFaqs() {
+  const { data: faqsResponse, isLoading, error } = useFAQs();
+
+  if (isLoading) {
+    return (
+      <div className="space-y-6">
+        <Header />
+        <div className="flex justify-center py-10">
+          <Loader />
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="space-y-6">
+        <Header />
+        <div className="text-center py-10 text-red-500">
+          حدث خطأ أثناء جلب الأسئلة الشائعة
+        </div>
+      </div>
+    );
+  }
+
+  const faqs = faqsResponse?.data.faqs || [];
+
+  return (
+    <div className="space-y-6">
+      <Header />
+      <StudentFaqsTable faqs={faqs.map(faq => ({
+        ...faq,
+        id: faq.id.toString()
+      }))} />
+    </div>
+  );
+}
+
+export default StudentFaqs;

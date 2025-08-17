@@ -4,30 +4,45 @@ import RelatedCourses from "@/features/course/components/RelatedCourses";
 
 export default function CourseDetails() {
   // const { slug } = useParams();
-
+  
+  // Mock course data for now
   const courseData = {
     id: 1,
-    title: "تطوير تطبيقات الويب المتقدمة",
-    rating: 4.5,
-    totalReviews: 128,
-    price: 199,
-    duration: "12 ساعة",
-    lessonsCount: 24,
-    enrolledStudents: 1234,
+    title: "تصميم واجهات المستخدم UI/UX",
+    rating: 4.9,
+    totalReviews: 328,
+    price: 399,
+    duration: "18 ساعة",
+    lessonsCount: 45,
+    enrolledStudents: 2850,
     videoUrl:
       "https://www.sayan-server.com/courses/videos/academy/1/1USaRw3xnc0Xgp8X3xbH.mp4",
     description:
-      "تعلم كيفية تطوير تطبيقات الويب المتقدمة باستخدام HTML, CSS, JavaScript, React, Node.js, و MongoDB.",
-    image: "/assets/images/courses/course-1.jpg",
+      "تعلم تصميم واجهات المستخدم وتجربة المستخدم من الصفر حتى الاحتراف. احصل على المهارات اللازمة لتصميم تطبيقات ومواقع جذابة وسهلة الاستخدام.",
+    image: "/assets/images/courses/ui-ux-design.jpg",
     instructor: {
-      name: "محمد علي",
-      image: "/assets/images/instructors/instructor-1.jpg",
+      name: "أ. ليلى حسام",
+      image: "/assets/images/instructors/instructor-ui.jpg",
+      bio: "مصممة UI/UX محترفة مع أكثر من 10 سنوات من الخبرة في أفضل الشركات التقنية",
+      rating: 4.8,
+      students: 15500,
+      courses: 12,
     },
-    type: "مجاني",
-    category: "تطوير الويب",
-    slug: "course-1",
-    insteadOf: 1000,
-    level: "متقدم",
+    type: "مدفوع",
+    category: "تصميم",
+    slug: "ui-ux",
+    insteadOf: 699,
+    level: "من المبتدئ إلى المتقدم",
+    learningPoints: [
+      "أساسيات تصميم واجهات المستخدم",
+      "مبادئ تجربة المستخدم",
+      "استخدام أدوات التصميم الحديثة",
+      "تصميم نماذج أولية تفاعلية",
+      "اختبار وتحليل تجربة المستخدم",
+      "التطبيق على مشاريع حقيقية",
+    ],
+    curriculum: [],
+    reviews: [],
   };
 
   return (

@@ -2,8 +2,14 @@ import Navbar, { links } from "./navbar";
 import AuthLinks from "./auth-links";
 import MobileMenu from "./mobile-menu";
 import { Link } from "react-router-dom";
+import type { Settings } from "@/types/academy";
+import RemoteImage from "@/components/shared/RemoteImage";
+import { Skeleton } from "@/components/ui/skeleton";
+import { UserMenu } from "@/components/shared/dashboard";
+import { useCurrentUserProfile } from "@/features/dashboard/profile/hooks";
 
-export default function Header() {
+export default function Header({ settings }: { settings: Settings }) {
+  const { data: user, isPending } = useCurrentUserProfile();
   return (
     <header className="py-8 fixed left-0 w-full top-0 z-50">
       <div className="container">
@@ -16,8 +22,8 @@ export default function Header() {
         >
           <div className="flex items-center flex-1 justify-between lg:justify-start gap-4 lg:gap-10">
             <Link to="/">
-              <img
-                src="https://www.sayan-server.com/storage/academy/image/uqeh6BuRGvAmQ8tdvoGa.png"
+              <RemoteImage
+                src={settings.logo}
                 alt="Logo"
                 loading="eager"
                 className="h-[45px] object-contain"
@@ -26,7 +32,13 @@ export default function Header() {
             <MobileMenu links={links} />
             <Navbar />
           </div>
-          <AuthLinks />
+          {isPending ? (
+            <Skeleton className="h-10 w-10 rounded-full" />
+          ) : user ? (
+            <UserMenu />
+          ) : (
+            <AuthLinks />
+          )}
         </div>
       </div>
     </header>

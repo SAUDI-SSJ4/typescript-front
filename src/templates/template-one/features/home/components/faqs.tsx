@@ -1,39 +1,7 @@
+import type { FAQ } from "@/types/faq";
 import { motion } from "framer-motion";
 import { Plus, Minus, HelpCircle } from "lucide-react";
 import { useState } from "react";
-
-const faqs = [
-  {
-    id: 1,
-    question: "كيف يمكنني التسجيل في الدورات؟",
-    answer: "يمكنك التسجيل بسهولة من خلال إنشاء حساب جديد على المنصة، ثم اختيار الدورة المناسبة والدفع الآمن عبر الإنترنت.",
-  },
-  {
-    id: 2,
-    question: "هل الدورات معتمدة؟",
-    answer: "نعم، جميع دوراتنا معتمدة ومعترف بها، وستحصل على شهادة إتمام معتمدة بعد انتهاء الدورة بنجاح.",
-  },
-  {
-    id: 3,
-    question: "ما هي مدة الوصول للدورة؟",
-    answer: "تحصل على وصول مدى الحياة للدورة بعد التسجيل، مما يتيح لك مراجعة المحتوى في أي وقت تشاء.",
-  },
-  {
-    id: 4,
-    question: "هل يمكنني الحصول على استرداد؟",
-    answer: "نعم، نوفر ضمان استرداد الأموال خلال 14 يوم من تاريخ الشراء إذا لم تكن راضياً عن الدورة.",
-  },
-  {
-    id: 5,
-    question: "هل هناك دعم فني متاح؟",
-    answer: "نعم، فريق الدعم الفني متاح على مدار الساعة لمساعدتك في أي استفسارات أو مشاكل تقنية.",
-  },
-  {
-    id: 6,
-    question: "كيف يمكنني التواصل مع المدرب؟",
-    answer: "يمكنك التواصل مع المدرب من خلال منصة الدورة، أو عبر البريد الإلكتروني، أو من خلال جلسات الأسئلة والأجوبة المباشرة.",
-  },
-];
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -45,7 +13,7 @@ const itemVariants = {
   visible: { opacity: 1, y: 0 },
 };
 
-function FAQs() {
+function FAQs({ faqs }: { faqs: FAQ[] }) {
   const [openFAQ, setOpenFAQ] = useState<number | null>(null);
 
   const toggleFAQ = (id: number) => {

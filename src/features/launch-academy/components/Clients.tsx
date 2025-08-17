@@ -7,62 +7,51 @@ import "swiper/css/navigation";
 import "swiper/css/pagination";
 
 function Clients() {
-  // Client logos data - Update these paths with actual logo files
-  const clients = [
+  // Partners logos data
+  const partners = [
     {
       id: 1,
-      name: "Durar Al Safia",
-      logo: "https://sayan.pro/assets/SayanLogo-D89UIoGs.png",
+      name: "شريك النجاح الأول",
+      logo: "/assets/images/partners/Logo-Files-02.png",
     },
     {
       id: 2,
-      name: "Pupil Optical",
-      logo: "https://sayan.pro/assets/SayanLogo-D89UIoGs.png",
+      name: "شريك النجاح الثاني",
+      logo: "/assets/images/partners/Asset 1@2x.png",
     },
     {
       id: 3,
-      name: "سيانتاليزر",
-      logo: "https://sayan.pro/assets/SayanLogo-D89UIoGs.png",
+      name: "شريك النجاح الثالث",
+      logo: "/assets/images/partners/Screenshot_20250522_171933_Samsung-Internet-750x395-1.jpg",
     },
     {
       id: 4,
-      name: "الجونه للأعمال",
-      logo: "https://sayan.pro/assets/SayanLogo-D89UIoGs.png",
+      name: "شريك النجاح الرابع",
+      logo: "/assets/images/partners/Logo-Files-02.png",
     },
     {
       id: 5,
-      name: "ميفاد",
-      logo: "https://sayan.pro/assets/SayanLogo-D89UIoGs.png",
+      name: "شريك النجاح الخامس",
+      logo: "/assets/images/partners/Asset 1@2x.png",
     },
     {
       id: 6,
-      name: "Palm Tree",
-      logo: "https://sayan.pro/assets/SayanLogo-D89UIoGs.png",
-    },
-    // Duplicate for continuous scroll effect
-    {
-      id: 7,
-      name: "Pupil Optical 2",
-      logo: "https://sayan.pro/assets/SayanLogo-D89UIoGs.png",
-    },
-    {
-      id: 8,
-      name: "Durar Al Safia 2",
-      logo: "https://sayan.pro/assets/SayanLogo-D89UIoGs.png",
+      name: "شريك النجاح السادس",
+      logo: "/assets/images/partners/Screenshot_20250522_171933_Samsung-Internet-750x395-1.jpg",
     },
   ];
 
   return (
-    <section className="py-14 sm:py-20 bg-white">
-      <div className="container mx-auto px-4">
+    <section className="pt-8 md:pt-12 pb-16 md:pb-20 bg-white">
+      <div className="container">
         {/* Section Header */}
-        <div className="text-center mb-16">
+        <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-4">
-            عملاء نفتخر بهم
+            <span className="text-primary">شركاء</span> النجاح
           </h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            نتشرف بثقة عملائنا وشركائنا الذين اختاروا منصة سيان لتطوير أعمالهم
-            التعليمية
+            نفتخر بشراكتنا مع رواد الأعمال والمؤسسات الرائدة في المملكة العربية
+            السعودية
           </p>
         </div>
 
@@ -105,13 +94,13 @@ function Clients() {
             }}
             className="clients-swiper pb-16"
           >
-            {clients.map((client) => (
-              <SwiperSlide key={client.id}>
+            {partners.map((partner) => (
+              <SwiperSlide key={partner.id}>
                 <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition-shadow duration-300 group">
                   <div className="flex items-center justify-center h-20">
                     <img
-                      src={client.logo}
-                      alt={client.name}
+                      src={partner.logo}
+                      alt={partner.name}
                       className="max-h-full max-w-full object-contain filter grayscale hover:grayscale-0 transition-all duration-300 group-hover:scale-110"
                       loading="lazy"
                     />

@@ -137,11 +137,11 @@ const FileUploadField = ({
               <div className="relative">
                 {preview && fileType === "image" ? (
                   // Image preview
-                  <div className="relative inline-block">
+                  <div className="relative inline-block w-full">
                     <img
                       src={preview}
                       alt="Preview"
-                      className="w-full max-w-xs h-48 object-cover rounded-lg border"
+                      className="w-full h-48 object-cover rounded-lg border"
                     />
                     <Button
                       type="button"
@@ -159,7 +159,7 @@ const FileUploadField = ({
                   <div className="relative inline-block w-full">
                     <video
                       src={preview}
-                      className="w-full max-w-md h-48 object-cover rounded-lg border"
+                      className="w-full h-48 object-cover rounded-lg border"
                       controls
                       preload="metadata"
                     >

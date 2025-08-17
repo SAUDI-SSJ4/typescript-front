@@ -3,13 +3,13 @@ export function formatCurrency(
   showDecimals: boolean = true
 ): string {
   if (isNaN(amount)) {
-    return "0 ر.س.";
+    return Number(0).toLocaleString("ar-SA");
   }
 
   // Format the number with appropriate decimal places
   const formattedAmount = showDecimals
-    ? amount.toLocaleString("en-SA")
-    : Math.round(amount).toLocaleString("en-SA");
+    ? amount.toLocaleString("ar-SA")
+    : Math.round(amount).toLocaleString("ar-SA");
 
-  return `${formattedAmount} ر.س.`;
+  return `${formattedAmount} ر.س`;
 }

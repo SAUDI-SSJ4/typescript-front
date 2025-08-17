@@ -10,22 +10,38 @@ import CourseDetails from "@/pages/courses/[slug]";
 import LaunchAcademy from "@/pages/launch-academy";
 import EmployeeTraining from "@/pages/employee-training";
 import Ai from "@/pages/ai";
+import MockPayment from "@/pages/mock-payment";
+
 import { dashboardRoutes } from "./DashboardRoutes";
 import { authRoutes } from "./AuthRoutes";
 import { academyRoutes } from "./academy-routes";
+import { hasSubdomain } from "@/lib/subdomain";
 
 export const router = createBrowserRouter(
   createRoutesFromElements(
     <>
-      <Route index element={<Home />} />
-      <Route path="about" element={<About />} />
-      <Route path="courses/:courseSlug" element={<CourseDetails />} />
-      <Route path="launch-academy" element={<LaunchAcademy />} />
-      <Route path="ai" element={<Ai />} />
-      <Route path="employee-training" element={<EmployeeTraining />} />
-      {dashboardRoutes}
-      {authRoutes}
-      {academyRoutes}
+      {hasSubdomain() ? (
+        // Academy subdomain routes
+        <>
+          {academyRoutes}
+          {dashboardRoutes}
+        </>
+      ) : (
+        // Main application routes
+        <>
+          <Route index element={<Home />} />
+          <Route path="about" element={<About />} />
+          <Route path="courses/:courseSlug" element={<CourseDetails />} />
+          <Route path="launch-academy" element={<LaunchAcademy />} />
+          <Route path="ai" element={<Ai />} />
+          <Route path="employee-training" element={<EmployeeTraining />} />
+          <Route path="mock-payment" element={<MockPayment />} />
+
+          {dashboardRoutes}
+          {authRoutes}
+          {academyRoutes}
+        </>
+      )}
       <Route path="*" element={<NotFound />} />
     </>
   )

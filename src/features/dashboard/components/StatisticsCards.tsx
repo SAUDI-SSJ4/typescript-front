@@ -53,7 +53,7 @@ function StatisticsCards({ userType }: { userType: UserType }) {
   const studentCards: StatCard[] = [
     {
       id: "purchases",
-      title: "المشتريات المكتملة",
+      title: "المشتريات",
       value: "0",
       iconColor: "bg-pink-500",
       bgColor: "#c902790f",
@@ -76,13 +76,13 @@ function StatisticsCards({ userType }: { userType: UserType }) {
       percentage: "100.00%",
       bgColor: "",
       className: "bg-gradient-to-r from-purple-500 to-purple-600 text-white",
-      link: "/dashboard/affiliate-marketing",
+      link: "",
     },
   ];
   const baseCards: StatCard[] = [
     {
       id: "courses",
-      title: "الدورات التدريبية",
+      title: "المواد التعليمية",
       value: "0",
       iconColor: "bg-blue-500",
       bgColor: "#0062ff0f",

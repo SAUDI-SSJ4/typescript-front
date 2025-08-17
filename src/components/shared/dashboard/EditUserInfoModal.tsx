@@ -19,16 +19,23 @@ import { toast } from "sonner";
 import { userSchema, type UserFormData } from "@/validations/user";
 
 interface UserInfo {
-  name: string;
+  fname: string;
+  lname: string;
   email: string;
   phone: string;
-  avatar?: string;
-  coverImage?: string;
+  gender?: string;
+  avatar?: string | File;
+  coverImage?: string | File;
 }
 
 interface EditUserInfoModalProps {
   userInfo: UserInfo;
-  onSave: (updatedInfo: UserInfo) => void;
+  onSave: (
+    updatedInfo: Omit<UserInfo, "avatar" | "coverImage"> & {
+      avatar?: File;
+      coverImage?: File;
+    }
+  ) => void;
   trigger?: React.ReactNode;
 }
 
@@ -40,6 +47,36 @@ export function EditUserInfoModal({
   const [open, setOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
+  // إصلاح مشكلة VITE_API_URL
+  const getApiUrl = () => {
+    const envUrl = import.meta.env.VITE_API_URL;
+    if (!envUrl) {
+      console.warn("VITE_API_URL not defined, using default 127.0.0.1:8000");
+      return "http://127.0.0.1:8000";
+    }
+    
+    try {
+      new URL(envUrl);
+      return envUrl;
+    } catch (error) {
+      console.warn("Invalid VITE_API_URL, using default 127.0.0.1:8000:", error);
+      return "http://127.0.0.1:8000";
+    }
+  };
+
+  const apiUrl = getApiUrl();
+
+  // Function to create full image URL
+  const getImageUrl = (imagePath?: string) => {
+    if (!imagePath) return undefined;
+    try {
+      const origin = new URL(apiUrl).origin;
+      return `${origin}/static/${imagePath}`;
+    } catch {
+      return undefined;
+    }
+  };
+
   const {
     register,
     handleSubmit,
@@ -50,9 +87,11 @@ export function EditUserInfoModal({
   } = useForm<UserFormData>({
     resolver: zodResolver(userSchema),
     defaultValues: {
-      name: userInfo.name,
+      fname: userInfo.fname,
+      lname: userInfo.lname,
       email: userInfo.email,
       phone: userInfo.phone,
+      gender: (userInfo.gender as "male" | "female") || "male",
       avatar: userInfo.avatar || "",
       coverImage: userInfo.coverImage || "",
     },
@@ -86,16 +125,18 @@ export function EditUserInfoModal({
       // Simulate API call
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
-      const userInfo: UserInfo = {
-        name: data.name,
+      const userInfo = {
+        fname: data.fname,
+        lname: data.lname,
         email: data.email,
         phone: data.phone,
-        avatar: typeof data.avatar === "string" ? data.avatar : undefined,
+        gender: data.gender,
+        avatar: data.avatar instanceof File ? data.avatar : undefined,
         coverImage:
-          typeof data.coverImage === "string" ? data.coverImage : undefined,
+          data.coverImage instanceof File ? data.coverImage : undefined,
       };
 
-      onSave(userInfo);
+      onSave(userInfo as UserInfo & { avatar?: File; coverImage?: File });
       toast.success("تم تحديث المعلومات بنجاح!");
       setOpen(false);
     } catch (error) {
@@ -111,35 +152,9 @@ export function EditUserInfoModal({
     setOpen(false);
   };
 
-  const validateCoverImageDimensions = async (file: File): Promise<boolean> => {
-    return new Promise((resolve) => {
-      const img = new Image();
-      img.onload = () => {
-        // Cover image should be landscape and reasonably sized
-        const minWidth = 800; // Minimum width for cover
-        const minHeight = 300; // Minimum height for cover
-        const maxWidth = 2048; // Maximum width
-        const maxHeight = 1152; // Maximum height
-
-        // Also check aspect ratio (should be wider than tall for cover)
-        const aspectRatio = img.width / img.height;
-        const minAspectRatio = 2.0; // At least 2:1 ratio
-        const maxAspectRatio = 4.0; // Maximum 4:1 ratio
-
-        const isValidDimensions =
-          img.width >= minWidth &&
-          img.height >= minHeight &&
-          img.width <= maxWidth &&
-          img.height <= maxHeight &&
-          aspectRatio >= minAspectRatio &&
-          aspectRatio <= maxAspectRatio;
-
-        resolve(isValidDimensions);
-      };
-
-      img.onerror = () => resolve(false);
-      img.src = URL.createObjectURL(file);
-    });
+  const validateCoverImageDimensions = async (_file: File): Promise<boolean> => {
+    // No restrictions on cover image dimensions - accept any image
+    return true;
   };
 
   const handleAvatarChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -173,13 +188,13 @@ export function EditUserInfoModal({
       }
 
       // Validate dimensions
-      const isValidDimensions = await validateCoverImageDimensions(file);
-      if (!isValidDimensions) {
-        toast.error(
-          "أبعاد صورة الغلاف غير مناسبة. الحد الأدنى: 800x300 بكسل، الحد الأقصى: 2048x1152 بكسل، ونسبة العرض للارتفاع بين 2:1 و 4:1"
-        );
-        return;
-      }
+      // const isValidDimensions = await validateCoverImageDimensions(file);
+      // if (!isValidDimensions) {
+      //   toast.error(
+      //     "أبعاد صورة الغلاف غير مناسبة. الحد الأدنى: 800x300 بكسل، الحد الأقصى: 2048x1152 بكسل، ونسبة العرض للارتفاع بين 2:1 و 4:1"
+      //   );
+      //   return;
+      // }
 
       const reader = new FileReader();
       reader.onload = (e) => {
@@ -219,12 +234,13 @@ export function EditUserInfoModal({
               className="relative cursor-pointer group h-32 bg-gradient-to-r from-gray-200 via-gray-100 to-gray-200 rounded-lg overflow-hidden"
               onClick={() => document.getElementById("cover-upload")?.click()}
             >
-              {watchedValues.coverImage ? (
+              {watchedValues.coverImage || userInfo.coverImage ? (
                 <img
                   src={
-                    typeof watchedValues.coverImage === "string"
+                    typeof watchedValues.coverImage === "string" &&
+                    watchedValues.coverImage
                       ? watchedValues.coverImage
-                      : ""
+                      : getImageUrl(typeof userInfo.coverImage === 'string' ? userInfo.coverImage : '') || ""
                   }
                   alt="Cover"
                   className="w-full h-full object-cover transition-all duration-200 group-hover:opacity-80"
@@ -259,16 +275,17 @@ export function EditUserInfoModal({
               <Avatar className="w-24 h-24 transition-all duration-200 group-hover:opacity-80">
                 <AvatarImage
                   src={
-                    typeof watchedValues.avatar === "string"
+                    typeof watchedValues.avatar === "string" &&
+                    watchedValues.avatar
                       ? watchedValues.avatar
-                      : userInfo.avatar
+                      : getImageUrl(typeof userInfo.avatar === 'string' ? userInfo.avatar : '') || undefined
                   }
                   alt="Profile"
                 />
                 <AvatarFallback className="bg-gray-200 text-gray-600 text-2xl">
-                  {watchedValues.name
-                    ? watchedValues.name.charAt(0)
-                    : userInfo.name.charAt(0)}
+                  {watchedValues.fname
+                    ? watchedValues.fname.charAt(0)
+                    : userInfo.fname?.charAt(0) || "?"}
                 </AvatarFallback>
               </Avatar>
               <div className="absolute bottom-0 right-0 bg-blue-500 hover:bg-blue-600 text-white rounded-full p-2 transition-colors">
@@ -293,65 +310,112 @@ export function EditUserInfoModal({
             onSubmit={handleSubmit(handleFormSubmit)}
             className="space-y-4"
           >
-            <div className="text-right">
-              <Label
-                htmlFor="name"
-                className="block text-sm font-medium text-gray-700 mb-2"
-              >
-                الاسم الكامل
-              </Label>
-              <Input
-                id="name"
-                type="text"
-                {...register("name")}
-                className="text-right"
-                placeholder="أدخل اسمك الكامل"
-              />
-              {errors.name && (
-                <p className="text-red-500 text-sm mt-1 text-right">
-                  {errors.name.message}
-                </p>
-              )}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="text-right">
+                <Label
+                  htmlFor="fname"
+                  className="block text-sm font-medium text-gray-700 mb-2"
+                >
+                  الاسم الأول
+                </Label>
+                <Input
+                  id="fname"
+                  type="text"
+                  {...register("fname")}
+                  className="text-right"
+                  placeholder="أدخل اسمك الأول"
+                />
+                {errors.fname && (
+                  <p className="text-red-500 text-sm mt-1 text-right">
+                    {errors.fname.message}
+                  </p>
+                )}
+              </div>
+
+              <div className="text-right">
+                <Label
+                  htmlFor="lname"
+                  className="block text-sm font-medium text-gray-700 mb-2"
+                >
+                  اسم العائلة
+                </Label>
+                <Input
+                  id="lname"
+                  type="text"
+                  {...register("lname")}
+                  className="text-right"
+                  placeholder="أدخل اسم العائلة"
+                />
+                {errors.lname && (
+                  <p className="text-red-500 text-sm mt-1 text-right">
+                    {errors.lname.message}
+                  </p>
+                )}
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="text-right">
+                <Label
+                  htmlFor="email"
+                  className="block text-sm font-medium text-gray-700 mb-2"
+                >
+                  البريد الإلكتروني
+                </Label>
+                <Input
+                  id="email"
+                  type="email"
+                  {...register("email")}
+                  className="text-right"
+                  placeholder="أدخل بريدك الإلكتروني"
+                />
+                {errors.email && (
+                  <p className="text-red-500 text-sm mt-1 text-right">
+                    {errors.email.message}
+                  </p>
+                )}
+              </div>
+
+              <div className="text-right">
+                <Label
+                  htmlFor="phone"
+                  className="block text-sm font-medium text-gray-700 mb-2"
+                >
+                  رقم الهاتف
+                </Label>
+                <Input
+                  id="phone"
+                  type="tel"
+                  {...register("phone")}
+                  className="text-right"
+                  placeholder="أدخل رقم هاتفك"
+                />
+                {errors.phone && (
+                  <p className="text-red-500 text-sm mt-1 text-right">
+                    {errors.phone.message}
+                  </p>
+                )}
+              </div>
             </div>
 
             <div className="text-right">
               <Label
-                htmlFor="email"
+                htmlFor="gender"
                 className="block text-sm font-medium text-gray-700 mb-2"
               >
-                البريد الإلكتروني
+                الجنس
               </Label>
-              <Input
-                id="email"
-                type="email"
-                {...register("email")}
-                className="text-right"
-                placeholder="أدخل بريدك الإلكتروني"
-              />
-              {errors.email && (
-                <p className="text-red-500 text-sm mt-1 text-right">
-                  {errors.email.message}
-                </p>
-              )}
-            </div>
-
-            <div className="text-right">
-              <Label
-                htmlFor="phone"
-                className="block text-sm font-medium text-gray-700 mb-2"
+              <select
+                id="gender"
+                {...register("gender")}
+                className="w-full p-2 border border-gray-300 rounded-md text-right bg-white"
               >
-                رقم الهاتف
-              </Label>
-              <Input
-                id="phone"
-                type="tel"
-                {...register("phone")}
-                className="text-right"
-                placeholder="أدخل رقم هاتفك"
-              />
-              {errors.phone && (
+                <option value="male">ذكر</option>
+                <option value="female">أنثى</option>
+              </select>
+              {errors.gender && (
                 <p className="text-red-500 text-sm mt-1 text-right">
-                  {errors.phone.message}
+                  {errors.gender.message}
                 </p>
               )}
             </div>

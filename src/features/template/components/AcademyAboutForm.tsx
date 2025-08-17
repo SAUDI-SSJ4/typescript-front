@@ -4,59 +4,73 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import ImageField from "@/components/shared/formFields/image-field";
-import TextareaField from "@/components/shared/formFields/textarea-field";
 import {
   academyAboutSchema,
   type AcademyAboutForm as AcademyAboutFormType,
 } from "@/validations/template";
 import { Input } from "@/components/ui/input";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Info, Settings, Image as ImageIcon, CheckCircle, Loader2 } from "lucide-react";
+import { Info, Image as ImageIcon, CheckCircle, Loader2 } from "lucide-react";
+import { useAcademyAboutMutation } from "../hooks/useAboutMutations";
+import type { About, AboutPayload } from "@/types/academy/about";
+import Editor from "@/components/shared/Editor";
+import RemoteImage from "@/components/shared/RemoteImage";
 
-const AcademyAboutForm = () => {
-  const [hasUserChanges, setHasUserChanges] = useState(false);
-
+const AcademyAboutForm = ({ about }: { about: About }) => {
+  const academyAboutMutation = useAcademyAboutMutation();
+  const [currentSliderId, setCurrentSliderId] = useState<string | null>(null);
+  const [isChangingImage, setIsChangingImage] = useState(false);
   const {
     control,
     handleSubmit,
-    formState: { errors, isValid, isDirty, isSubmitting },
+    formState: { errors, isSubmitting },
     reset,
   } = useForm<AcademyAboutFormType>({
     resolver: zodResolver(academyAboutSchema),
     defaultValues: {
-      title: "",
-      subtitle: "",
-      description: "",
-      featureOne: "",
-      featureTwo: "",
+      title: about.title || "",
+      content: about.content || "",
+      feature_one: about.feature_one || "",
+      feature_two: about.feature_two || "",
     },
     mode: "onChange",
   });
 
-  // Track when user actually makes changes (after initial render)
-  useEffect(() => {
-    if (isDirty) {
-      setHasUserChanges(true);
-    }
-  }, [isDirty]);
-
   const onSubmit = async (data: AcademyAboutFormType) => {
-    // Handle form submission logic here
-    console.log("Form submitted with data:", data);
-    // You can call your API or perform any other actions here
+    try {
+      const payload: AboutPayload = {
+        title: data.title,
+        content: data.content,
+        feature_one: data.feature_one,
+        feature_two: data.feature_two,
+      };
 
-    // After successful submission, reset the user changes flag
-    setHasUserChanges(false);
+      // Include image if it exists
+      if (data.image) {
+        payload.image = data.image;
+      }
+
+      if (currentSliderId) {
+        // Update existing about section
+        await academyAboutMutation.mutateAsync(payload);
+      } else {
+        // Create new about section
+        const response = await academyAboutMutation.mutateAsync(payload);
+        if (response.data?.id) {
+          setCurrentSliderId(response.data.id.toString());
+        }
+      }
+    } catch (error) {
+      console.error("Error submitting form:", error);
+    }
   };
 
   const handleReset = () => {
     reset();
-    setHasUserChanges(false);
   };
 
-  const formLoading = isSubmitting;
+  const formLoading = isSubmitting || academyAboutMutation.isPending;
 
   return (
     <div className="space-y-6" dir="rtl">
@@ -65,15 +79,13 @@ const AcademyAboutForm = () => {
         <div className="flex items-center gap-3">
           <Info className="w-5 h-5 text-blue-600" />
           <div>
-            <h2 className="text-base font-semibold text-gray-900">تحرير قسم "من نحن"</h2>
-            <p className="text-sm text-gray-600">قم بتخصيص المعلومات التعريفية لأكاديميتك</p>
+            <h2 className="text-base font-semibold text-gray-900">
+              تحرير قسم "من نحن"
+            </h2>
+            <p className="text-sm text-gray-600">
+              قم بتخصيص المعلومات التعريفية لأكاديميتك
+            </p>
           </div>
-          {hasUserChanges && (
-            <Badge variant="outline" className="bg-amber-50 text-amber-700 border-amber-200 mr-auto">
-              <Settings className="w-3 h-3 ml-1" />
-              يوجد تغييرات غير محفوظة
-            </Badge>
-          )}
         </div>
       </div>
 
@@ -96,54 +108,12 @@ const AcademyAboutForm = () => {
                   control={control}
                   name="title"
                   render={({ field: { onChange, value } }) => (
-                    <Input
-                      type="text"
-                      value={value || ""}
-                      onChange={onChange}
-                      placeholder="أدخل العنوان الجذاب"
-                      disabled={formLoading}
-                      className={`${
-                        errors.title
-                          ? "border-destructive focus-visible:border-destructive focus-visible:ring-destructive/20"
-                          : "!border-border !shadow-none focus-visible:ring-0 focus-visible:border-border"
-                      } h-10 !bg-transparent`}
-                      dir="rtl"
-                    />
+                    <Editor value={value || ""} onChange={onChange} />
                   )}
                 />
                 {errors.title && (
                   <p className="text-sm text-destructive">
                     {errors.title.message}
-                  </p>
-                )}
-              </div>
-
-              <div className="space-y-2">
-                <Label className="text-sm font-medium text-card-foreground">
-                  العنوان الفرعي
-                </Label>
-                <Controller
-                  control={control}
-                  name="subtitle"
-                  render={({ field: { onChange, value } }) => (
-                    <Input
-                      type="text"
-                      value={value || ""}
-                      onChange={onChange}
-                      placeholder="أدخل العنوان الفرعي"
-                      disabled={formLoading}
-                      className={`${
-                        errors.subtitle
-                          ? "border-destructive focus-visible:border-destructive focus-visible:ring-destructive/20"
-                          : "!border-border !shadow-none focus-visible:ring-0 focus-visible:border-border"
-                      } h-10 !bg-transparent`}
-                      dir="rtl"
-                    />
-                  )}
-                />
-                {errors.subtitle && (
-                  <p className="text-sm text-destructive">
-                    {errors.subtitle.message}
                   </p>
                 )}
               </div>
@@ -165,7 +135,7 @@ const AcademyAboutForm = () => {
                 </Label>
                 <Controller
                   control={control}
-                  name="featureOne"
+                  name="feature_one"
                   render={({ field: { onChange, value } }) => (
                     <Input
                       type="text"
@@ -174,7 +144,7 @@ const AcademyAboutForm = () => {
                       placeholder="مثال: +500 طالب"
                       disabled={formLoading}
                       className={`${
-                        errors.featureOne
+                        errors.feature_one
                           ? "border-destructive focus-visible:border-destructive focus-visible:ring-destructive/20"
                           : "!border-border !shadow-none focus-visible:ring-0 focus-visible:border-border"
                       } h-10 !bg-transparent`}
@@ -182,9 +152,9 @@ const AcademyAboutForm = () => {
                     />
                   )}
                 />
-                {errors.featureOne && (
+                {errors.feature_one && (
                   <p className="text-sm text-destructive">
-                    {errors.featureOne.message}
+                    {errors.feature_one.message}
                   </p>
                 )}
               </div>
@@ -195,7 +165,7 @@ const AcademyAboutForm = () => {
                 </Label>
                 <Controller
                   control={control}
-                  name="featureTwo"
+                  name="feature_two"
                   render={({ field: { onChange, value } }) => (
                     <Input
                       type="text"
@@ -204,7 +174,7 @@ const AcademyAboutForm = () => {
                       placeholder="مثال: +50 دورة"
                       disabled={formLoading}
                       className={`${
-                        errors.featureTwo
+                        errors.feature_two
                           ? "border-destructive focus-visible:border-destructive focus-visible:ring-destructive/20"
                           : "!border-border !shadow-none focus-visible:ring-0 focus-visible:border-border"
                       } h-10 !bg-transparent`}
@@ -212,16 +182,15 @@ const AcademyAboutForm = () => {
                     />
                   )}
                 />
-                {errors.featureTwo && (
+                {errors.feature_two && (
                   <p className="text-sm text-destructive">
-                    {errors.featureTwo.message}
+                    {errors.feature_two.message}
                   </p>
                 )}
               </div>
             </CardContent>
           </Card>
 
-          {/* Hero Image */}
           <Card className="shadow-sm border-0">
             <CardHeader className="pb-3">
               <CardTitle className="flex items-center gap-2 text-gray-800 text-sm font-medium">
@@ -231,21 +200,60 @@ const AcademyAboutForm = () => {
             </CardHeader>
             <CardContent>
               <div className="space-y-2">
-                <ImageField
-                  name="heroImage"
-                  type="image"
-                  label=""
-                  placeholder="اختر الصورة الرئيسية"
-                  control={control as unknown as Control<Record<string, unknown>>}
-                  errors={errors}
-                  disabled={formLoading}
-                />
+                {about.image && !isChangingImage ? (
+                  <div className="space-y-3">
+                    <div className="relative">
+                      <RemoteImage
+                        prefix="static"
+                        src={about.image}
+                        alt="About Image"
+                        className="w-full h-40 object-cover rounded-lg border"
+                      />
+                    </div>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setIsChangingImage(true)}
+                      disabled={formLoading}
+                      className="w-full"
+                    >
+                      تغيير الصورة
+                    </Button>
+                  </div>
+                ) : (
+                  <div className="space-y-3">
+                    <ImageField
+                      name="image"
+                      type="image"
+                      label=""
+                      placeholder="اختر الصورة الرئيسية"
+                      control={
+                        control as unknown as Control<Record<string, unknown>>
+                      }
+                      errors={errors}
+                      disabled={formLoading}
+                    />
+                    {about.image && isChangingImage && (
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => setIsChangingImage(false)}
+                        disabled={formLoading}
+                        className="w-full"
+                      >
+                        إلغاء التغيير
+                      </Button>
+                    )}
+                  </div>
+                )}
               </div>
             </CardContent>
           </Card>
         </div>
 
-        {/* Description - Second Row */}
+        {/* content - Second Row */}
         <Card className="shadow-sm border-0">
           <CardHeader className="pb-3">
             <CardTitle className="flex items-center gap-2 text-gray-800 text-sm font-medium">
@@ -254,27 +262,24 @@ const AcademyAboutForm = () => {
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-2">
-            <TextareaField
-              name="description"
-              type="textarea"
-              label=""
-              placeholder="اكتب وصفاً شاملاً عن الأكاديمية، رؤيتها، رسالتها، والخدمات التي تقدمها..."
+            <Controller
               control={control}
-              errors={errors}
-              disabled={formLoading}
-              rows={6}
-              maxLength={1000}
+              name="content"
+              render={({ field: { onChange, value } }) => (
+                <Editor value={value || ""} onChange={onChange} />
+              )}
             />
+            {errors.content && (
+              <p className="text-sm text-destructive">
+                {errors.content.message}
+              </p>
+            )}
           </CardContent>
         </Card>
 
         {/* Form Actions */}
         <div className="flex justify-start gap-3 pt-4 border-t border-gray-100">
-          <Button
-            type="submit"
-            disabled={!isValid || isSubmitting || !hasUserChanges}
-            className="px-6"
-          >
+          <Button type="submit" disabled={isSubmitting} className="px-6">
             {isSubmitting ? (
               <>
                 <Loader2 className="w-4 h-4 ml-2 animate-spin" />
@@ -291,7 +296,7 @@ const AcademyAboutForm = () => {
             type="button"
             variant="outline"
             onClick={handleReset}
-            disabled={isSubmitting || !hasUserChanges}
+            disabled={isSubmitting}
             className="px-6"
           >
             إلغاء التغييرات

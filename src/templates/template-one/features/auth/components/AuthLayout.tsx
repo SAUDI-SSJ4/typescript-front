@@ -1,18 +1,33 @@
-import { Outlet, Link } from "react-router-dom";
+import { Outlet, Link, useParams, Navigate } from "react-router-dom";
+import { useAcademy } from "../../home/hooks/useAcademyQueries";
+import { Routes } from "@/constants/enums";
+import RemoteImage from "@/components/shared/RemoteImage";
 
 function AuthLayout() {
+  const { academySlug } = useParams();
+  const subdomain = window.location.hostname.split(".")[0];
+  const { data: academyInfo, isPending } = useAcademy({
+    slug: academySlug,
+    subdomain: subdomain,
+  });
+  if (!isPending && !academyInfo) {
+    return <Navigate to={Routes.ROOT} state={{ from: location }} replace />;
+  }
   return (
     <main className="min-h-screen grid grid-cols-1 lg:grid-cols-2">
       <div className="hidden lg:block relative">
-        <div className="absolute inset-0 rounded-bl-[200px] bg-black/60">
-          <div className="absolute left-20 top-10 z-10">
-            <img
-              src="https://www.sayan-server.com/storage/academy/image/uqeh6BuRGvAmQ8tdvoGa.png"
-              alt="Sayan Logo"
-              loading="eager"
-              className="h-[75px] object-cover"
-            />
-          </div>
+        <div className="absolute inset-0 rounded-bl-[200px] bg-primary">
+          {academyInfo?.data.settings.logo && (
+            <div className="absolute left-20 top-10 z-10">
+              <RemoteImage
+                src={academyInfo?.data.settings.logo}
+                alt="Sayan Logo"
+                loading="eager"
+                className="h-32 w-32 object-cover"
+              />
+            </div>
+          )}
+
           <div className="absolute right-10 bottom-10 z-10">
             <Navbar />
           </div>

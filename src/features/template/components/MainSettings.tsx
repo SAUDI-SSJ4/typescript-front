@@ -1,12 +1,25 @@
 import { Settings } from "lucide-react";
 import AcademySettingsForm from "./AcademyMainSettingsForm";
+import { Loader } from "@/components/shared";
+import { useAcademyMainSettings } from "../hooks/useMainSettingsQueries";
 
 function MainSettings() {
+  const { data: mainSettings, isPending } = useAcademyMainSettings();
+  if (isPending) {
+    return (
+      <div className="element-center">
+        <Loader />
+      </div>
+    );
+  }
   return (
-    <div className="space-y-6">
-      <Header />
-      <AcademySettingsForm />
-    </div>
+    !isPending &&
+    mainSettings && (
+      <div className="space-y-6">
+        <Header />
+        <AcademySettingsForm mainSettings={mainSettings.data} />
+      </div>
+    )
   );
 }
 

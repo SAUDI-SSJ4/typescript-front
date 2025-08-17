@@ -34,7 +34,7 @@ const PhoneField = ({
         control={control}
         name={name}
         render={({ field: { onChange, value } }) => (
-          <div className="relative" dir="rtl">
+          <div className="relative" dir="ltr">
             <PhoneInput
               international
               country={selectedCountry as "SA"}
@@ -53,7 +53,6 @@ const PhoneField = ({
               }}
               disabled={disabled || false}
               placeholder={placeholder || ""}
-              dir="rtl"
               className={cn(
                 "flex h-10 w-full rounded-md border bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
                 hasError && "border-destructive focus-visible:ring-destructive",
@@ -67,9 +66,8 @@ const PhoneField = ({
               )}
               numberInputProps={{
                 className:
-                  "!border-none !outline-none !ring-0 !bg-transparent flex-1 text-sm pr-2 text-right",
+                  "!border-none !outline-none !ring-0 !bg-transparent flex-1 text-sm pr-2",
                 autoFocus: autoFocus,
-                dir: "rtl",
               }}
               countrySelectProps={{
                 className:

@@ -69,16 +69,18 @@ function AiFeatures() {
   ];
 
   return (
-    <section className="py-14 sm:py-20 relative">
-      <div
-        style={{
-          rotate: "-180deg",
-          background:
-            "linear-gradient(136.72deg, rgba(0, 255, 206, 0.1) -16.9%, rgba(255, 255, 255, 0.173594) 34.08%, rgba(255, 255, 255, 0) 135.36%)",
-        }}
-        className="absolute inset-0 z-[-1]"
-      ></div>
-      <div className="container mx-auto px-4">
+    <section className="py-16 md:py-20 relative">
+      <div className="container">
+        {/* Section Header */}
+        <div className="text-center mb-12">
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-6">
+            <span className="text-blue-600">مميزات</span> الذكاء الاصطناعي
+          </h2>
+          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+            اكتشف كيف يحسن الذكاء الاصطناعي تجربة التعليم والتعلم في منصة سيان
+          </p>
+        </div>
+
         {/* Features Grid */}
         <Features features={features} />
       </div>

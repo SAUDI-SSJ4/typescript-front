@@ -1,4 +1,5 @@
 import { buttonVariants } from "@/components/ui/button";
+import { hasSubdomain } from "@/lib/subdomain";
 import { Link, useParams } from "react-router-dom";
 
 interface AuthLinksProps {
@@ -6,11 +7,12 @@ interface AuthLinksProps {
 }
 
 export default function AuthLinks({ className = "" }: AuthLinksProps) {
-  const { academySlug } = useParams();
+  const { academySlug } = useParams<{ academySlug?: string }>();
+  const academyPath = hasSubdomain() ? "" : `/academy/${academySlug}`;
   return (
     <div className={`hidden lg:flex items-center gap-6 ${className}`}>
       <Link
-        to={`/academy/${academySlug}/auth/signin`}
+        to={`${academyPath}/auth/signin`}
         className={`${buttonVariants({
           variant: "secondary",
         })} !text-lg !font-medium border border-border hover:border-primary hover:text-primary transition-colors`}
@@ -18,7 +20,7 @@ export default function AuthLinks({ className = "" }: AuthLinksProps) {
         دخول
       </Link>
       <Link
-        to={`/academy/${academySlug}/auth/signup`}
+        to={`${academyPath}/auth/signup`}
         className={`${buttonVariants({ size: "lg" })} !font-bold`}
       >
         حساب جديد

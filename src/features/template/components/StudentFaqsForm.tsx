@@ -13,21 +13,31 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Plus, CheckCircle } from "lucide-react";
+import { useCreateFAQ } from "../hooks/useFAQsMutations";
 
 const StudentFaqsForm = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [question, setQuestion] = useState("");
   const [answer, setAnswer] = useState("");
+  
+  const createFAQMutation = useCreateFAQ();
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (question.trim() && answer.trim()) {
-      // Handle form submission logic here
-      console.log("FAQ Data:", { question: question.trim(), answer: answer.trim() });
-      
-      // Reset form and close dialog
-      setQuestion("");
-      setAnswer("");
-      setIsOpen(false);
+      try {
+        await createFAQMutation.mutateAsync({
+          question: question.trim(),
+          answer: answer.trim(),
+        });
+        
+        // Reset form and close dialog
+        setQuestion("");
+        setAnswer("");
+        setIsOpen(false);
+      } catch (error) {
+        // Error handling is done in the mutation hook
+        console.error("Error creating FAQ:", error);
+      }
     }
   };
 
@@ -95,11 +105,11 @@ const StudentFaqsForm = () => {
           <Button
             type="button"
             onClick={handleSubmit}
-            disabled={!question.trim() || !answer.trim()}
+            disabled={!question.trim() || !answer.trim() || createFAQMutation.isPending}
             className="flex-1 gap-2"
           >
             <CheckCircle className="w-4 h-4" />
-            إضافة السؤال
+            {createFAQMutation.isPending ? "جاري الحفظ..." : "إضافة السؤال"}
           </Button>
         </DialogFooter>
       </DialogContent>

@@ -1,0 +1,10 @@
+echo "🚀 Running pre-commit checks..."
+echo "📦 Building project (TypeScript errors will be warnings)..."
+yarn build:force
+
+if [ $? -eq 0 ]; then
+  echo "✅ Pre-commit checks passed!"
+else
+  echo "❌ Build failed! Please fix the errors before committing."
+  exit 1
+fi

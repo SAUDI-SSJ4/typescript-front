@@ -7,12 +7,7 @@ import { trainerSchema, type ITrainerForm } from "@/validations/trainer";
 import { toast } from "sonner";
 import { Save, Trash2 } from "lucide-react";
 import { useEffect, useCallback } from "react";
-
-interface AddTrainerFormProps {
-  onSubmit?: (data: ITrainerForm) => void;
-  onCancel?: () => void;
-  isLoading?: boolean;
-}
+import { trainersApi } from "../services/trainersApi";
 
 const FORM_DATA_KEY = "addTrainerForm_draft";
 
@@ -44,18 +39,16 @@ const removeFromLocalStorage = (key: string) => {
   }
 };
 
-const AddTrainerForm = ({
-  onSubmit,
-  onCancel,
-  isLoading = false,
-}: AddTrainerFormProps) => {
+const AddTrainerForm = () => {
   const getSavedFormData = useCallback(() => {
     const savedData = getFromLocalStorage(FORM_DATA_KEY);
     return (
       savedData || {
-        name: "",
+        fname: "",
+        lname: "",
         email: "",
         phone: "",
+        image: null,
       }
     );
   }, []);
@@ -76,7 +69,7 @@ const AddTrainerForm = ({
     defaultValues: getSavedFormData(),
   });
 
-  const formLoading = isSubmitting || isLoading;
+  const formLoading = isSubmitting;
   const watchedValues = watch();
 
   useEffect(() => {
@@ -95,28 +88,22 @@ const AddTrainerForm = ({
     }
   }, [clearDraftData, getSavedFormData, reset]);
 
-  useEffect(() => {
-    const savedData = getFromLocalStorage(FORM_DATA_KEY);
-    if (
-      savedData &&
-      Object.keys(savedData).some((key) => savedData[key] !== "")
-    ) {
-      toast.info("تم استعادة المسودة المحفوظة مسبقاً", {
-        duration: 5000,
-        action: {
-          label: "بدء من جديد",
-          onClick: () => handleClearDraft(),
-        },
-      });
-    }
-  }, [handleClearDraft]);
-
   const handleFormSubmit = async (data: ITrainerForm) => {
     try {
-      console.log("Trainer Form Data:", data);
+      // Create trainer payload
+      const trainerPayload = {
+        fname: data.fname,
+        lname: data.lname,
+        email: data.email,
+        phone_number: data.phone,
+        image: data.image || null,
+      };
+
+      // Send API request
+      await trainersApi.createTrainer(trainerPayload);
+
       toast.success("تم إضافة المدرب بنجاح!");
       clearDraftData();
-      onSubmit?.(data);
     } catch (error) {
       console.error("Error creating trainer:", error);
       toast.error("حدث خطأ أثناء إضافة المدرب");
@@ -131,7 +118,6 @@ const AddTrainerForm = ({
     ) {
       clearDraftData();
       reset();
-      onCancel?.();
     }
   };
 
@@ -158,8 +144,8 @@ const AddTrainerForm = ({
         </div>
 
         <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="md:col-span-2">
+          <div className="flex flex-row gap-4 items-start">
+            <div className="w-1/5">
               <FormFields
                 name="image"
                 label="الصورة الشخصية"
@@ -180,19 +166,31 @@ const AddTrainerForm = ({
               />
             </div>
 
-            <div>
+            <div className="w-1/5">
               <FormFields
-                name="name"
-                label="اسم المدرب"
+                name="fname"
+                label="الاسم الأول"
                 type="text"
-                placeholder="أدخل اسم المدرب الكامل"
+                placeholder="أدخل الاسم الأول"
                 control={control}
                 errors={errors}
                 disabled={formLoading}
               />
             </div>
 
-            <div>
+            <div className="w-1/5">
+              <FormFields
+                name="lname"
+                label="اسم العائلة"
+                type="text"
+                placeholder="أدخل اسم العائلة"
+                control={control}
+                errors={errors}
+                disabled={formLoading}
+              />
+            </div>
+
+            <div className="w-1/5">
               <FormFields
                 name="email"
                 label="البريد الإلكتروني"
@@ -204,7 +202,7 @@ const AddTrainerForm = ({
               />
             </div>
 
-            <div className="md:col-span-2">
+            <div className="w-1/5">
               <FormFields
                 name="phone"
                 label="رقم الهاتف"

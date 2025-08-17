@@ -1,33 +1,40 @@
 import { Star } from "lucide-react";
 import StudentReviewForm from "./StudentReviewForm";
 import StudentReviewsTable from "./StudentReviewsTable";
+import { useOpinions } from "../hooks/useOpinionsQueries";
+import { Loader } from "@/components/shared";
 
 function StudentReviews() {
+  const { data: opinionsResponse, isLoading, error } = useOpinions(0, 100);
+
+  if (isLoading) {
+    return (
+      <div className="space-y-6">
+        <Header />
+        <div className="flex justify-center py-10">
+          <Loader />
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="space-y-6">
+        <Header />
+        <div className="text-center py-10 text-red-500">
+          حدث خطأ أثناء جلب آراء الطلبة
+        </div>
+      </div>
+    );
+  }
+
+  const opinions = opinionsResponse?.data.opinions || [];
+
   return (
     <div className="space-y-6">
       <Header />
-      <StudentReviewsTable
-        reviews={[
-          {
-            student_name: "أحمد محمد",
-            comment: "دورة رائعة! تعلمت الكثير.",
-            rating: 5,
-            image: "https://avatars.githubusercontent.com/u/87553297?v=4",
-          },
-          {
-            student_name: "سارة علي",
-            comment: "المحتوى كان مفيدًا جدًا.",
-            rating: 4,
-            image: "https://avatars.githubusercontent.com/u/87553297?v=4",
-          },
-          {
-            student_name: "محمد حسن",
-            comment: "تجربة تعليمية ممتازة.",
-            rating: 5,
-            image: "https://avatars.githubusercontent.com/u/87553297?v=4",
-          },
-        ]}
-      />
+      <StudentReviewsTable reviews={opinions} />
     </div>
   );
 }

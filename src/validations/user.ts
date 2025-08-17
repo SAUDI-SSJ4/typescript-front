@@ -37,10 +37,15 @@ const createImageValidation = (
 };
 
 export const userSchema = z.object({
-  name: z
+  fname: z
     .string()
-    .min(2, "الاسم يجب أن يكون أطول من حرفين")
-    .max(50, "الاسم يجب أن يكون أقل من 50 حرف")
+    .min(2, "الاسم الأول يجب أن يكون أطول من حرفين")
+    .max(50, "الاسم الأول يجب أن يكون أقل من 50 حرف")
+    .regex(/^[\u0600-\u06FF\s\w]+$/, "الاسم يجب أن يحتوي على حروف صحيحة فقط"),
+  lname: z
+    .string()
+    .min(2, "اسم العائلة يجب أن يكون أطول من حرفين")
+    .max(50, "اسم العائلة يجب أن يكون أقل من 50 حرف")
     .regex(/^[\u0600-\u06FF\s\w]+$/, "الاسم يجب أن يحتوي على حروف صحيحة فقط"),
   email: z
     .string()
@@ -51,14 +56,17 @@ export const userSchema = z.object({
     .min(10, "رقم الهاتف يجب أن يكون على الأقل 10 أرقام")
     .max(15, "رقم الهاتف يجب أن يكون أقل من 15 رقم")
     .regex(/^[+]?[\d\s-()]+$/, "رقم الهاتف غير صحيح"),
+  gender: z
+    .enum(["male", "female"], {
+      errorMap: () => ({ message: "الجنس مطلوب" }),
+    }),
   avatar: createImageValidation(
     2, // 2MB max
     ["image/jpeg", "image/jpg", "image/png", "image/webp"]
   ),
-  coverImage: createImageValidation(
-    5, // 5MB max
-    ["image/jpeg", "image/jpg", "image/png", "image/webp"]
-  ),
+  coverImage: z
+    .union([z.string(), z.instanceof(File)])
+    .optional(),
 });
 
 // Separate validation schemas for different use cases
@@ -70,7 +78,8 @@ export const userProfileSchema = userSchema.extend({
 });
 
 export const userRegistrationSchema = userSchema.required({
-  name: true,
+  fname: true,
+  lname: true,
   email: true,
   phone: true,
 });

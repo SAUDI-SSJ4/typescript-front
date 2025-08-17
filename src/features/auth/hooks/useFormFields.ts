@@ -20,6 +20,18 @@ const useFormFields = ({ slug }: IFormFieldsVariables) => {
 
   const signupFields = (): IFormField[] => [
     {
+      label: "الاسم الاول",
+      name: "fname",
+      type: "text",
+      placeholder: "أدخل اسمك الأول",
+    },
+    {
+      label: "الاسم الاخير",
+      name: "lname",
+      type: "text",
+      placeholder: "أدخل اسمك الأخير",
+    },
+    {
       label: "نوع الحساب",
       name: "user_type",
       type: "select",
@@ -36,15 +48,10 @@ const useFormFields = ({ slug }: IFormFieldsVariables) => {
       type: "image",
       placeholder: "اختر صورة شخصية",
     },
-    {
-      label: "الاسم",
-      name: "name",
-      type: "text",
-      placeholder: "أدخل اسمك الكامل",
-    },
+
     {
       label: "رقم الهاتف",
-      name: "phone",
+      name: "phone_number",
       type: "phone",
       placeholder: "أدخل رقم هاتفك",
     },
@@ -94,6 +101,28 @@ const useFormFields = ({ slug }: IFormFieldsVariables) => {
     },
   ];
 
+  const verifyAccountFields = (): IFormField[] => [
+    {
+      label: "رمز التحقق",
+      name: "otp",
+      type: "otp",
+      autoFocus: true,
+    },
+  ];
+  const signinWithGoogleFields = (): IFormField[] => [
+    {
+      label: "نوع الحساب",
+      name: "user_type",
+      type: "select",
+      placeholder: "اختر نوع حسابك",
+      autoFocus: true,
+      options: [
+        { value: UserType.STUDENT, label: "طالب" },
+        { value: UserType.ACADEMY, label: "أكاديمية" },
+      ],
+    },
+  ];
+
   const getFormFields = (): IFormField[] => {
     switch (slug) {
       case Pages.SIGNIN:
@@ -104,6 +133,10 @@ const useFormFields = ({ slug }: IFormFieldsVariables) => {
         return forgotFields();
       case Pages.RESET_PASSWORD:
         return resetFields();
+      case Pages.VERIFY_ACCOUNT:
+        return verifyAccountFields();
+      case Pages.SIGNIN_WITH_GOOGLE:
+        return signinWithGoogleFields();
 
       default:
         return [];

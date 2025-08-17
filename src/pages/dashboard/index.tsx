@@ -3,15 +3,27 @@ import StatisticsCards from "@/features/dashboard/components/StatisticsCards";
 import StudentDashboard from "@/features/dashboard/components/StudentDashboard";
 import AcademyDashboard from "@/features/dashboard/components/AcademyDashboard";
 import { LayoutDashboard } from "lucide-react";
-
-const userType = UserType.ACADEMY;
+import { useAuthStore } from "@/features/auth/store";
+import { Loader } from "@/components/shared";
 
 function Dashboard() {
+  const { user, isAuthenticated } = useAuthStore();
+
+  const userType = user?.user_type || UserType.STUDENT;
+
+  if (!isAuthenticated || !user) {
+    return (
+      <div className="element-center">
+        <Loader />
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-6">
       <Header />
-      <StatisticsCards userType={userType} />
-      {userType === UserType.ACADEMY ? (
+      <StatisticsCards userType={user.user_type} />
+      {user.user_type === UserType.ACADEMY ? (
         <AcademyDashboard />
       ) : (
         <StudentDashboard />
@@ -28,9 +40,7 @@ function Header() {
       <div className="flex flex-col sm:flex-row sm:items-center gap-3 lg:gap-4">
         <div className="flex items-center gap-2 text-gray-600">
           <LayoutDashboard className="w-5 h-5 text-blue-600" />
-          <span className="font-medium text-sm lg:text-base">
-            لوحة التحكم
-          </span>
+          <span className="font-medium text-sm lg:text-base">لوحة التحكم</span>
         </div>
       </div>
     </div>

@@ -5,6 +5,9 @@ import HomeLayout from "../features/home/components/HomeLayout";
 import Testimonials from "../features/home/components/Testimonials";
 import { motion } from "framer-motion";
 import Courses from "../features/home/components/Courses";
+import { Navigate, useParams } from "react-router-dom";
+import { useAcademy } from "../features/home/hooks/useAcademyQueries";
+import { Routes } from "@/constants/enums";
 import "swiper/css";
 import "swiper/css/navigation";
 
@@ -20,51 +23,68 @@ const sectionVariants = {
 };
 
 function Home() {
+  const { academySlug } = useParams();
+  const subdomain = window.location.hostname.split(".")[0];
+  const { data: academyInfo, isPending } = useAcademy({
+    slug: academySlug,
+    subdomain: subdomain,
+  });
+
+  if (!isPending && !academyInfo) {
+    return <Navigate to={Routes.ROOT} state={{ from: location }} replace />;
+  }
   return (
-    <HomeLayout>
-      <main className="bg-[rgb(249_250_251)]">
-        <motion.div
-          variants={sectionVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.3 }}
-        >
-          <Hero />
-        </motion.div>
-        <motion.div
-          variants={sectionVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.3 }}
-        >
-          <Features />
-        </motion.div>
-        <motion.div
-          variants={sectionVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.3 }}
-        >
-          <Courses />
-        </motion.div>
-        <motion.div
-          variants={sectionVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.3 }}
-        >
-          <Testimonials />
-        </motion.div>
-        <motion.div
-          variants={sectionVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.3 }}
-        >
-          <FAQs />
-        </motion.div>
-      </main>
-    </HomeLayout>
+    !isPending &&
+    academyInfo && (
+      <HomeLayout settings={academyInfo.data?.settings}>
+        <main className="bg-[rgb(249_250_251)]">
+          <motion.div
+            variants={sectionVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.3 }}
+          >
+            <Hero hero={academyInfo.data?.hero} />
+          </motion.div>
+          <motion.div
+            variants={sectionVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.3 }}
+          >
+            <Features about={academyInfo.data?.about} />
+          </motion.div>
+          <motion.div
+            variants={sectionVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.3 }}
+          >
+            <Courses />
+          </motion.div>
+          {academyInfo.data?.faqs && academyInfo.data.faqs.length > 0 && (
+            <motion.div
+              variants={sectionVariants}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, amount: 0.3 }}
+            >
+              <Testimonials opinions={academyInfo.data.opinions} />
+            </motion.div>
+          )}
+          {academyInfo.data?.faqs && academyInfo.data.faqs.length > 0 && (
+            <motion.div
+              variants={sectionVariants}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, amount: 0.3 }}
+            >
+              <FAQs faqs={academyInfo.data.faqs} />
+            </motion.div>
+          )}
+        </main>
+      </HomeLayout>
+    )
   );
 }
 
