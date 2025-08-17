@@ -22,7 +22,7 @@ function AddNewTrainer() {
       <Header />
 
       {/* Form */}
-      <AddTrainerForm onSubmit={handleSubmit} onCancel={handleCancel} />
+      <AddTrainerForm />
     </div>
   );
 }
