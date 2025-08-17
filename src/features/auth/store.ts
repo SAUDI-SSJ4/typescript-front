@@ -26,7 +26,7 @@ interface AuthState {
   refreshUser: () => Promise<void>;
   refreshTokens: () => Promise<void>;
   clearAuth: () => void;
-  forgotPassword: (email: string) => Promise<any>;
+  forgotPassword: (email: string) => Promise<unknown>;
   verifyAccount: ({
     email,
     otp,
@@ -34,13 +34,13 @@ interface AuthState {
     email: string;
     otp: string;
   }) => Promise<AuthResponse>;
-  resendOtp: (data: { email: string }) => Promise<any>;
+  resendOtp: (data: { email: string }) => Promise<unknown>;
   resetPassword: (data: {
     email: string;
     otp: string;
     password: string;
     password_confirmation: string;
-  }) => Promise<any>;
+  }) => Promise<unknown>;
   // Computed
   isStudent: () => boolean;
   isAcademy: () => boolean;
@@ -48,20 +48,47 @@ interface AuthState {
 
 // Initialize authentication state from cookies
 const initializeAuthState = () => {
-  const { accessToken, refreshToken, user } = authCookies.getAuthData();
+  try {
+    const { accessToken, refreshToken, user } = authCookies.getAuthData();
+    
+    // Protection against corrupted data
+    if (accessToken && !user) {
+      console.warn("Access token exists but no user data, clearing auth");
+      authCookies.clearAll();
+      return {
+        user: null,
+        accessToken: null,
+        refreshToken: null,
+        isLoading: false,
+        isAuthenticated: false,
+      };
+    }
 
-  return {
-    user,
-    accessToken,
-    refreshToken,
-    isLoading: false,
-    isAuthenticated: Boolean(accessToken && user), // تبسيط: لا نحتاج refreshToken للفحص
-  };
+    return {
+      user,
+      accessToken,
+      refreshToken,
+      isLoading: false,
+      isAuthenticated: Boolean(accessToken && user),
+    };
+  } catch (error) {
+    console.error("Error initializing auth state:", error);
+    // In case of error, clear all cookies
+    authCookies.clearAll();
+    return {
+      user: null,
+      accessToken: null,
+      refreshToken: null,
+      isLoading: false,
+      isAuthenticated: false,
+    };
+  }
 };
 
 export const useAuthStore = create<AuthState>()((set, get) => ({
   // Initial state
   ...initializeAuthState(),
+  
   // Actions
   setUser: (user) =>
     set(() => ({
@@ -70,9 +97,7 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
     })),
 
   setLoading: (loading) =>
-    set(() => ({
-      isLoading: loading,
-    })),
+    set(() => ({ isLoading: loading })),
 
   login: async (credentials) => {
     set(() => ({ isLoading: true }));
@@ -94,7 +119,7 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
       authCookies.setAuthData(
         data.access_token,                        // Fixed: access access_token directly
         data.refresh_token,                       // Fixed: access refresh_token directly
-        data.user_data as any                    // Fixed: access user_data directly
+        data.user_data as unknown as User        // Fixed: access user_data directly
       );
       return data;
     } catch (error) {
@@ -124,7 +149,7 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
       authCookies.setAuthData(
         response.access_token,                        // Fixed: access access_token directly
         response.refresh_token,                       // Fixed: access refresh_token directly
-        response.user_data as any                    // Fixed: access user_data directly
+        response.user_data as unknown as User        // Fixed: access user_data directly
       );
       return response;
     } catch (error) {
@@ -176,7 +201,7 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
       }));
 
       // Update user data in cookies
-      authCookies.setUser(user as any);
+      authCookies.setUser(user as unknown as User);
     } catch (error) {
       console.error("Failed to refresh user:", error);
       // If refresh fails, clear auth state
@@ -226,7 +251,7 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
     const { user } = get();
     return user?.user_type === UserType.ACADEMY;
   },
-  forgotPassword: async (email) => {
+  forgotPassword: async (email: string) => {
     set(() => ({ isLoading: true }));
 
     try {
@@ -258,7 +283,7 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
         authCookies.setAuthData(
           response.access_token,                     // Fixed: access access_token directly
           response.refresh_token,                    // Fixed: access refresh_token directly
-          response.user_data as any                 // Fixed: access user_data directly
+          response.user_data as unknown as User                 // Fixed: access user_data directly
         );
       }
 

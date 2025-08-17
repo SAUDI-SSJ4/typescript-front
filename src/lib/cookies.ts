@@ -6,8 +6,9 @@ import { Environments } from "@/constants/enums";
 const COOKIE_OPTIONS = {
   expires: 7, // 7 days
   secure: process.env.NODE_ENV === Environments.PROD, // HTTPS only in production
-  sameSite: "lax" as const, // تغيير من "strict" إلى "lax" لتجنب مشاكل CORS
+  sameSite: "lax" as const, // Use lax for better compatibility and OAuth support
   path: "/",
+  domain: process.env.NODE_ENV === Environments.PROD ? ".sayan-server.com" : undefined, // Set domain in production
 };
 
 const ACCESS_TOKEN_KEY = "access_token";
