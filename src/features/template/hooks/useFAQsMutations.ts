@@ -30,8 +30,7 @@ export const useCreateFAQ = () => {
     },
     onError: (error: ApiError) => {
       const errorMessage =
-        error?.response?.data?.message ||
-        "حدث خطأ أثناء إنشاء السؤال الشائع";
+        error?.response?.data?.message || "حدث خطأ أثناء إنشاء السؤال الشائع";
       toast.error(errorMessage);
       console.error("Error creating FAQ:", error);
     },
@@ -43,7 +42,7 @@ export const useUpdateFAQ = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ id, data }: { id: string; data: FAQPayload }) =>
+    mutationFn: ({ id, data }: { id: number; data: FAQPayload }) =>
       faqsApi.updateFAQ(id, data),
     onSuccess: (response: FAQResponse) => {
       // Invalidate all FAQs-related queries
@@ -55,8 +54,7 @@ export const useUpdateFAQ = () => {
     },
     onError: (error: ApiError) => {
       const errorMessage =
-        error?.response?.data?.message ||
-        "حدث خطأ أثناء تحديث السؤال الشائع";
+        error?.response?.data?.message || "حدث خطأ أثناء تحديث السؤال الشائع";
       toast.error(errorMessage);
       console.error("Error updating FAQ:", error);
     },
@@ -68,7 +66,7 @@ export const useDeleteFAQ = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (id: string) => faqsApi.deleteFAQ(id),
+    mutationFn: (id: number) => faqsApi.deleteFAQ(id),
     onSuccess: (response: FAQResponse) => {
       // Invalidate all FAQs-related queries
       queryClient.invalidateQueries({
@@ -79,10 +77,9 @@ export const useDeleteFAQ = () => {
     },
     onError: (error: ApiError) => {
       const errorMessage =
-        error?.response?.data?.message ||
-        "حدث خطأ أثناء حذف السؤال الشائع";
+        error?.response?.data?.message || "حدث خطأ أثناء حذف السؤال الشائع";
       toast.error(errorMessage);
       console.error("Error deleting FAQ:", error);
     },
   });
-}; 
+};

@@ -51,6 +51,7 @@ import {
   useDeleteOpinion,
 } from "../hooks/useOpinionsMutations";
 import RemoteImage from "@/components/shared/RemoteImage";
+import type { OpinionPayload } from "@/types/academy/opinion";
 
 interface StudentReview {
   id: string | number;
@@ -67,13 +68,6 @@ interface StudentReview {
 
 interface StudentReviewsTableProps {
   reviews: StudentReview[];
-}
-
-interface ReviewFormData {
-  name: string;
-  content: string;
-  rating: number;
-  image?: File | null;
 }
 
 function StudentReviewsTable({ reviews }: StudentReviewsTableProps) {
@@ -102,7 +96,7 @@ function StudentReviewsTable({ reviews }: StudentReviewsTableProps) {
     formState: { errors },
     reset,
     setValue,
-  } = useForm<ReviewFormData>({
+  } = useForm({
     defaultValues: {
       name: "",
       content: "",
@@ -244,24 +238,13 @@ function StudentReviewsTable({ reviews }: StudentReviewsTableProps) {
     setEditDialogOpen(true);
   };
 
-  const onEditSubmit = async (data: ReviewFormData) => {
+  const onEditSubmit = async (data: OpinionPayload) => {
     if (!editingReview) return;
 
     try {
-      // Create FormData to handle file upload
-      const formData = new FormData();
-      formData.append('name', data.name);
-      formData.append('content', data.content);
-      formData.append('rating', data.rating.toString());
-      
-      // Only append image if a new one was selected
-      if (data.image) {
-        formData.append('image', data.image);
-      }
-      
       await updateOpinionMutation.mutateAsync({
         id: editingReview.id.toString(),
-        data: formData as any, // Cast to any to avoid type issues with FormData
+        data,
       });
 
       setEditDialogOpen(false);
@@ -354,20 +337,20 @@ function StudentReviewsTable({ reviews }: StudentReviewsTableProps) {
               className="bg-white rounded-lg border border-gray-200 p-4 space-y-3"
             >
               <div className="flex items-start gap-3">
-                                  <img
-                    src={
-                      row.getValue("image") ||
-                      "https://via.placeholder.com/64x64/e5e7eb/9ca3af?text=صورة"
-                    }
-                    alt={`صورة ${row.getValue("name")}`}
-                    className="h-16 w-16 rounded-lg object-contain flex-shrink-0"
-                    loading="lazy"
-                    onError={(e) => {
-                      const target = e.target as HTMLImageElement;
-                      target.src =
-                        "https://via.placeholder.com/64x64/e5e7eb/9ca3af?text=صورة";
-                    }}
-                  />
+                <img
+                  src={
+                    row.getValue("image") ||
+                    "https://via.placeholder.com/64x64/e5e7eb/9ca3af?text=صورة"
+                  }
+                  alt={`صورة ${row.getValue("name")}`}
+                  className="h-16 w-16 rounded-lg object-contain flex-shrink-0"
+                  loading="lazy"
+                  onError={(e) => {
+                    const target = e.target as HTMLImageElement;
+                    target.src =
+                      "https://via.placeholder.com/64x64/e5e7eb/9ca3af?text=صورة";
+                  }}
+                />
                 <div className="flex-1 min-w-0">
                   <h3 className="font-medium text-sm leading-5 line-clamp-2 text-right">
                     {row.getValue("name")}
@@ -653,19 +636,22 @@ function StudentReviewsTable({ reviews }: StudentReviewsTableProps) {
                   </p>
                 )}
               </div>
-              
+
               <div className="space-y-2">
                 <ImageField
                   name="image"
                   type="image"
                   label="صورة الطالب"
                   placeholder="اختر صورة الطالب"
-                  control={control as unknown as Control<Record<string, unknown>>}
+                  control={
+                    control as unknown as Control<Record<string, unknown>>
+                  }
                   errors={errors}
                 />
                 {editingReview?.image && (
                   <div className="text-sm text-muted-foreground mt-1">
-                    * في حالة عدم اختيار صورة جديدة سيتم الاحتفاظ بالصورة الحالية
+                    * في حالة عدم اختيار صورة جديدة سيتم الاحتفاظ بالصورة
+                    الحالية
                   </div>
                 )}
               </div>

@@ -30,7 +30,7 @@ export const faqsApi = {
   },
 
   // Update existing FAQ
-  updateFAQ: async (id: string, faqData: FAQPayload): Promise<FAQResponse> => {
+  updateFAQ: async (id: number, faqData: FAQPayload): Promise<FAQResponse> => {
     // Add default values for required fields
     const payload = {
       ...faqData,
@@ -44,7 +44,7 @@ export const faqsApi = {
   },
 
   // Delete FAQ
-  deleteFAQ: async (id: string): Promise<FAQResponse> => {
+  deleteFAQ: async (id: number): Promise<FAQResponse> => {
     const response = await api.delete(`/faqs/${id}`);
     return response.data;
   },

@@ -1,5 +1,6 @@
 import type { About } from "./academy/about";
 import type { Opinion } from "./academy/opinion";
+import type { Course } from "./couse";
 import type { FAQ } from "./faq";
 
 export interface Academy {
@@ -83,6 +84,7 @@ export interface AcademyResponse {
     settings: Settings;
     faqs: FAQ[];
     opinions: Opinion[];
+    courses: Course[];
   };
   path: string | null;
   timestamp: string;

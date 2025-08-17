@@ -38,4 +38,9 @@ export interface MainSettingsPayload {
   secondary_color: string;
   logo?: File;
   favicon?: File;
+  facebook?: string;
+  twitter?: string;
+  instagram?: string;
+  youtube?: string;
+  linkedin?: string;
 }

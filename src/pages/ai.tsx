@@ -2,18 +2,6 @@ import Hero from "@/features/ai/components/Hero";
 import Layout from "@/features/ai/components/Layout";
 import FAQs from "@/components/shared/faqs";
 import AiFeatures from "@/features/ai/components/AiFeatures";
-import { motion } from "framer-motion";
-
-const sectionVariants = {
-  hidden: { opacity: 0, y: 50 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: {
-      duration: 0.6,
-    },
-  },
-};
 
 const faqItems = [
   {
@@ -46,30 +34,9 @@ function Ai() {
   return (
     <Layout>
       <main>
-        <motion.div
-          variants={sectionVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.3 }}
-        >
-          <Hero />
-        </motion.div>
-        <motion.div
-          variants={sectionVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.3 }}
-        >
-          <AiFeatures />
-        </motion.div>
-        <motion.div
-          variants={sectionVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.3 }}
-        >
-          <FAQs faqItems={faqItems} />
-        </motion.div>
+        <Hero />
+        <AiFeatures />
+        <FAQs faqItems={faqItems} />
       </main>
     </Layout>
   );

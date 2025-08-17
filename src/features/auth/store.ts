@@ -7,7 +7,7 @@ import type {
 import type { User } from "@/types/user";
 import { authService } from "./services/authService";
 import { authCookies } from "@/lib/cookies";
-import { Pages, Routes, UserType } from "@/constants/enums";
+import { Routes, UserType } from "@/constants/enums";
 
 interface AuthState {
   // State
@@ -151,7 +151,7 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
       authCookies.clearAll();
 
       // Redirect to login
-      window.location.href = `/${Routes.AUTH}/${Pages.SIGNIN}`;
+      window.location.href = Routes.ROOT;
     }
   },
 

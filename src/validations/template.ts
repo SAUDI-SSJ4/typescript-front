@@ -66,6 +66,32 @@ export const academyMainSettingsSchema = z.object({
       message:
         "النطاق الفرعي يجب أن يكون أحرفًا أو أرقامًا صغيرة فقط، ويمكن أن يحتوي على شرطات، ويجب أن يبدأ وينتهي بحرف أو رقم",
     }),
+  // Social Media Fields
+  facebook: z
+    .string()
+    .url({ message: "رابط فيسبوك غير صحيح" })
+    .optional()
+    .or(z.literal("")),
+  twitter: z
+    .string()
+    .url({ message: "رابط تويتر غير صحيح" })
+    .optional()
+    .or(z.literal("")),
+  instagram: z
+    .string()
+    .url({ message: "رابط إنستغرام غير صحيح" })
+    .optional()
+    .or(z.literal("")),
+  youtube: z
+    .string()
+    .url({ message: "رابط يوتيوب غير صحيح" })
+    .optional()
+    .or(z.literal("")),
+  linkedin: z
+    .string()
+    .url({ message: "رابط لينكد إن غير صحيح" })
+    .optional()
+    .or(z.literal("")),
 });
 export type AcademyMainSettingsFormData = z.infer<
   typeof academyMainSettingsSchema

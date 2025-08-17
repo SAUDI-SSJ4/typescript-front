@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import RemoteImage from "@/components/shared/RemoteImage";
 import type { Hero } from "@/types/academy";
+import HtmlRenderer from "@/components/shared/HtmlRenderer";
 
 const imageVariants = {
   hidden: { opacity: 0, scale: 0.8, rotate: -5 },
@@ -16,10 +17,10 @@ export default function Hero({ hero }: { hero: Hero }) {
         <div className="grid lg:grid-cols-2 gap-8 items-center">
           <div className="flex flex-col gap-6 py-8 lg:py-16">
             <h1 className="text-3xl lg:text-4xl font-bold leading-tight text-foreground">
-              {hero.title}
+              <HtmlRenderer html={hero.title} />
             </h1>
             <p className="text-base lg:text-lg text-muted-foreground leading-relaxed">
-              {hero.description}
+              <HtmlRenderer html={hero.description} />
             </p>
             <div className="flex items-center gap-4 pt-2">
               <Link

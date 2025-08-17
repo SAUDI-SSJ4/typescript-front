@@ -1,0 +1,8 @@
+echo "🚀 Running STRICT pre-commit checks..."
+echo "🔍 Linting code..."
+yarn lint
+
+echo "📦 Building project with TypeScript checks..."
+yarn build
+
+echo "✅ All pre-commit checks passed!"

@@ -54,7 +54,7 @@ export const academyApi = {
     });
     const response = await api.put("/academy/about", formData, {
       headers: {
-        "Content-Type": "form-data",
+        "Content-Type": "multipart/form-data",
       },
     });
     return response.data;

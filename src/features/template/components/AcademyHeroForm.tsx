@@ -21,7 +21,7 @@ import {
 import { useAcademyHeroMutation } from "../hooks/useHeroMutations";
 import type { Hero } from "@/types/academy/hero";
 import RemoteImage from "@/components/shared/RemoteImage";
-import RichTextEditor from "@/components/shared/RichTextEditor";
+import Editor from "@/components/shared/Editor";
 
 const AcademyHeroForm = ({ hero }: { hero: Hero }) => {
   const academyHeroMutation = useAcademyHeroMutation();
@@ -95,12 +95,7 @@ const AcademyHeroForm = ({ hero }: { hero: Hero }) => {
                   control={control}
                   name="title"
                   render={({ field: { onChange, value } }) => (
-                    <RichTextEditor
-                      content={value || ""}
-                      onChange={onChange}
-                      minHeight="20px"
-                      disabled={formLoading}
-                    />
+                    <Editor value={value || ""} onChange={onChange} />
                   )}
                 />
                 {errors.title && (
@@ -268,12 +263,7 @@ const AcademyHeroForm = ({ hero }: { hero: Hero }) => {
                 control={control}
                 name="description"
                 render={({ field: { onChange, value } }) => (
-                  <RichTextEditor
-                    content={value || ""}
-                    onChange={onChange}
-                    minHeight="150px"
-                    disabled={formLoading}
-                  />
+                  <Editor value={value || ""} onChange={onChange} />
                 )}
               />
               {errors.description && (

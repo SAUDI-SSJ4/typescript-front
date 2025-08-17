@@ -60,7 +60,8 @@ function Counter({ target, suffix }: CounterProps) {
       ref={counterRef}
       className="text-4xl md:text-5xl font-bold text-foreground"
     >
-      {count}<span className="text-primary">{suffix}</span>
+      {count}
+      <span className="text-primary">{suffix}</span>
     </div>
   );
 }
@@ -68,31 +69,31 @@ function Counter({ target, suffix }: CounterProps) {
 function Stats() {
   const stats = [
     {
-      target: 100,
+      target: 1000,
       suffix: "+",
-      title: "أكاديمية متنوعة",
+      title: "أكاديمية نشطة",
     },
     {
-      target: 2,
+      target: 50,
       suffix: "K+",
-      title: "ساعة تعليمية",
+      title: "ريال تم تحقيقها شهرياً",
     },
     {
-      target: 1,
+      target: 15,
       suffix: "K+",
-      title: "دورة مباعة",
+      title: "دورة تم إنشاؤها",
     },
     {
-      target: 5,
+      target: 100,
       suffix: "K+",
-      title: "طالب مسجل",
+      title: "طالب يتعلم",
     },
   ];
 
   return (
-    <section className="py-20 bg-gradient-to-br from-gray-50 to-white">
+    <section className="py-16 md:py-20 bg-gradient-to-br from-gray-50 to-white">
       <div className="container">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           {/* Text Content */}
           <div>
             <div className="bg-primary/10 rounded-2xl w-20 h-20 flex items-center justify-center mb-6">
@@ -104,17 +105,21 @@ function Stats() {
               />
             </div>
             <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-6 leading-tight">
-              إنجازاتنا في أرقام
+              <span className="text-primary">نجاحات</span> منشئي الأكاديميات
             </h2>
             <p className="text-lg text-muted-foreground leading-relaxed">
-              في منصة سيان، نفخر بإنجازاتنا المتميزة التي حققناها مع شركائنا ومستخدمينا.
+              انضم إلى آلاف منشئي المحتوى الذين حولوا خبراتهم إلى دخل شهري
+              مستدام عبر منصة سيان.
             </p>
           </div>
 
           {/* Stats Grid */}
           <div className="grid grid-cols-2 gap-8">
             {stats.map((stat, index) => (
-              <div key={index} className="text-center bg-white rounded-2xl p-6 shadow-sm border border-border">
+              <div
+                key={index}
+                className="text-center bg-white rounded-2xl p-6 shadow-sm border border-border"
+              >
                 <Counter target={stat.target} suffix={stat.suffix} />
                 <h3 className="text-lg font-semibold text-foreground mt-4">
                   {stat.title}

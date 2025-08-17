@@ -1,3 +1,5 @@
+import { motion } from "framer-motion";
+
 function GoalVision() {
   const cards = [
     {
@@ -14,48 +16,59 @@ function GoalVision() {
       alt: "رؤيتنا",
       title: "رؤيتنا",
       description:
-        "نؤمن بأن التعليم هو القوة الحقيقة لمستقبل مشرق يسوده الإبداع والابتكار",
+        "نؤمن بأن التعليم هو القوة الحقيقية لمستقبل مشرق يسوده الإبداع والابتكار",
     },
   ];
 
   return (
-    <section className="py-14 sm:py-20 relative">
-      <div
-        style={{
-          background:
-            "linear-gradient(136.72deg, rgba(0, 255, 206, 0.1) -16.9%, rgba(255, 255, 255, 0.173594) 34.08%, rgba(255, 255, 255, 0) 135.36%)",
-        }}
-        className="absolute inset-0 z-[-1] rotate-180"
-      ></div>
-      <div className="container mx-auto px-4">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {cards.map((card) => (
-            <div
-              key={card.id}
-              style={{ boxShadow: "0px 0px 30px rgba(0, 0, 0, 0.06)" }}
-              className="text-center rounded-[24px] p-8 hover:!shadow-lg transition-shadow duration-300"
-            >
-              {/* 3D Illustration */}
-              <div className="mb-8 flex justify-center">
-                <img
-                  src={card.image}
-                  alt={card.alt}
-                  className="w-64 h-64 object-contain"
-                  loading="lazy"
-                />
-              </div>
+    <section className="py-16 md:py-20 bg-white">
+      <div className="container">
+        <div className="w-full">
+          {/* Section Header */}
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-6">
+              <span className="text-primary">هدفنا</span> ورؤيتنا
+            </h2>
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+              نسعى لبناء جيل متعلم ومبدع، ونؤمن بأن التعليم هو القوة الحقيقية
+              للمستقبل
+            </p>
+          </div>
 
-              {/* Title */}
-              <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-6">
-                {card.title}
-              </h2>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            {cards.map((card, index) => (
+              <motion.div
+                key={card.id}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.3 }}
+                transition={{ duration: 0.6, delay: index * 0.2 }}
+                className="bg-white rounded-2xl p-8 shadow-sm border border-gray-100"
+              >
+                <div className="flex flex-col md:flex-row items-center gap-6">
+                  {/* Content - Left Side */}
+                  <div className="flex-1 text-center md:text-right order-2 md:order-1">
+                    <h3 className="text-xl md:text-2xl font-bold text-gray-900 mb-4">
+                      {card.title}
+                    </h3>
+                    <p className="text-lg text-gray-600 leading-relaxed">
+                      {card.description}
+                    </p>
+                  </div>
 
-              {/* Description */}
-              <p className="text-lg text-muted-foreground leading-relaxed max-w-md mx-auto">
-                {card.description}
-              </p>
-            </div>
-          ))}
+                  {/* Image - Right Side */}
+                  <div className="flex justify-center order-1 md:order-2">
+                    <img
+                      src={card.image}
+                      alt={card.alt}
+                      className="w-40 h-40 md:w-48 md:h-48 object-contain"
+                      loading="lazy"
+                    />
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
         </div>
       </div>
     </section>

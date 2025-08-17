@@ -1,5 +1,5 @@
-import Footer from "@/templates/template-one/components/footer";
-import Header from "@/templates/template-one/components/header";
+import Footer from "@/components/shared/footer";
+import Header from "@/components/shared/header";
 
 function CourseLayout({ children }: { children: React.ReactNode }) {
   return (

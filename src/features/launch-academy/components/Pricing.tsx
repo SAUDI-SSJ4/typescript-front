@@ -3,140 +3,94 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 
 function Pricing() {
-  const [billingPeriod, setBillingPeriod] = useState("monthly");
+  const [, setEmail] = useState("");
 
   const plans = [
     {
       id: 0,
       name: "المجانية",
       price: 0.0,
+      originalPrice: null,
       free: true,
-      monthlyPrice: 0.0,
-      annualPrice: 0.0,
-      period: "شهر",
+      period: "مدى الحياة",
       description:
-        "جرب منصتنا مجانًا واكتشف الإمكانيات الأساسية لتعزيز تجربتك التعليمية",
+        "ابدأ رحلتك التعليمية مجاناً واكتشف إمكانيات المنصة الأساسية",
       features: [
-        { name: "عدد محدود من الدورات التعليمية", included: true },
+        { name: "3 دورات تعليمية مجانية", included: true },
         { name: "دعم فني أساسي", included: true },
         { name: "إمكانية الوصول للمحتوى الأساسي", included: true },
         { name: "تتبع تقدم المتعلمين", included: false },
+        { name: "شهادات إتمام", included: false },
       ],
-      buttonText: "ابدأ مجانًا",
+      buttonText: "ابدأ مجانًا الآن",
       isPopular: false,
+      isComingSoon: false,
     },
     {
       id: 1,
-      name: "الأساسية",
-      price: 70.0,
-      monthlyPrice: 70.0,
-      annualPrice: 700.0, // 12 months for the price of 10
+      name: "الباقة الحالية",
+      price: 99.0,
+      originalPrice: 299.0,
       period: "شهر",
-      description:
-        "خطة مثالية للبدء في رحلتك التعليمية مع جميع الميزات الأساسية",
+      description: "عرض محدود! احصل على جميع الميزات المتقدمة بسعر مخفض",
       features: [
-        { name: "وصول كامل للدورات الأساسية", included: true },
-        { name: "دعم فني متقدم", included: true },
+        { name: "وصول كامل لجميع الدورات", included: true },
+        { name: "دعم فني متقدم 24/7", included: true },
         { name: "تتبع تقدم المتعلمين", included: true },
-        { name: "تخصيص المحتوى التعليمي", included: false },
+        { name: "شهادات إتمام معتمدة", included: true },
+        { name: "تحليلات متقدمة للأداء", included: true },
       ],
-      buttonText: "اشترك",
-      isPopular: false,
+      buttonText: "ابدا الان",
+      isPopular: true,
+      isComingSoon: false,
+      badge: "عرض محدود",
+      discount: "67% خصم",
     },
     {
       id: 2,
-      name: "النمو",
-      price: 120.0,
-      monthlyPrice: 120.0,
-      annualPrice: 1200.0, // 12 months for the price of 10
-      period: "شهر",
-      description:
-        "لأصحاب المشاريع التعليمية المتوسطة الراغبين في النمو والتوسع",
+      name: "الباقة المتقدمة",
+      price: null,
+      originalPrice: null,
+      period: "قريباً",
+      description: "مميزات حصرية وأدوات احترافية للمؤسسات التعليمية الكبيرة",
       features: [
-        { name: "جميع ميزات الباقة الأساسية", included: true },
-        { name: "تحليلات متقدمة للأداء", included: true },
-        { name: "تخصيص المحتوى التعليمي", included: true },
-        { name: "دعم أولوية متقدم", included: false },
-      ],
-      buttonText: "اشترك",
-      isPopular: true,
-    },
-    {
-      id: 3,
-      name: "الاحترافية",
-      price: 199.0,
-      monthlyPrice: 199.0,
-      annualPrice: 1990.0, // 12 months for the price of 10
-      period: "شهر",
-      description:
-        "للمؤسسات التعليمية الكبيرة التي تحتاج إلى حلول متكاملة واحترافية",
-      features: [
-        { name: "جميع ميزات باقة النمو", included: true },
-        { name: "دعم أولوية متقدم", included: true },
+        { name: "جميع ميزات الباقة الحالية", included: true },
         { name: "API مخصص للتكامل", included: true },
         { name: "تدريب مخصص للفريق", included: true },
+        { name: "دعم مؤسسي متخصص", included: true },
+        { name: "تخصيص كامل للمنصة", included: true },
       ],
-      buttonText: "اشترك",
+      buttonText: "أعلمني عند الإطلاق",
       isPopular: false,
+      isComingSoon: true,
     },
   ];
 
   return (
-    <section className="py-14 sm:py-20 relative">
-      <div
-        style={{
-          background:
-            "linear-gradient(136.72deg, rgba(0, 255, 206, 0.1) -16.9%, rgba(255, 255, 255, 0.173594) 34.08%, rgba(255, 255, 255, 0) 135.36%)",
-        }}
-        className="absolute inset-0 z-[-1] rotate-180"
-      ></div>
-      <div className="container mx-auto px-4">
+    <section className="py-16 md:py-20 relative">
+      <div className="container">
         {/* Section Header */}
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-6">
-            باقاتنا هي تقدرات مختلفة للنمو
+            اختر الباقة المناسبة{" "}
+            <span className="text-primary">لمنصتك التعليمية</span>
           </h2>
-
-          {/* Billing Description */}
-          <p className="text-muted-foreground mb-4">
-            {billingPeriod === "annual"
-              ? "وفر حتى 20% مع الدفع السنوي"
-              : "مرونة الدفع الشهري لباقات متنوعة"}
+          <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+            ابدأ مجاناً أو احصل على ميزات متقدمة بعرض محدود، واكتشف المستقبل مع
+            باقتنا القادمة
           </p>
-
-          {/* Toggle Buttons */}
-          <div className="flex justify-center items-center gap-2 mb-8">
-            <button
-              className={`px-6 py-3 rounded-lg transition-colors ${
-                billingPeriod === "annual"
-                  ? "bg-primary text-white shadow-sm"
-                  : "text-gray-600 hover:text-primary"
-              }`}
-              onClick={() => setBillingPeriod("annual")}
-            >
-              سنوي
-            </button>
-            <button
-              className={`px-6 py-3 rounded-lg transition-colors ${
-                billingPeriod === "monthly"
-                  ? "bg-primary text-white shadow-sm"
-                  : "text-gray-600 hover:text-primary"
-              }`}
-              onClick={() => setBillingPeriod("monthly")}
-            >
-              شهري
-            </button>
-          </div>
         </div>
 
         {/* Pricing Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-7xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
           {plans.map((plan) => (
             <div
               key={plan.id}
               className={`bg-white rounded-2xl p-8 relative transition-all duration-300 hover:shadow-lg ${
                 plan.isPopular
-                  ? "ring-2 ring-primary shadow-lg scale-105"
+                  ? "ring-2 ring-primary shadow-lg scale-105 z-10"
+                  : plan.isComingSoon
+                  ? "border-2 border-dashed border-gray-300 opacity-90"
                   : "shadow-sm border border-gray-100"
               }`}
             >
@@ -144,7 +98,16 @@ function Pricing() {
               {plan.isPopular && (
                 <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
                   <span className="bg-primary text-white px-6 py-2 rounded-full text-sm font-medium">
-                    الأكثر شعبية
+                    {plan.badge}
+                  </span>
+                </div>
+              )}
+
+              {/* Coming Soon Badge */}
+              {plan.isComingSoon && (
+                <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
+                  <span className="bg-gray-500 text-white px-6 py-2 rounded-full text-sm font-medium">
+                    قريباً
                   </span>
                 </div>
               )}
@@ -156,25 +119,31 @@ function Pricing() {
                 </h3>
 
                 <div className="mb-4">
-                  <span className="text-4xl font-bold text-foreground">
-                    {billingPeriod === "monthly"
-                      ? plan.monthlyPrice.toFixed(2)
-                      : plan.annualPrice.toFixed(2)}
-                  </span>
-                  <span className="text-lg text-muted-foreground mr-2">
-                    ر.س /{billingPeriod === "monthly" ? "شهر" : "سنة"}
-                  </span>
-
-                  {billingPeriod === "annual" && plan.price > 0 && (
-                    <div className="mt-2 text-sm text-green-600 font-medium">
-                      وفر{" "}
-                      {Math.round(
-                        ((plan.monthlyPrice * 12 - plan.annualPrice) /
-                          (plan.monthlyPrice * 12)) *
-                          100
-                      )}
-                      ٪
+                  {plan.isComingSoon ? (
+                    <div className="text-2xl font-bold text-gray-500">
+                      مميزات حصرية
                     </div>
+                  ) : (
+                    <>
+                      {plan.originalPrice && (
+                        <div className="flex items-center justify-center gap-2 mb-2">
+                          <span className="text-lg text-gray-400 line-through">
+                            {plan.originalPrice} ر.س
+                          </span>
+                          <span className="bg-red-100 text-red-600 px-2 py-1 rounded-full text-xs font-medium">
+                            {plan.discount}
+                          </span>
+                        </div>
+                      )}
+                      <span className="text-4xl font-bold text-foreground">
+                        {plan.free ? "مجاني" : `${plan.price}`}
+                      </span>
+                      {!plan.free && (
+                        <span className="text-lg text-muted-foreground mr-2">
+                          ر.س / {plan.period}
+                        </span>
+                      )}
+                    </>
                   )}
                 </div>
 
@@ -236,7 +205,19 @@ function Pricing() {
               </div>
 
               {/* CTA Button */}
-              {plan.free ? (
+              {plan.isComingSoon ? (
+                <div className="space-y-4">
+                  <input
+                    type="email"
+                    placeholder="أدخل بريدك الإلكتروني"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                    onChange={(e) => setEmail(e.target.value)}
+                  />
+                  <Button className="w-full py-3 text-lg rounded-xl bg-gray-500 hover:bg-gray-600 text-white">
+                    {plan.buttonText}
+                  </Button>
+                </div>
+              ) : plan.free ? (
                 <Button
                   asChild
                   className="w-full py-3 text-lg rounded-xl bg-white border-2 border-primary text-primary hover:bg-primary/10"
@@ -244,13 +225,7 @@ function Pricing() {
                   <Link to="/auth/signup">{plan.buttonText}</Link>
                 </Button>
               ) : (
-                <Button
-                  className={`w-full py-3 text-lg rounded-xl ${
-                    plan.isPopular
-                      ? "bg-primary hover:bg-primary/90 text-white"
-                      : "bg-primary hover:bg-primary/90 text-white"
-                  }`}
-                >
+                <Button className="w-full py-3 text-lg rounded-xl bg-primary hover:bg-primary/90 text-white">
                   {plan.buttonText}
                 </Button>
               )}

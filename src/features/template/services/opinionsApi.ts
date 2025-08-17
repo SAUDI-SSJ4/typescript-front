@@ -45,25 +45,19 @@ export const opinionsApi = {
   // Update existing opinion
   updateOpinion: async (
     id: string,
-    opinionData: OpinionPayload | FormData
+    opinionData: OpinionPayload
   ): Promise<OpinionResponse> => {
-    let formData: FormData;
-    
-    if (opinionData instanceof FormData) {
-      formData = opinionData;
-    } else {
-      // Add default values for required fields
-      const payload = {
-        ...opinionData,
-        is_featured:
-          opinionData.is_featured !== undefined ? opinionData.is_featured : false,
-        is_approved:
-          opinionData.is_approved !== undefined ? opinionData.is_approved : true,
-      };
-      
-      formData = new FormData();
-      appendFormData(formData, payload);
-    }
+    // Add default values for required fields
+    const payload = {
+      ...opinionData,
+      is_featured:
+        opinionData.is_featured !== undefined ? opinionData.is_featured : false,
+      is_approved:
+        opinionData.is_approved !== undefined ? opinionData.is_approved : true,
+    };
+
+    const formData = new FormData();
+    appendFormData(formData, payload);
 
     const response = await api.put(`opinions/${id}`, formData, {
       headers: {

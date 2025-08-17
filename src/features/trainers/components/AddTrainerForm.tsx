@@ -9,12 +9,6 @@ import { Save, Trash2 } from "lucide-react";
 import { useEffect, useCallback } from "react";
 import { trainersApi } from "../services/trainersApi";
 
-interface AddTrainerFormProps {
-  onSubmit?: (data: ITrainerForm) => void;
-  onCancel?: () => void;
-  isLoading?: boolean;
-}
-
 const FORM_DATA_KEY = "addTrainerForm_draft";
 
 const saveToLocalStorage = (key: string, data: Partial<ITrainerForm>) => {
@@ -45,22 +39,18 @@ const removeFromLocalStorage = (key: string) => {
   }
 };
 
-const AddTrainerForm = ({
-  onSubmit,
-  onCancel,
-  isLoading = false,
-}: AddTrainerFormProps) => {
+const AddTrainerForm = () => {
   const getSavedFormData = useCallback(() => {
     const savedData = getFromLocalStorage(FORM_DATA_KEY);
-      return (
-    savedData || {
-      fname: "",
-      lname: "",
-      email: "",
-      phone: "",
-      image: null,
-    }
-  );
+    return (
+      savedData || {
+        fname: "",
+        lname: "",
+        email: "",
+        phone: "",
+        image: null,
+      }
+    );
   }, []);
 
   const clearDraftData = useCallback(() => {
@@ -79,7 +69,7 @@ const AddTrainerForm = ({
     defaultValues: getSavedFormData(),
   });
 
-  const formLoading = isSubmitting || isLoading;
+  const formLoading = isSubmitting;
   const watchedValues = watch();
 
   useEffect(() => {
@@ -106,15 +96,14 @@ const AddTrainerForm = ({
         lname: data.lname,
         email: data.email,
         phone_number: data.phone,
-        image: data.image || null
+        image: data.image || null,
       };
-      
+
       // Send API request
       await trainersApi.createTrainer(trainerPayload);
-      
+
       toast.success("تم إضافة المدرب بنجاح!");
       clearDraftData();
-      onSubmit?.(data);
     } catch (error) {
       console.error("Error creating trainer:", error);
       toast.error("حدث خطأ أثناء إضافة المدرب");
@@ -129,7 +118,6 @@ const AddTrainerForm = ({
     ) {
       clearDraftData();
       reset();
-      onCancel?.();
     }
   };
 
@@ -189,7 +177,7 @@ const AddTrainerForm = ({
                 disabled={formLoading}
               />
             </div>
-            
+
             <div className="w-1/5">
               <FormFields
                 name="lname"

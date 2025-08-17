@@ -35,6 +35,9 @@ export type User = {
   phone_number?: string;
   gender?: string;
   academy_memberships?: AcademyMembership[];
+  phone_number: string;
+  gender: string;
+  banner?: string;
 };
 
 type UserWithTokens = {

@@ -1,0 +1,103 @@
+name: Deploy to cPanel/Hostinger
+
+on:
+  push:
+    branches: ["main", "master", "dev"]
+  workflow_dispatch:
+
+concurrency:
+  group: "deploy-${{ github.ref }}"
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "18"
+          cache: "yarn"
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile --production=false
+
+      - name: Lint code
+        run: yarn lint
+        continue-on-error: false
+
+      - name: Run tests (if available)
+        run: |
+          if [ -f "package.json" ] && grep -q '"test"' package.json; then
+            yarn test --passWithNoTests --watchAll=false
+          else
+            echo "No tests found, skipping..."
+          fi
+        continue-on-error: false
+
+      - name: Build with Vite
+        run: yarn build
+        env:
+          NODE_ENV: production
+          CI: true
+
+      - name: Verify build output
+        run: |
+          if [ ! -d "dist" ]; then
+            echo "Error: dist directory not found!"
+            exit 1
+          fi
+          if [ ! -f "dist/index.html" ]; then
+            echo "Error: index.html not found in dist!"
+            exit 1
+          fi
+          echo "Build verification successful"
+          ls -la dist/
+
+      - name: Verify secrets are available
+        run: |
+          if [ -z "${{ secrets.FTP_SERVER }}" ]; then
+            echo "Error: FTP_SERVER secret is not set"
+            exit 1
+          fi
+          if [ -z "${{ secrets.FTP_USERNAME }}" ]; then
+            echo "Error: FTP_USERNAME secret is not set"
+            exit 1
+          fi
+          if [ -z "${{ secrets.FTP_PASSWORD }}" ]; then
+            echo "Error: FTP_PASSWORD secret is not set"
+            exit 1
+          fi
+          echo "All FTP secrets are configured"
+
+      - name: Deploy to cPanel via FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          local-dir: ./dist/
+          server-dir: /htdocs/sayan.website/
+          exclude: |
+            **/.git*
+            **/.git*/**
+            **/node_modules/**
+            **/.env*
+            **/.DS_Store
+            **/Thumbs.db
+            **/*.map
+          dangerous-clean-slate: false
+          dry-run: false
+
+      - name: Health check (optional)
+        run: |
+          echo "Deployment completed successfully!"
+          # Optional: Add a simple curl check to your domain
+          # curl -f https://yourdomain.com || exit 1

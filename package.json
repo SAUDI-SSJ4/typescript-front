@@ -6,8 +6,16 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
+    "build:force": "vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "lint:fix": "eslint . --fix",
+    "preview": "vite preview",
+    "prepare": "husky",
+    "pre-commit": "yarn lint && yarn build",
+    "pre-push": "yarn build",
+    "check": "yarn lint && yarn build",
+    "check:force": "yarn lint && yarn build:force",
+    "commit-ready": "yarn lint:fix && yarn build"
   },
   "dependencies": {
     "@floating-ui/dom": "^1.0.0",
@@ -37,6 +45,8 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "framer-motion": "^12.19.1",
+    "html-react-parser": "^5.2.6",
+    "jodit-react": "^5.2.19",
     "js-cookie": "^3.0.5",
     "libphonenumber-js": "^1.12.8",
     "lucide-react": "^0.511.0",
@@ -62,16 +72,22 @@
     "@types/js-cookie": "^3.0.6",
     "@types/node": "^22.15.21",
     "@types/react": "^19.1.2",
-    "@types/react-dom": "^19.1.2",
     "@types/swiper": "^6.0.0",
     "@vitejs/plugin-react-swc": "^3.9.0",
     "eslint": "^9.25.0",
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "^0.4.19",
     "globals": "^16.0.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.1.5",
     "tw-animate-css": "^1.3.0",
     "typescript": "~5.8.3",
     "typescript-eslint": "^8.30.1",
     "vite": "^6.3.5"
+  },
+  "lint-staged": {
+    "*.{ts,tsx,js,jsx}": [
+      "eslint --fix"
+    ]
   }
 }

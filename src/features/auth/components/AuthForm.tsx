@@ -91,7 +91,7 @@ const AuthForm: React.FC<{
           });
           if (message) {
             toast.success(message);
-            navigate(`/${Routes.DASHBOARD}`, {
+            navigate(Routes.DASHBOARD, {
               replace: true,
             });
           }

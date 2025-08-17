@@ -12,6 +12,7 @@ const Signup: React.FC = () => {
           قم بإنشاء حساب جديد للبدء في استخدام خدماتنا
         </p>
       </div>
+
       <AuthForm slug={Pages.SIGNUP} />
     </div>
   );
