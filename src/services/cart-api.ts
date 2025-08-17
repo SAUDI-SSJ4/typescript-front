@@ -59,12 +59,9 @@ const getHeaders = (): HeadersInit => {
   
   // Get or create cart ID from localStorage and send as TheCookie header
   const cartId = getCartId();
-  if (cartId) {
-    headers['TheCookie'] = cartId;
-    console.log('🔍 CartAPI - Sending TheCookie header:', cartId);
-  } else {
-    console.log('🔍 CartAPI - No cart ID found, will create new one');
-  }
+      if (cartId) {
+      headers['TheCookie'] = cartId;
+    }
   
   return headers;
 };
@@ -74,23 +71,19 @@ function getCartId(): string {
   // Try to get existing cart ID from localStorage
   let cartId = localStorage.getItem('sayan_cart_id');
   
-  if (!cartId) {
-    // Generate new cart ID if none exists
-    const timestamp = Date.now();
-    const randomPart = Math.random().toString(36).substring(2, 15);
-    cartId = `cart-${randomPart}-${timestamp}`;
-    localStorage.setItem('sayan_cart_id', cartId);
-    console.log('Generated new cart ID:', cartId);
-  } else {
-    console.log('Using existing cart ID:', cartId);
-  }
+      if (!cartId) {
+      // Generate new cart ID if none exists
+      const timestamp = Date.now();
+      const randomPart = Math.random().toString(36).substring(2, 15);
+      cartId = `cart-${randomPart}-${timestamp}`;
+      localStorage.setItem('sayan_cart_id', cartId);
+    }
   
   return cartId;
 }
 
 function clearCartId(): void {
   localStorage.removeItem('sayan_cart_id');
-  console.log('Cart ID cleared from localStorage');
 }
 
 // Helper function to make API calls with proper error handling
@@ -100,8 +93,6 @@ const makeApiCall = async <T>(
 ): Promise<T> => {
   const url = `${API_BASE_URL}${endpoint}`;
   
-  console.log(`Making API call to: ${url}`);
-  
   const response = await fetch(url, {
     ...options,
     mode: 'cors', // Explicitly set CORS mode
@@ -109,12 +100,10 @@ const makeApiCall = async <T>(
       ...getHeaders(),
       ...options.headers,
     },
-    // credentials: 'include', // Removed due to allow_origins=["*"] in backend
-  });
-
-  console.log(`API response status: ${response.status}`);
-
-  if (!response.ok) {
+    credentials: 'include', // Re-enabled after fixing backend CORS
+      });
+    
+    if (!response.ok) {
     let errorData;
     try {
       errorData = await response.json();
@@ -135,15 +124,6 @@ export class CartAPI {
    */
   static async getCart(): Promise<CartSummary> {
     const response = await makeApiCall<ApiResponse<CartSummary>>('/cart/');
-    
-    // Debug logging to trace data flow
-    console.log("🔍 CartAPI.getCart - Full response:", response);
-    console.log("🔍 CartAPI.getCart - Response data:", response.data);
-    if (response.data?.items && response.data.items.length > 0) {
-      console.log("🔍 CartAPI.getCart - First item:", response.data.items[0]);
-      console.log("🔍 CartAPI.getCart - First item details:", response.data.items[0]?.item_details);
-      console.log("🔍 CartAPI.getCart - First item image_url:", response.data.items[0]?.item_details?.image_url);
-    }
     
     return {
       items: response.data?.items || [],
@@ -197,13 +177,9 @@ export class CartAPI {
       throw new Error('معرف عنصر السلة مطلوب');
     }
 
-    console.log('CartAPI removeFromCart called with cartId:', cartId);
-    
     const response = await makeApiCall<ApiResponse<CartSummary>>(`/cart/delete/${cartId}`, {
       method: 'DELETE',
     });
-    
-    console.log('CartAPI removeFromCart response:', response);
     
     return {
       items: response.data?.items || [],

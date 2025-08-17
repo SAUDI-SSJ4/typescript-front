@@ -36,7 +36,7 @@ function ShoppingCart() {
       console.error("Cart ID is missing or invalid:", cartId);
       return;
     }
-    console.log("Removing item with cart_id:", cartId);
+    // console.log("Removing item with cart_id:", cartId);
     await removeItem(cartId);
   }, [removeItem]);
 
@@ -52,11 +52,11 @@ function ShoppingCart() {
 
   // Additional effect to refresh when cart count changes
   useEffect(() => {
-    console.log("🛒 HEADER CART - Count:", count, "Total:", total, "Currency:", currency);
-    console.log("🛒 HEADER CART - Items:", items);
-    if (items.length > 0) {
-      console.log("🛒 HEADER CART - First item details:", items[0]?.item_details);
-    }
+    // console.log("🛒 HEADER CART - Count:", count, "Total:", total, "Currency:", currency);
+    // console.log("🛒 HEADER CART - Items:", items);
+    // if (items.length > 0) {
+    //   console.log("🛒 HEADER CART - First item details:", items[0]?.item_details);
+    // }
   }, [count, items, total, currency]);
 
   return (
@@ -135,7 +135,7 @@ function ShoppingCart() {
                         alt={item.item_details?.title || "منتج"}
                         className="w-24 h-14 object-cover bg-gray-50 rounded-md flex-shrink-0 aspect-[10/6]"
                         onError={() => {
-                          console.log("🖼️ RemoteImage failed for:", item.item_details?.image_url);
+                          // console.log("🖼️ RemoteImage failed for:", item.item_details?.image_url);
                         }}
                       />
                       <div className="flex-1 min-w-0 text-right">

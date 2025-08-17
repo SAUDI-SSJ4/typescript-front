@@ -44,9 +44,9 @@ const AcademyMainMenuForm = () => {
     }
   }, [isDirty]);
 
-  const onSubmit = async (data: AcademyMainMenuFormType) => {
+  const onSubmit = async (_data: AcademyMainMenuFormType) => {
     // Handle form submission logic here
-    console.log("Form submitted with data:", data);
+    // console.log("Form submitted with data:", _data);
     // You can call your API or perform any other actions here
 
     // After successful submission, reset the user changes flag

@@ -98,7 +98,7 @@ function SiginWithGoogle({
     },
     onError: () => {
       toast.error("فشل في تسجيل الدخول باستخدام جوجل");
-      console.log("Login Failed");
+              // console.log("Login Failed");
     },
   });
 

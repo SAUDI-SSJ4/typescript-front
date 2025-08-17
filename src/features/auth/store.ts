@@ -55,7 +55,7 @@ const initializeAuthState = () => {
     accessToken,
     refreshToken,
     isLoading: false,
-    isAuthenticated: Boolean(accessToken && refreshToken && user),
+    isAuthenticated: Boolean(accessToken && user), // تبسيط: لا نحتاج refreshToken للفحص
   };
 };
 
@@ -78,24 +78,27 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
     set(() => ({ isLoading: true }));
 
     try {
+      console.log("Attempting login with:", { email: credentials.email });
       const data = await authService.login(credentials);
+      console.log("Login response:", data);
 
       set(() => ({
-        user: data.data.user as unknown as User,
-        accessToken: data.data.access_token,
-        refreshToken: data.data.access_token, // Note: no refresh token in current response
+        user: data.user_data as unknown as User,  // Fixed: access user_data directly
+        accessToken: data.access_token,           // Fixed: access access_token directly
+        refreshToken: data.refresh_token,         // Fixed: access refresh_token directly
         isAuthenticated: true,
         isLoading: false,
       }));
 
       // Store in cookies
       authCookies.setAuthData(
-        data.data.access_token,
-        data.data.access_token, // Note: no refresh token in current response
-        data.data.user as any
+        data.access_token,                        // Fixed: access access_token directly
+        data.refresh_token,                       // Fixed: access refresh_token directly
+        data.user_data as any                    // Fixed: access user_data directly
       );
       return data;
     } catch (error) {
+      console.error("Login error:", error);
       set(() => ({ isLoading: false }));
       throw error;
     }
@@ -105,24 +108,27 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
     set(() => ({ isLoading: true }));
 
     try {
+      console.log("Attempting signup with:", { email: userData.email });
       const response = await authService.signup(userData);
+      console.log("Signup response:", response);
 
       set(() => ({
-        user: response.data.user as unknown as User,
-        accessToken: response.data.access_token,
-        refreshToken: response.data.access_token,
+        user: response.user_data as unknown as User,  // Fixed: access user_data directly
+        accessToken: response.access_token,           // Fixed: access access_token directly
+        refreshToken: response.refresh_token,         // Fixed: access refresh_token directly
         isAuthenticated: true,
         isLoading: false,
       }));
 
       // Store in cookies
       authCookies.setAuthData(
-        response.data.access_token,
-        response.data.access_token,
-        response.data.user as any
+        response.access_token,                        // Fixed: access access_token directly
+        response.refresh_token,                       // Fixed: access refresh_token directly
+        response.user_data as any                    // Fixed: access user_data directly
       );
       return response;
     } catch (error) {
+      console.error("Signup error:", error);
       set(() => ({ isLoading: false }));
       throw error;
     }
@@ -151,12 +157,18 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
 
   refreshUser: async () => {
     const { accessToken } = get();
-    if (!accessToken) return;
+    if (!accessToken) {
+      console.log("No access token found, skipping user refresh");
+      return;
+    }
 
     set(() => ({ isLoading: true }));
 
     try {
+      console.log("Refreshing user data...");
       const user = await authService.getCurrentUser();
+      console.log("User refresh successful:", user);
+
       set(() => ({
         user: user as unknown as User,
         isAuthenticated: true,
@@ -175,6 +187,7 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
   refreshTokens: async () => {
     const { refreshToken } = get();
     if (!refreshToken) {
+      console.log("No refresh token found, clearing auth state");
       get().clearAuth();
       return;
     }
@@ -233,19 +246,19 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
 
       // Update auth state with verified user data and tokens
       set(() => ({
-        user: response.data.user as unknown as User,
-        accessToken: response.data.access_token,
-        refreshToken: response.data.access_token,
+        user: response.user_data as unknown as User,  // Fixed: access user_data directly
+        accessToken: response.access_token,           // Fixed: access access_token directly
+        refreshToken: response.refresh_token,         // Fixed: access refresh_token directly
         isAuthenticated: true,
         isLoading: false,
       }));
 
       // Store in cookies
-      if (response.data) {
+      if (response) {
         authCookies.setAuthData(
-          response.data.access_token,
-          response.data.access_token,
-          response.data.user as any
+          response.access_token,                     // Fixed: access access_token directly
+          response.refresh_token,                    // Fixed: access refresh_token directly
+          response.user_data as any                 // Fixed: access user_data directly
         );
       }
 

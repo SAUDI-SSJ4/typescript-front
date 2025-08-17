@@ -39,7 +39,7 @@ function PaymentSuccess() {
           if (dbTransactionId) {
             const parsedDbId = parseInt(dbTransactionId, 10);
             if (!isNaN(parsedDbId)) {
-              console.log("Using transaction_id from URL:", parsedDbId);
+              // console.log("Using transaction_id from URL:", parsedDbId);
               verifyPayment(parsedDbId);
               return;
             }

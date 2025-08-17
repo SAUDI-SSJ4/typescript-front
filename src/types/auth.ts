@@ -40,14 +40,14 @@ export interface RegisterData {
 }
 
 export interface AuthResponse {
-  success: boolean;
-  data: {
-    user: User;
-    access_token: string;
-    token_type: string;
-  };
+  status: string;
+  status_code: number;
   message: string;
-  status_code?: number;
+  access_token: string;
+  refresh_token: string;
+  user_data: User;
+  token_type: string;
+  timestamp: string;
 }
 
 export interface OTPVerificationData {

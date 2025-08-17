@@ -129,9 +129,20 @@ const AuthForm: React.FC<{
           });
         }
       } catch (error: unknown) {
-        const errorMessage =
-          (error as { response?: { data?: { message?: string } } })?.response
-            ?.data?.message || "حدث خطأ ما";
+        console.error("Auth error:", error); // إضافة تسجيل الأخطاء للتشخيص
+        
+        let errorMessage = "حدث خطأ ما";
+        
+        if (error && typeof error === 'object') {
+          if ('response' in error && error.response && typeof error.response === 'object') {
+            if ('data' in error.response && error.response.data && typeof error.response.data === 'object') {
+              if ('message' in error.response.data && typeof error.response.data.message === 'string') {
+                errorMessage = error.response.data.message;
+              }
+            }
+          }
+        }
+        
         toast.error(errorMessage);
       }
     },

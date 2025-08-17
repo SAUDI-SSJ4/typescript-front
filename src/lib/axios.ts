@@ -44,7 +44,10 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   (response: AxiosResponse) => response,
   async (error: AxiosError) => {
+    console.error("Axios error:", error);
+    
     if (error.response?.status === 401) {
+      console.log("Unauthorized access, redirecting to login");
       // Redirect to login page if unauthorized
       // The backend's cookie middleware should handle clearing expired/invalid cookies
       window.location.href = "/auth/signin";

@@ -103,7 +103,7 @@ export default function FinancialTransactions() {
   
   // Debug transactions data
   useEffect(() => {
-    console.log('Transactions data in component:', transactions);
+    // console.log('Transactions data in component:', transactions);
     if (error) {
       console.error('Error in FinancialTransactions:', error);
     }

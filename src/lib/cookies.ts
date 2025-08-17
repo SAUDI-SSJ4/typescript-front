@@ -6,7 +6,7 @@ import { Environments } from "@/constants/enums";
 const COOKIE_OPTIONS = {
   expires: 7, // 7 days
   secure: process.env.NODE_ENV === Environments.PROD, // HTTPS only in production
-  sameSite: "strict" as const,
+  sameSite: "lax" as const, // تغيير من "strict" إلى "lax" لتجنب مشاكل CORS
   path: "/",
 };
 

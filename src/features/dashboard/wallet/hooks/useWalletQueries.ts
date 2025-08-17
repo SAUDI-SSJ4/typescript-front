@@ -14,20 +14,20 @@ export const useWalletTransactions = (
     queryFn: () => walletApi.getTransactions(filter, dateRange, searchQuery),
     enabled,
     select: (data) => {
-      console.log('Raw API response in select:', data);
+      // console.log('Raw API response in select:', data);
       
       // Handle different API response formats
       if (data.data && Array.isArray(data.data)) {
-        console.log('Data is directly an array');
+        // console.log('Data is directly an array');
         return data.data;
       } else if (data.data && data.data.transactions && Array.isArray(data.data.transactions)) {
-        console.log('Data is in data.transactions');
+        // console.log('Data is in data.transactions');
         return data.data.transactions;
       } else if (Array.isArray(data)) {
-        console.log('Data is directly the response');
+        // console.log('Data is directly the response');
         return data;
       } else {
-        console.log('Unknown data format, returning empty array');
+        // console.log('Unknown data format, returning empty array');
         return [];
       }
     },
