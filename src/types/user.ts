@@ -21,6 +21,7 @@ export type AcademyMembership = {
     logo: string;
   };
 };
+
 export type User = {
   id: string;
   email: string;
@@ -35,9 +36,6 @@ export type User = {
   phone_number?: string;
   gender?: string;
   academy_memberships?: AcademyMembership[];
-  phone_number: string;
-  gender: string;
-  banner?: string;
 };
 
 type UserWithTokens = {
@@ -45,6 +43,7 @@ type UserWithTokens = {
   access_token: string;
   refresh_token: string;
 };
+
 export type AuthResponse = UserWithTokens & {
   status_code: number;
   message: string;

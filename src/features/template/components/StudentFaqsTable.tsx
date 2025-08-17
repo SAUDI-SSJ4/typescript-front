@@ -84,7 +84,7 @@ function StudentFaqsTable({ faqs }: StudentFaqsTableProps) {
   const handleDeleteConfirm = async () => {
     if (selectedFaq) {
       try {
-        await deleteFAQMutation.mutateAsync(selectedFaq.id);
+        await deleteFAQMutation.mutateAsync(parseInt(selectedFaq.id));
         setDeleteDialogOpen(false);
         setSelectedFaq(null);
       } catch (error) {
