@@ -96,33 +96,36 @@ const AuthForm: React.FC<{
             });
           }
         } else if (slug === Pages.FORGOT_PASSWORD) {
-          const { status_code, message } = await forgotPassword(
+          const response = await forgotPassword(
             data.email as string
           );
-          if (status_code === 200) {
+          if (response && typeof response === 'object' && 'status_code' in response && response.status_code === 200) {
+            const message = (response as any).message || 'تم إرسال رابط إعادة تعيين كلمة المرور';
             toast.success(message);
           }
         } else if (slug === Pages.RESET_PASSWORD) {
-          const { status_code, message } = await resetPassword({
+          const response = await resetPassword({
             email: verifiedEmail as string,
             otp: verification_token as string,
             password: data.password as string,
             password_confirmation: data.confirm_password as string,
           });
-          if (status_code === 200) {
+          if (response && typeof response === 'object' && 'status_code' in response && response.status_code === 200) {
+            const message = (response as any).message || 'تم إعادة تعيين كلمة المرور بنجاح';
             toast.success(message);
             navigate(`/${Routes.AUTH}/${Pages.SIGNIN}`, {
               replace: true,
             });
           }
         } else if (slug === Pages.SIGNIN_WITH_GOOGLE) {
-          const { message } = await login({
+          const response = await login({
             email: "google@example.com",
             password: "temp",
             // google_token: cookieStorage.getItem("google_token") as string,
             user_type: data.user_type as UserType,
           });
 
+          const message = response && typeof response === 'object' && 'message' in response ? (response as any).message : 'تم تسجيل الدخول بنجاح';
           toast.success(message);
           navigate(Routes.DASHBOARD, {
             replace: true,
@@ -298,9 +301,12 @@ function NavigationLink({
   const handleResendOtp = async () => {
     try {
       // Using forgotPassword as a placeholder for resend OTP
-      const { message } = await resendOtp({ email: verifiedEmail }); // This should be the user's email
-      if (message) {
-        toast.success(message);
+      const response = await resendOtp({ email: verifiedEmail }); // This should be the user's email
+      if (response && typeof response === 'object' && 'message' in response) {
+        const message = (response as any).message;
+        if (message) {
+          toast.success(message);
+        }
       }
 
       setCountdown(60); // Reset countdown after successful resend
