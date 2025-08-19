@@ -8,6 +8,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { toast } from "sonner";
 import { Skeleton } from "@/components/ui/skeleton";
 import RemoteImage from "@/components/shared/RemoteImage";
+import PaymentIcon from "@/components/payment/PaymentIcons";
 
 function ShoppingCart() {
   const navigate = useNavigate();
@@ -26,6 +27,7 @@ function ShoppingCart() {
   const [discountCode, setDiscountCode] = useState("");
   const [processingCheckout, setProcessingCheckout] = useState(false);
   const [paymentError, setPaymentError] = useState<string | null>(null);
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<string | null>(null);
 
   // Check for payment error from navigation state
   useEffect(() => {
@@ -65,14 +67,123 @@ function ShoppingCart() {
     }
   };
 
+  const handlePaymentMethodSelect = (methodId: string) => {
+    setSelectedPaymentMethod(methodId);
+  };
+
+  const handleApplePayCheckout = async () => {
+    try {
+      // Check if Apple Pay is available
+      if (!window.ApplePaySession || !window.ApplePaySession.canMakePayments()) {
+        toast.error("Apple Pay غير متاح على هذا الجهاز");
+        return;
+      }
+
+      const totalAmount = total;
+      const token = localStorage.getItem('token');
+      
+      // Create Apple Pay payment request
+      const request = {
+        countryCode: 'SA',
+        currencyCode: 'SAR',
+        supportedNetworks: ['visa', 'masterCard', 'amex', 'mada'],
+        merchantCapabilities: ['supports3DS'],
+        total: {
+          label: 'SAYAN Academy',
+          amount: totalAmount.toString(),
+          type: 'final'
+        }
+      };
+
+      const session = new window.ApplePaySession(3, request);
+
+      session.onvalidatemerchant = async (event) => {
+        try {
+          const validationResponse = await fetch('/api/v1/payment/apple-pay/validate', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({
+              validationURL: event.validationURL,
+              merchantIdentifier: 'merchant.com.sayan.applepay'
+            })
+          });
+
+          const validation = await validationResponse.json();
+          if (validation.success) {
+            session.completeMerchantValidation(validation.data);
+          } else {
+            session.abort();
+            toast.error("فشل في التحقق من Apple Pay");
+          }
+        } catch {
+          session.abort();
+          toast.error("خطأ في التحقق من Apple Pay");
+        }
+      };
+
+      session.onpaymentauthorized = async (event) => {
+        try {
+          const paymentResponse = await fetch('/api/v1/payment/apple-pay/process', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({
+              token: event.payment.token,
+              amount: totalAmount,
+              currency: 'SAR',
+              orderId: `order_${Date.now()}`
+            })
+          });
+
+          const result = await paymentResponse.json();
+          
+          if (result.success) {
+            session.completePayment(window.ApplePaySession!.STATUS_SUCCESS);
+            toast.success("تم الدفع بنجاح!");
+            // Clear cart and redirect
+            clearCart();
+            window.location.href = '/dashboard/payment-success';
+          } else {
+            session.completePayment(window.ApplePaySession!.STATUS_FAILURE);
+            toast.error("فشل في معالجة الدفع");
+          }
+        } catch {
+          session.completePayment(window.ApplePaySession!.STATUS_FAILURE);
+          toast.error("خطأ في معالجة الدفع");
+        }
+      };
+
+      session.begin();
+    } catch (error) {
+      console.error('Apple Pay error:', error);
+      toast.error("خطأ في Apple Pay");
+    }
+  };
+
   const handleCheckout = async () => {
     if (items.length === 0) {
       toast.error("السلة فارغة");
       return;
     }
 
+    if (!selectedPaymentMethod) {
+      toast.error("يرجى اختيار وسيلة دفع");
+      return;
+    }
+
     setProcessingCheckout(true);
     try {
+      // Handle Apple Pay differently
+      if (selectedPaymentMethod === 'applepay') {
+        await handleApplePayCheckout();
+        setProcessingCheckout(false);
+        return;
+      }
       
       // 271: Process checkout with custom success and back URLs for payment gateway
       const checkoutResponse = await PaymentAPI.processCheckout({
@@ -114,8 +225,6 @@ function ShoppingCart() {
     }, 0);
   };
 
-
-
   const getTypeLabel = (type: string) => {
     return type === "course" ? "دورة تعليمية" : "منتج رقمي";
   };
@@ -124,7 +233,74 @@ function ShoppingCart() {
     return type === "course" ? "bg-blue-100 text-blue-700" : "bg-purple-100 text-purple-700";
   };
 
+  const renderPaymentMethods = () => {
+    const paymentMethods = [
+      {
+        id: 'applepay',
+        name: 'Apple Pay',
+        nameAr: 'Apple Pay',
+        icon: 'applepay',
+        description: 'المحفظة الرقمية من آبل - سريعة وآمنة',
+        color: 'bg-black hover:bg-gray-800',
+        textColor: 'text-white'
+      },
+      {
+        id: 'creditcard',
+        name: 'Credit/Debit Cards',
+        nameAr: 'بطاقات الائتمان/الخصم',
+        icon: 'creditcard',
+        description: 'فيزا، ماستركارد، أمريكان إكسبريس، مدى',
+        color: 'bg-blue-600 hover:bg-blue-700',
+        textColor: 'text-white'
+      }
+    ];
 
+    return (
+      <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-6 mb-4">
+        <h4 className="text-lg font-semibold text-gray-900 mb-4">اختر وسيلة الدفع</h4>
+        <div className="grid gap-3">
+          {paymentMethods.map((method) => {
+            const isSelected = selectedPaymentMethod === method.id;
+            
+            return (
+              <button
+                key={method.id}
+                onClick={() => handlePaymentMethodSelect(method.id)}
+                className={`
+                  flex items-center p-4 rounded-lg border-2 transition-all duration-200
+                  ${isSelected 
+                    ? 'border-blue-500 bg-blue-50' 
+                    : 'border-gray-200 hover:border-gray-300'
+                  }
+                `}
+              >
+                <div className={`
+                  w-12 h-12 rounded-full flex items-center justify-center mr-4
+                  ${method.color}
+                `}>
+                  <PaymentIcon 
+                    type={method.icon as 'applepay' | 'creditcard'} 
+                    className={method.textColor}
+                  />
+                </div>
+                <div className="flex-1 text-right">
+                  <h5 className="font-semibold text-gray-900 mb-1">{method.nameAr}</h5>
+                  <p className="text-sm text-gray-600">{method.description}</p>
+                </div>
+                {isSelected && (
+                  <div className="w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center">
+                    <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                  </div>
+                )}
+              </button>
+            );
+          })}
+        </div>
+      </div>
+    );
+  };
 
   if (loading) {
     return (
@@ -209,94 +385,50 @@ function ShoppingCart() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Cart Items */}
         <div className="lg:col-span-2 space-y-4">
-          {items.map((item, index) => (
-            <div key={`${item.cart_id}-${index}`} className="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden">
-              <div className="flex">
-                {/* Item Image */}
-                <div className="w-32 h-24 relative overflow-hidden">
-                  <RemoteImage
-                    src={item.item_details.image_url || "courses/default-course.jpg"}
-                    alt={item.item_details.title}
-                    className="w-full h-full object-cover"
-                    onError={() => {
-                      console.error("Failed to load image:", item.item_details.image_url);
-                    }}
-                  />
-                  <div className="absolute top-2 right-2">
-                    <span className={`px-2 py-1 rounded-full text-xs font-medium ${getTypeColor(item.item_details.type)}`}>
-                      {getTypeLabel(item.item_details.type)}
-                    </span>
-                  </div>
-                </div>
-
-                {/* Item Details */}
-                <div className="flex-1 p-4">
-                  <div className="flex justify-between items-start mb-2">
-                    <div className="flex-1">
-                      <h3 className="font-semibold text-gray-900 line-clamp-1 mb-2">
+          {items.map((item) => (
+            <div key={item.id} className="bg-white rounded-lg shadow-sm border border-gray-100 p-4">
+              <div className="flex items-start gap-4">
+                <RemoteImage
+                  src={item.item_details.thumbnail}
+                  alt={item.item_details.title}
+                  className="w-20 h-20 rounded-lg object-cover flex-shrink-0"
+                />
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-start justify-between">
+                    <div className="flex-1 min-w-0">
+                      <h4 className="font-semibold text-gray-900 mb-1 truncate">
                         {item.item_details.title}
-                      </h3>
-                      
-                      <div className="flex items-center gap-4 text-sm text-gray-600">
-                        {item.item_details.type === "course" ? (
-                          <>
-                            {item.item_details.academy_name && (
-                              <span className="text-blue-600">
-                                {item.item_details.academy_name}
-                              </span>
-                            )}
-                            {item.item_details.instructor_name && (
-                              <span>{item.item_details.instructor_name}</span>
-                            )}
-                            {item.item_details.duration && (
-                              <span>{item.item_details.duration}</span>
-                            )}
-                            {item.item_details.rating && (
-                              <span>{item.item_details.rating} ⭐</span>
-                            )}
-                            {item.item_details.students_count && (
-                              <span>{item.item_details.students_count} طالب</span>
-                            )}
-                          </>
-                        ) : (
-                          <>
-                            {item.item_details.academy_name && (
-                              <span className="text-purple-600">
-                                {item.item_details.academy_name}
-                              </span>
-                            )}
-                            {item.item_details.rating && (
-                              <span>{item.item_details.rating} ⭐</span>
-                            )}
-                          </>
-                        )}
+                      </h4>
+                      <p className="text-sm text-gray-600 mb-2 line-clamp-2">
+                        {item.item_details.description}
+                      </p>
+                      <div className="flex items-center gap-3">
+                        <span className={`px-2 py-1 rounded-full text-xs font-medium ${getTypeColor(item.item_details.type)}`}>
+                          {getTypeLabel(item.item_details.type)}
+                        </span>
+                        <span className="text-sm text-gray-500">
+                          {item.item_details.academy_name}
+                        </span>
                       </div>
                     </div>
-
-                    <div className="flex flex-col items-end gap-2">
+                    <div className="text-right ml-4">
+                      <div className="font-semibold text-gray-900 mb-1">
+                        {item.item_details.price} {currency}
+                      </div>
+                      {item.item_details.original_price && item.item_details.original_price > item.item_details.price && (
+                        <div className="text-sm text-gray-500 line-through">
+                          {item.item_details.original_price} {currency}
+                        </div>
+                      )}
                       <Button
-                        variant="ghost"
+                        variant="outline"
                         size="sm"
-                        onClick={() => handleRemoveItem(item.cart_id)}
-                        className="text-red-600 hover:bg-red-50"
+                        onClick={() => handleRemoveItem(item.id)}
+                        className="text-red-600 border-red-300 hover:bg-red-50 mt-2"
                         disabled={loading}
                       >
-                        {loading ? (
-                          <Loader2 className="w-4 h-4 animate-spin" />
-                        ) : (
-                          <Trash2 className="w-4 h-4" />
-                        )}
+                        <Trash2 className="w-4 h-4" />
                       </Button>
-                      <div className="text-right">
-                        <span className="text-lg font-bold text-blue-600">
-                          {item.item_details.price} {currency}
-                        </span>
-                        {item.item_details.original_price && item.item_details.original_price > item.item_details.price && (
-                          <div className="text-sm text-gray-500 line-through">
-                            {item.item_details.original_price} {currency}
-                          </div>
-                        )}
-                      </div>
                     </div>
                   </div>
                 </div>
@@ -369,10 +501,10 @@ function ShoppingCart() {
                   <span className="text-blue-600">{total || getTotalOriginalPrice() - getSavings()} {currency}</span>
                 </div>
               </div>
-
             </div>
 
-
+            {/* Payment Methods Section */}
+            {renderPaymentMethods()}
 
             <div className="space-y-3">
               {isAcademyUser() && (
@@ -382,9 +514,10 @@ function ShoppingCart() {
                   </p>
                 </div>
               )}
+              
               <Button 
                 className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 font-medium rounded-lg"
-                disabled={processingCheckout || items.length === 0 || isAcademyUser()}
+                disabled={processingCheckout || items.length === 0 || isAcademyUser() || !selectedPaymentMethod}
                 onClick={handleCheckout}
               >
                 {processingCheckout ? (
@@ -393,9 +526,10 @@ function ShoppingCart() {
                     جاري المعالجة...
                   </>
                 ) : (
-                  isAcademyUser() ? 'غير متاح لأصحاب الأكاديميات' : 'الدفع الآن'
+                  `الدفع بـ ${selectedPaymentMethod === 'applepay' ? 'Apple Pay' : 'بطاقة ائتمان/خصم'}`
                 )}
               </Button>
+              
               <Button 
                 variant="outline" 
                 className="w-full border-gray-300 text-gray-600 hover:bg-gray-50 py-3 font-medium rounded-lg"

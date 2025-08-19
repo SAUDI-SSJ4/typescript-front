@@ -6,10 +6,20 @@ const getHeaders = (): HeadersInit => {
     'Content-Type': 'application/json',
   };
   
-  // Get authorization header if available
-  const token = localStorage.getItem('access_token') || sessionStorage.getItem('access_token');
-  if (token) {
-    headers['Authorization'] = `Bearer ${token}`;
+  // Get authorization header from cookies if available
+  const cookies = document.cookie.split(';');
+  let accessToken = null;
+  
+  for (const cookie of cookies) {
+    const [name, value] = cookie.trim().split('=');
+    if (name === 'access_token') {
+      accessToken = value;
+      break;
+    }
+  }
+    
+  if (accessToken) {
+    headers['Authorization'] = `Bearer ${accessToken}`;
   }
   
   return headers;
@@ -45,6 +55,10 @@ export const makeApiCall = async <T>(
   
   return response.json();
 };
+
+
+
+
 
 
 
