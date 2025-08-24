@@ -37,4 +37,8 @@ export default function CourseVideo({ courseData }: CourseVideoProps) {
       </div>
     </Card>
   );
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> sketch

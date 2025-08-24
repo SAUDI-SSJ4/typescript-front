@@ -1,5 +1,9 @@
 import { useState } from "react";
+<<<<<<< HEAD
 import { BookOpen, CheckCircle, MessageSquare } from "lucide-react";
+=======
+import { BookOpen, CheckCircle, User, MessageSquare } from "lucide-react";
+>>>>>>> sketch
 import { Card, CardContent } from "@/components/ui/card";
 import CourseTabContent from "./CourseTabContent";
 
@@ -61,7 +65,11 @@ export default function CourseTabs({ courseData }: CourseTabsProps) {
             { id: "overview", label: "نظرة عامة", icon: BookOpen },
             { id: "curriculum", label: "المنهج", icon: CheckCircle },
             { id: "instructor", label: "ماذا سوف تتعلم", icon: CheckCircle },
+<<<<<<< HEAD
             { id: "reviews", label: "التقييمات", icon: MessageSquare },
+=======
+            { id: "reviews", label: "التقييمات", icon: MessageSquare }
+>>>>>>> sketch
           ].map((tab) => (
             <button
               key={tab.id}
@@ -78,7 +86,11 @@ export default function CourseTabs({ courseData }: CourseTabsProps) {
           ))}
         </nav>
       </div>
+<<<<<<< HEAD
 
+=======
+      
+>>>>>>> sketch
       {/* Tab Content */}
       <Card className="border border-gray-200 bg-white">
         <CardContent className="p-8">
@@ -87,4 +99,8 @@ export default function CourseTabs({ courseData }: CourseTabsProps) {
       </Card>
     </>
   );
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> sketch

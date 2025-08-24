@@ -1,60 +1,82 @@
-import { Star } from "lucide-react";
+import { useState } from "react";
+import WebBuilderLayout from "@/components/shared/WebBuilderLayout";
 import StudentReviewForm from "./StudentReviewForm";
 import StudentReviewsTable from "./StudentReviewsTable";
-import { useOpinions } from "../hooks/useOpinionsQueries";
-import { Loader } from "@/components/shared";
+import CustomCSSProvider from "./CustomCSSProvider";
+import HomePreview from "@/templates/template-one/pages/preview";
 
 function StudentReviews() {
-  const { data: opinionsResponse, isLoading, error } = useOpinions(0, 100);
+  const [canUndo] = useState(false);
+  const [canRedo] = useState(false);
 
-  if (isLoading) {
-    return (
-      <div className="space-y-6">
-        <Header />
-        <div className="flex justify-center py-10">
-          <Loader />
-        </div>
-      </div>
-    );
-  }
+  const handleSave = () => {
+    // تنفيذ عملية الحفظ
+    console.log("حفظ التغييرات");
+  };
 
-  if (error) {
-    return (
-      <div className="space-y-6">
-        <Header />
-        <div className="text-center py-10 text-red-500">
-          حدث خطأ أثناء جلب آراء الطلبة
-        </div>
-      </div>
-    );
-  }
+  const handleUndo = () => {
+    // تنفيذ عملية التراجع
+    console.log("تراجع");
+  };
 
-  const opinions = opinionsResponse?.data.opinions || [];
+  const handleRedo = () => {
+    // تنفيذ عملية الإعادة
+    console.log("إعادة");
+  };
 
   return (
-    <div className="space-y-6">
-      <Header />
-      <StudentReviewsTable reviews={opinions} />
-    </div>
+    <CustomCSSProvider>
+      <WebBuilderLayout
+        title="تقييمات الطلاب"
+        onSave={handleSave}
+        onUndo={handleUndo}
+        onRedo={handleRedo}
+        canUndo={canUndo}
+        canRedo={canRedo}
+        previewComponent={
+          <div className="w-full h-full bg-white">
+            <HomePreview />
+          </div>
+        }
+      >
+        <div className="space-y-6">
+          <div className="p-4 bg-yellow-50 rounded-lg border border-yellow-200">
+            <h3 className="font-semibold text-yellow-900 mb-2">إدارة تقييمات الطلاب</h3>
+            <p className="text-sm text-yellow-700">
+              قم بإدارة وتحرير تقييمات الطلاب المعروضة على الموقع
+            </p>
+          </div>
+          
+          <div className="mb-4">
+            <StudentReviewForm />
+          </div>
+          
+          <StudentReviewsTable
+            reviews={[
+              {
+                student_name: "أحمد محمد",
+                comment: "دورة رائعة! تعلمت الكثير.",
+                rating: 5,
+                image: "https://avatars.githubusercontent.com/u/87553297?v=4",
+              },
+              {
+                student_name: "سارة علي",
+                comment: "المحتوى كان مفيدًا جدًا.",
+                rating: 4,
+                image: "https://avatars.githubusercontent.com/u/87553297?v=4",
+              },
+              {
+                student_name: "محمد حسن",
+                comment: "تجربة تعليمية ممتازة.",
+                rating: 5,
+                image: "https://avatars.githubusercontent.com/u/87553297?v=4",
+              },
+            ]}
+          />
+        </div>
+      </WebBuilderLayout>
+    </CustomCSSProvider>
   );
 }
 
 export default StudentReviews;
-
-function Header() {
-  return (
-    <div className="flex flex-col sm:space-y-0 sm:flex-row sm:items-center sm:justify-between gap-4 bg-white p-4 lg:p-6 rounded-xl shadow-sm border border-gray-100">
-      <div className="flex flex-col sm:flex-row sm:items-center gap-3 lg:gap-4">
-        <div className="flex items-center gap-2 text-gray-600">
-          <Star className="w-5 h-5 text-blue-600" />
-          <span className="font-medium text-sm lg:text-base">
-            آراء الطلبة
-          </span>
-        </div>
-      </div>
-      <div className="flex items-center gap-4">
-        <StudentReviewForm />
-      </div>
-    </div>
-  );
-}

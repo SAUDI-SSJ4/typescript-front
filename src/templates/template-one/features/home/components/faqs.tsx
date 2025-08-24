@@ -36,9 +36,9 @@ function FAQs({ faqs }: { faqs: FAQ[] }) {
             transition={{ duration: 0.5 }}
             className="flex items-center justify-center gap-3 mb-6"
           >
-            <HelpCircle className="w-8 h-8 text-blue-600" />
+            <HelpCircle className="w-8 h-8 text-primary" />
             <h2 className="text-3xl lg:text-4xl font-bold">
-              الأسئلة <span className="text-blue-600">الشائعة</span>
+              الأسئلة <span className="text-primary">الشائعة</span>
             </h2>
           </motion.div>
           <motion.p
@@ -63,7 +63,7 @@ function FAQs({ faqs }: { faqs: FAQ[] }) {
               key={faq.id}
               variants={itemVariants}
               transition={{ duration: 0.5 }}
-              className="bg-gray-50/50 rounded-2xl border border-gray-100 overflow-hidden transition-all duration-300 hover:shadow-sm"
+              className="bg-white rounded-2xl border border-gray-200 overflow-hidden transition-all duration-300 hover:shadow-md"
             >
               <button
                 onClick={() => toggleFAQ(faq.id)}
@@ -71,12 +71,12 @@ function FAQs({ faqs }: { faqs: FAQ[] }) {
               >
                 <div className="flex items-center gap-3">
                   {openFAQ === faq.id ? (
-                    <Minus className="w-5 h-5 text-blue-600 transition-transform duration-200" />
+                    <Minus className="w-5 h-5 text-primary transition-transform duration-200" />
                   ) : (
-                    <Plus className="w-5 h-5 text-blue-600 transition-transform duration-200" />
+                    <Plus className="w-5 h-5 text-primary transition-transform duration-200" />
                   )}
                 </div>
-                <h3 className="text-lg font-semibold text-gray-900 flex-1">
+                <h3 className="text-lg font-semibold text-foreground flex-1">
                   {faq.question}
                 </h3>
               </button>
@@ -90,8 +90,8 @@ function FAQs({ faqs }: { faqs: FAQ[] }) {
                 transition={{ duration: 0.3, ease: "easeInOut" }}
                 className="overflow-hidden"
               >
-                <div className="px-6 pb-6">
-                  <p className="text-muted-foreground leading-relaxed">
+                <div className="px-6 pb-6 border-t border-gray-100">
+                  <p className="text-muted-foreground leading-relaxed pt-4">
                     {faq.answer}
                   </p>
                 </div>

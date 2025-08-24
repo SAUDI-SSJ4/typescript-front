@@ -64,7 +64,11 @@ function EmployeeFeatures() {
       {/* Background */}
       <div className="absolute inset-0 bg-gradient-to-b from-gray-50 to-white"></div>
       <div className="absolute inset-0 bg-[url('/assets/images/employee-training/pattern.svg')] opacity-5"></div>
+<<<<<<< HEAD
 
+=======
+      
+>>>>>>> sketch
       <div className="container relative">
         <div className="max-w-6xl mx-auto">
           {/* Section Header */}
@@ -83,8 +87,12 @@ function EmployeeFeatures() {
               أهمية <span className="text-blue-600">تدريب</span> الموظفين
             </h2>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+<<<<<<< HEAD
               اكتشف كيف يمكن لبرامج التدريب المتخصصة أن تحول أداء فريقك وتحقق
               نتائج استثنائية
+=======
+              اكتشف كيف يمكن لبرامج التدريب المتخصصة أن تحول أداء فريقك وتحقق نتائج استثنائية
+>>>>>>> sketch
             </p>
           </motion.div>
 
@@ -104,9 +112,13 @@ function EmployeeFeatures() {
               >
                 <div className="bg-white rounded-2xl p-8 shadow-sm border border-gray-100 h-full">
                   {/* Icon */}
+<<<<<<< HEAD
                   <div
                     className={`w-16 h-16 rounded-xl ${feature.color} flex items-center justify-center mb-6`}
                   >
+=======
+                  <div className={`w-16 h-16 rounded-xl ${feature.color} flex items-center justify-center mb-6`}>
+>>>>>>> sketch
                     <feature.icon className="w-8 h-8" />
                   </div>
 

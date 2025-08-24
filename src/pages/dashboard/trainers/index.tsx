@@ -2,6 +2,7 @@ import { Plus, Users } from "lucide-react";
 import { buttonVariants } from "@/components/ui/button";
 import TrainerStats from "@/features/trainers/components/TrainerStats";
 import TrainerFilters from "@/features/trainers/components/TrainerFilters";
+import DashboardPageHeader from "@/components/shared/dashboard/DashboardPageHeader";
 import { Link } from "react-router-dom";
 import { Pages, Routes } from "@/constants/enums";
 import type { Trainer } from "@/types/trainer";
@@ -84,7 +85,19 @@ function Trainers() {
 
   return (
     <div className="space-y-6">
-      <Header />
+      <DashboardPageHeader
+        icon={Users}
+        title="إدارة المدربين"
+        actions={
+          <Link
+            to={`${Routes.DASHBOARD}/${Pages.TRAINERS}/${Pages.NEW}`}
+            className={buttonVariants()}
+          >
+            <Plus className="w-4 h-4 mr-2" />
+            إضافة مدرب
+          </Link>
+        }
+      />
       <TrainerStats trainers={filteredTrainers} />
       <TrainerFilters
         selectedSpecialization={selectedSpecialization}
@@ -101,26 +114,4 @@ function Trainers() {
 
 export default Trainers;
 
-function Header() {
-  return (
-    <div className="flex flex-col sm:space-y-0 sm:flex-row sm:items-center sm:justify-between gap-4 bg-white p-4 lg:p-6 rounded-xl shadow-sm border-0">
-      <div className="flex flex-col sm:flex-row sm:items-center gap-3 lg:gap-4">
-        <div className="flex items-center gap-2 text-gray-600">
-          <Users className="w-5 h-5 text-blue-600" />
-          <span className="font-medium text-sm lg:text-base">
-            إدارة المدربين
-          </span>
-        </div>
-      </div>
-      <div className="flex items-center gap-4">
-        <Link
-          to={`${Routes.DASHBOARD}/${Pages.TRAINERS}/${Pages.NEW}`}
-          className={buttonVariants()}
-        >
-          <Plus className="w-4 h-4 mr-2" />
-          إضافة مدرب
-        </Link>
-      </div>
-    </div>
-  );
-}
+

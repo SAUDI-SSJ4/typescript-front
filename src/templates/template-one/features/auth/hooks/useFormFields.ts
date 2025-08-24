@@ -26,8 +26,8 @@ const useFormFields = ({ slug }: IFormFieldsVariables) => {
       placeholder: "اختر نوع حسابك",
       autoFocus: true,
       options: [
-        { value: UserType.STUDENT, label: "طالب" },
         { value: UserType.ACADEMY, label: "أكاديمية" },
+        { value: UserType.STUDENT, label: "طالب" },
       ],
     },
     {

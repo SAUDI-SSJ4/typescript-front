@@ -1,5 +1,5 @@
 import { Pages, Routes } from "@/constants/enums";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useCallback } from "react";
 import FormFields from "@/components/shared/formFields/form-fields";
@@ -10,6 +10,7 @@ import { LoadingButton } from "@/components/shared/Loader";
 import { toast } from "sonner";
 import { UserType } from "@/constants/enums";
 import { useAuth } from "@/features/auth/hooks/useAuthStore";
+import { useAuthStore } from "@/features/auth/store";
 import useFormFields from "../hooks/useFormFields";
 import useFormValidations from "../hooks/useFormValidations";
 
@@ -44,10 +45,17 @@ const AuthForm: React.FC<{ slug: string }> = ({ slug }) => {
             email: data.email as string,
             password: data.password as string,
           });
-
           toast.success("تم تسجيل الدخول بنجاح");
-          navigate("/dashboard");
+          
+          // التوجيه بناءً على نوع المستخدم
+          const { user } = useAuthStore.getState();
+          if (user?.user_type === "ACADEMY") {
+            navigate("/academy/simple-arab-code");
+          } else {
+            navigate("/dashboard");
+          }
         } else if (slug === Pages.SIGNUP) {
+<<<<<<< HEAD
           console.log("Form data:", data);
           console.log(
             "Phone number (after schema processing):",
@@ -57,16 +65,31 @@ const AuthForm: React.FC<{ slug: string }> = ({ slug }) => {
           const { message } = await signup({
             fname: data.fname as string,
             lname: data.lname as string,
+=======
+          await signup({
+            name: data.name as string,
+>>>>>>> sketch
             email: data.email as string,
-            phone_number: data.phone_number as string,
+            phone: data.phone as string,
             password: data.password as string,
             password_confirmation: data.confirm_password as string,
             user_type: data.user_type as UserType,
             // profile_picture: data.profile_picture as File,
           });
+<<<<<<< HEAD
           if (message) {
             toast.success(message);
             navigate(Routes.DASHBOARD);
+=======
+          toast.success("تم إنشاء الحساب بنجاح");
+          
+          // التوجيه بناءً على نوع المستخدم بعد التسجيل
+          const { user } = useAuthStore.getState();
+          if (user?.user_type === "ACADEMY") {
+            navigate("/academy/simple-arab-code");
+          } else {
+            navigate("/dashboard");
+>>>>>>> sketch
           }
         }
       } catch (error: unknown) {
@@ -76,7 +99,7 @@ const AuthForm: React.FC<{ slug: string }> = ({ slug }) => {
         toast.error(errorMessage);
       }
     },
-    [slug, login, navigate, signup]
+    [slug, login, signup, navigate]
   );
 
   const formLoading = isSubmitting || isLoading;
@@ -173,6 +196,8 @@ function SubmitButton({
 }
 
 function NavigationLink({ slug }: { slug: string }) {
+  const { academySlug } = useParams();
+
   const getText = () => {
     switch (slug) {
       case Pages.SIGNIN:
@@ -199,7 +224,7 @@ function NavigationLink({ slug }: { slug: string }) {
     <div className="mt-6 flex items-center gap-2">
       <p className="text-card-foreground text-sm">{getText().desc}</p>
       <Link
-        to={`/${Routes.AUTH}/${getText().slug}`}
+        to={`/academy/${academySlug}/${Routes.AUTH}/${getText().slug}`}
         replace
         className="text-primary hover:underline text-sm font-medium transition-colors duration-200"
       >

@@ -47,7 +47,11 @@ function Clients() {
         {/* Section Header */}
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-4">
+<<<<<<< HEAD
             <span className="text-primary">شركاء</span> النجاح
+=======
+            <span className="text-primary">عملاء</span> نفتخر بهم
+>>>>>>> sketch
           </h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
             نفتخر بشراكتنا مع رواد الأعمال والمؤسسات الرائدة في المملكة العربية

@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 import { useState, useEffect } from 'react';
+=======
+import { useState, useMemo } from 'react';
+>>>>>>> sketch
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -12,6 +16,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+<<<<<<< HEAD
 import { Search, Calendar, Download, Loader2 } from "lucide-react";
 import type { TransactionFilter, DateRange } from '@/types/wallet';
 import { ITEMS_PER_PAGE } from '@/constants/wallet';
@@ -85,10 +90,22 @@ const getStatusColor = (transaction: any) => {
 };
 
 export default function FinancialTransactions() {
+=======
+import { Search, Calendar, Download } from "lucide-react";
+import type { Transaction, TransactionFilter, DateRange } from '@/types/wallet';
+import { ITEMS_PER_PAGE } from '@/constants/wallet';
+
+interface FinancialTransactionsProps {
+  transactions: Transaction[];
+}
+
+export default function FinancialTransactions({ transactions }: FinancialTransactionsProps) {
+>>>>>>> sketch
   const [searchQuery, setSearchQuery] = useState("");
   const [transactionFilter, setTransactionFilter] = useState<TransactionFilter>("all");
   const [dateRange, setDateRange] = useState<DateRange>("this-month");
   const [currentPage, setCurrentPage] = useState(1);
+<<<<<<< HEAD
   
   // Debounce search query to avoid too many API calls
   const debouncedSearchQuery = useDebounce(searchQuery, 500);
@@ -131,6 +148,34 @@ export default function FinancialTransactions() {
   // Pagination
   const totalPages = Math.ceil((transactions?.length || 0) / ITEMS_PER_PAGE);
   const paginatedTransactions = transactions.slice(
+=======
+
+  // Filter transactions based on search and filters
+  const filteredTransactions = useMemo(() => {
+    return transactions.filter(transaction => {
+      const matchesSearch = searchQuery === "" || 
+        transaction.product.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        transaction.student.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        transaction.type.toLowerCase().includes(searchQuery.toLowerCase());
+      
+      const matchesFilter = transactionFilter === "all" ||
+        (transactionFilter === "income" && transaction.change.startsWith("+ ")) ||
+        (transactionFilter === "expense" && transaction.change.startsWith("-")) ||
+        (transactionFilter === "course" && transaction.type === "بيع دورة") ||
+        (transactionFilter === "partnership" && transaction.type === "عمولة شراكة");
+      
+      // Date range filtering would be implemented here with actual date parsing
+      // For now, we'll assume all transactions match the date range
+      const matchesDateRange = true;
+      
+      return matchesSearch && matchesFilter && matchesDateRange;
+    });
+  }, [transactions, searchQuery, transactionFilter, dateRange]);
+
+  // Pagination
+  const totalPages = Math.ceil(filteredTransactions.length / ITEMS_PER_PAGE);
+  const paginatedTransactions = filteredTransactions.slice(
+>>>>>>> sketch
     (currentPage - 1) * ITEMS_PER_PAGE,
     currentPage * ITEMS_PER_PAGE
   );
@@ -153,16 +198,23 @@ export default function FinancialTransactions() {
       <div className="flex items-center justify-between mb-6">
         <div>
           <h3 className="text-xl font-semibold text-gray-900">سجل المعاملات المالية</h3>
+<<<<<<< HEAD
           <p className="text-sm text-gray-600 mt-1">
             {isLoading ? 'جاري التحميل...' : `إجمالي ${transactions.length} معاملة`}
           </p>
+=======
+          <p className="text-sm text-gray-600 mt-1">إجمالي {filteredTransactions.length} معاملة</p>
+>>>>>>> sketch
         </div>
         <Button 
           variant="outline" 
           size="sm" 
           className="gap-2"
           onClick={handleExportTransactions}
+<<<<<<< HEAD
           disabled={isLoading || isError || transactions.length === 0}
+=======
+>>>>>>> sketch
         >
           <Download className="w-4 h-4" />
           تصدير المعاملات
@@ -179,6 +231,7 @@ export default function FinancialTransactions() {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="pr-10"
+<<<<<<< HEAD
               disabled={isLoading}
             />
           </div>
@@ -188,6 +241,12 @@ export default function FinancialTransactions() {
           onValueChange={(value) => setTransactionFilter(value as TransactionFilter)}
           disabled={isLoading}
         >
+=======
+            />
+          </div>
+        </div>
+        <Select value={transactionFilter} onValueChange={(value) => setTransactionFilter(value as TransactionFilter)}>
+>>>>>>> sketch
           <SelectTrigger className="w-full sm:w-48">
             <SelectValue placeholder="تصفية حسب النوع" />
           </SelectTrigger>
@@ -201,7 +260,11 @@ export default function FinancialTransactions() {
         </Select>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
+<<<<<<< HEAD
             <Button variant="outline" size="default" className="gap-2" disabled={isLoading}>
+=======
+            <Button variant="outline" size="default" className="gap-2">
+>>>>>>> sketch
               <Calendar className="w-4 h-4" />
               الفترة الزمنية
             </Button>
@@ -231,6 +294,7 @@ export default function FinancialTransactions() {
             </TableRow>
           </TableHeader>
           <TableBody>
+<<<<<<< HEAD
             {isLoading ? (
               <TableRow>
                 <TableCell colSpan={8} className="text-center py-8">
@@ -280,6 +344,39 @@ export default function FinancialTransactions() {
                   <TableCell className="text-right py-4">
                     <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium ${getStatusColor(transaction)}`}>
                       {transaction.status || 'مكتمل'}
+=======
+            {paginatedTransactions.length > 0 ? (
+              paginatedTransactions.map((transaction) => (
+                <TableRow key={transaction.id} className="border-b border-gray-100 hover:bg-gray-50 transition-colors">
+                  <TableCell className="text-right py-4">
+                    <div className="text-gray-600">{transaction.id}</div>
+                  </TableCell>
+                  <TableCell className="text-right py-4">
+                    <div className="text-sm text-gray-600">{transaction.date}</div>
+                  </TableCell>
+                  <TableCell className="text-right py-4">
+                    <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-${transaction.typeColor}-100 text-${transaction.typeColor}-700`}>
+                      {transaction.type}
+                    </span>
+                  </TableCell>
+                  <TableCell className="text-right py-4">
+                    <div className="font-medium text-gray-900">{transaction.product}</div>
+                  </TableCell>
+                  <TableCell className="text-right py-4">
+                    <div className="text-gray-600">{transaction.student}</div>
+                  </TableCell>
+                  <TableCell className="text-right py-4">
+                    <div className={`font-semibold ${transaction.change.startsWith("+") ? "text-green-600" : "text-red-600"}`}>
+                      ﷼{transaction.change}
+                    </div>
+                  </TableCell>
+                  <TableCell className="text-right py-4">
+                    <div className="text-gray-900 font-medium">﷼{transaction.after}</div>
+                  </TableCell>
+                  <TableCell className="text-right py-4">
+                    <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium ${transaction.status === "مكتمل" ? "bg-green-100 text-green-700" : "bg-orange-100 text-orange-700"}`}>
+                      {transaction.status}
+>>>>>>> sketch
                     </span>
                   </TableCell>
                 </TableRow>
@@ -298,14 +395,21 @@ export default function FinancialTransactions() {
       {/* Mobile Card View */}
       <div className="block lg:hidden space-y-4">
         {paginatedTransactions.length > 0 ? (
+<<<<<<< HEAD
           paginatedTransactions.map((transaction, index) => (
             <div
               key={transaction.id || index}
+=======
+          paginatedTransactions.map((transaction) => (
+            <div
+              key={transaction.id}
+>>>>>>> sketch
               className="bg-white rounded-lg border-0 shadow-sm p-4 space-y-3"
             >
               <div className="flex items-start justify-between">
                 <div className="space-y-1">
                   <h3 className="font-medium text-sm leading-5 text-right">
+<<<<<<< HEAD
                     {transaction.product || transaction.description || '-'}
                   </h3>
                   <p className="text-xs text-gray-500 text-right">
@@ -318,25 +422,54 @@ export default function FinancialTransactions() {
                 <div className="text-left">
                   <div className={`font-semibold text-sm ${getAmountColor(transaction)}`}>
                     ﷼{formatAmount(transaction)}
+=======
+                    {transaction.product}
+                  </h3>
+                  <p className="text-xs text-gray-500 text-right">
+                    {transaction.student}
+                  </p>
+                  <p className="text-xs text-gray-500 text-right">
+                    {transaction.date}
+                  </p>
+                </div>
+                <div className="text-left">
+                  <div className={`font-semibold text-sm ${transaction.change.startsWith("+") ? "text-green-600" : "text-red-600"}`}>
+                    ﷼{transaction.change}
+>>>>>>> sketch
                   </div>
                 </div>
               </div>
 
               <div className="flex flex-wrap gap-2 justify-end">
+<<<<<<< HEAD
                 <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium ${getTypeColor(transaction)}`}>
                   {transaction.type || 'غير معروف'}
                 </span>
                 <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium ${getStatusColor(transaction)}`}>
                   {transaction.status || 'مكتمل'}
+=======
+                <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-${transaction.typeColor}-100 text-${transaction.typeColor}-700`}>
+                  {transaction.type}
+                </span>
+                <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium ${transaction.status === "مكتمل" ? "bg-green-100 text-green-700" : "bg-orange-100 text-orange-700"}`}>
+                  {transaction.status}
+>>>>>>> sketch
                 </span>
               </div>
 
               <div className="flex justify-between items-center pt-2 border-t">
                 <div className="text-sm text-gray-600">
+<<<<<<< HEAD
                   رقم المعاملة: {transaction.id || `#${index+1}`}
                 </div>
                 <div className="text-sm font-medium text-gray-900">
                   الرصيد: ﷼{transaction.after || transaction.balance || '-'}
+=======
+                  رقم المعاملة: {transaction.id}
+                </div>
+                <div className="text-sm font-medium text-gray-900">
+                  الرصيد: ﷼{transaction.after}
+>>>>>>> sketch
                 </div>
               </div>
             </div>
@@ -352,7 +485,11 @@ export default function FinancialTransactions() {
       {totalPages > 1 && (
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4 py-4">
           <div className="text-sm text-muted-foreground">
+<<<<<<< HEAD
             عرض {(currentPage - 1) * ITEMS_PER_PAGE + 1} إلى {Math.min(currentPage * ITEMS_PER_PAGE, transactions.length)} من {transactions.length} معاملة
+=======
+            عرض {(currentPage - 1) * ITEMS_PER_PAGE + 1} إلى {Math.min(currentPage * ITEMS_PER_PAGE, filteredTransactions.length)} من {filteredTransactions.length} معاملة
+>>>>>>> sketch
           </div>
           <div className="flex gap-2">
             <Button

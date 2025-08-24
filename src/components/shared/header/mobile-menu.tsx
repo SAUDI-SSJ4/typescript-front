@@ -8,6 +8,7 @@ import {
 } from "@/components/ui/sheet";
 import { Menu, X } from "lucide-react";
 import { buttonVariants } from "@/components/ui/button";
+import LoginDialog from "@/components/ui/login-dialog";
 
 interface MobileMenuProps {
   links: Array<{
@@ -59,19 +60,15 @@ export default function MobileMenu({ links }: MobileMenuProps) {
             </ul>
           </nav>
           <div className="py-6 flex flex-col items-stretch gap-4 border-t border-border">
-            <Link
-              to="/auth/signin"
-              className={buttonVariants({
-                variant: "outline",
-                className: "w-full justify-center",
-              })}
-            >
-              دخول
-            </Link>
+            <LoginDialog
+              triggerText="دخول"
+              triggerVariant="outline"
+              className="w-full justify-center"
+            />
             <Link
               to="/auth/signup"
               className={buttonVariants({
-                className: "w-full justify-center",
+                className: "w-full justify-center bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white shadow-lg hover:shadow-xl transition-all duration-300",
               })}
             >
               انضم الان

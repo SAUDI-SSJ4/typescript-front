@@ -1,11 +1,32 @@
+<<<<<<< HEAD
 import { Wallet, TrendingUp, AlertCircle, CheckCircle, Clock, X } from "lucide-react";
 import { useState } from "react";
 import WithdrawalModal from "@/components/shared/dashboard/WithdrawalModal";
 import FinancialTransactions from "@/components/shared/dashboard/FinancialTransactions";
+=======
+import { Wallet, DollarSign, TrendingUp, CreditCard, ArrowDownLeft, AlertCircle, CheckCircle, Clock, X } from "lucide-react";
+import { useState } from "react";
+import WithdrawalModal from "@/components/shared/dashboard/WithdrawalModal";
+import FinancialTransactions from "@/components/shared/dashboard/FinancialTransactions";
+
+import useWalletData from "@/hooks/useWalletData";
+import type { ChartPeriod, WithdrawalRequest } from '@/types/wallet';
+import { DEFAULT_VALUES } from '@/constants/wallet';
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+} from "chart.js";
+>>>>>>> sketch
 
 import { useWalletBalance, useWithdrawalRequests } from "@/features/dashboard/wallet/hooks/useWalletQueries";
 import type { WithdrawalRequest } from '@/types/wallet';
 
+<<<<<<< HEAD
 
 // StatCard component for wallet statistics
 interface StatCardProps {
@@ -70,6 +91,71 @@ function WalletStats({ walletBalance, isLoading, isError }: WalletStatsProps) {
     },
   ];
 
+=======
+// StatCard component for wallet statistics
+interface StatCardProps {
+  title: string;
+  value: string | number;
+  icon: React.ReactNode;
+  change?: string;
+  changeType?: "positive" | "negative";
+}
+
+function StatCard({ title, value, icon, change, changeType }: StatCardProps) {
+  return (
+    <div className="bg-white rounded-lg border-0 shadow-sm p-6">
+      <div className="flex items-center justify-between">
+        <div>
+          <p className="text-sm font-medium text-gray-600">{title}</p>
+          <p className="text-2xl font-bold text-gray-900 mt-2">{value}</p>
+          {change && (
+            <p
+              className={`text-sm mt-2 flex items-center gap-1 ${
+                changeType === "positive" ? "text-green-600" : "text-red-600"
+              }`}
+            >
+              <TrendingUp className="w-4 h-4" />
+              {change}
+            </p>
+          )}
+        </div>
+        <div className="text-blue-600">{icon}</div>
+      </div>
+    </div>
+  );
+}
+
+// WalletStats component
+interface WalletStatsProps {
+  walletBalance: { total: number; monthlyRevenue: number; withdrawals: number; partnershipCommissions: number; availableForWithdrawal: number; };
+  transactions: any[];
+}
+
+function WalletStats({ walletBalance, transactions }: WalletStatsProps) {
+  // Calculate pending withdrawals from transactions
+  const pendingWithdrawals = transactions
+    .filter(t => t.type === 'سحب أرباح' && t.status === 'معلق')
+    .reduce((sum, t) => sum + (t.amount || 0), 0);
+
+  const stats = [
+    {
+      title: "الرصيد المتاح",
+      value: `${walletBalance.availableForWithdrawal.toFixed(2)} ريال`,
+      icon: <Wallet className="w-6 h-6" />,
+      change: "+5.2%",
+      changeType: "positive" as const,
+    },
+
+    {
+      title: "السحوبات المعلقة",
+      value: `${pendingWithdrawals.toFixed(2)} ريال`,
+      icon: <CreditCard className="w-6 h-6" />,
+      change: "-2.1%",
+      changeType: "negative" as const,
+    },
+  ];
+
+>>>>>>> sketch
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
       {stats.map((stat, index) => (
@@ -78,6 +164,11 @@ function WalletStats({ walletBalance, isLoading, isError }: WalletStatsProps) {
           title={stat.title}
           value={stat.value}
           icon={stat.icon}
+<<<<<<< HEAD
+=======
+          change={stat.change}
+          changeType={stat.changeType}
+>>>>>>> sketch
         />
       ))}
     </div>
@@ -85,6 +176,7 @@ function WalletStats({ walletBalance, isLoading, isError }: WalletStatsProps) {
 }
 
 function WalletPage() {
+<<<<<<< HEAD
   // Get wallet data from API
   const { data: walletBalance, isLoading: isLoadingBalance, isError: isBalanceError } = useWalletBalance();
   const { data: withdrawalRequests = [], isLoading: isLoadingRequests } = useWithdrawalRequests();
@@ -99,12 +191,32 @@ function WalletPage() {
       <WalletContent 
         withdrawalRequests={withdrawalRequests}
         isLoading={isLoading}
+=======
+  const [activeTab, setActiveTab] = useState<ChartPeriod>(DEFAULT_VALUES.ACTIVE_TAB as ChartPeriod);
+  
+  // Get wallet data from custom hook
+  const { walletBalance, transactions, withdrawalRequests } = useWalletData();
+
+  return (
+    <div className="space-y-6">
+      <Header walletBalance={walletBalance} />
+      <WalletStats walletBalance={walletBalance} transactions={transactions} />
+      <WalletContent 
+        activeTab={activeTab} 
+        onTabChange={setActiveTab}
+        transactions={transactions}
+        withdrawalRequests={withdrawalRequests}
+>>>>>>> sketch
       />
     </div>
   );
 }
 
+<<<<<<< HEAD
 function Header({ walletBalance, isLoading }: { walletBalance?: any, isLoading?: boolean }) {
+=======
+function Header({ walletBalance }: any) {
+>>>>>>> sketch
   return (
     <div className="flex flex-col sm:space-y-0 sm:flex-row sm:items-center sm:justify-between gap-4 bg-white p-4 lg:p-6 rounded-xl shadow-sm border-0">
       <div className="flex flex-col sm:flex-row sm:items-center gap-3 lg:gap-4">
@@ -116,7 +228,11 @@ function Header({ walletBalance, isLoading }: { walletBalance?: any, isLoading?:
         </div>
       </div>
       <div className="flex items-center">
+<<<<<<< HEAD
         <WithdrawalModal availableBalance={walletBalance?.availableForWithdrawal || 0} disabled={isLoading} />
+=======
+        <WithdrawalModal availableBalance={walletBalance?.availableForWithdrawal || 0} />
+>>>>>>> sketch
       </div>
     </div>
   );
@@ -214,17 +330,25 @@ function WithdrawalRequestCard({ request }: { request: WithdrawalRequest }) {
   );
 }
 
+<<<<<<< HEAD
 function WalletContent({ withdrawalRequests, isLoading }: { 
   withdrawalRequests: WithdrawalRequest[];
   isLoading?: boolean;
 }) {
+=======
+function WalletContent({ activeTab, onTabChange, transactions, withdrawalRequests }: any) {
+>>>>>>> sketch
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
       {/* Left Side - 66% of page */}
       <div className="lg:col-span-2 space-y-6">
         {/* Transactions Table - Top */}
         <div>
+<<<<<<< HEAD
           <FinancialTransactions />
+=======
+          <FinancialTransactions transactions={transactions} />
+>>>>>>> sketch
         </div>
 
 
@@ -237,6 +361,7 @@ function WalletContent({ withdrawalRequests, isLoading }: {
           <h3 className="text-lg font-semibold text-gray-900 mb-6">طلبات السحب</h3>
           
           <div className="space-y-3">
+<<<<<<< HEAD
             {isLoading ? (
               <div className="flex justify-center items-center py-8">
                 <div className="w-6 h-6 border-2 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
@@ -251,6 +376,11 @@ function WalletContent({ withdrawalRequests, isLoading }: {
                 <WithdrawalRequestCard key={request.id} request={request} />
               ))
             )}
+=======
+            {withdrawalRequests.map((request: WithdrawalRequest) => (
+              <WithdrawalRequestCard key={request.id} request={request} />
+            ))}
+>>>>>>> sketch
           </div>
         </div>
       </div>

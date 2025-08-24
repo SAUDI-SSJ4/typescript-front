@@ -1,0 +1,9 @@
+export { default as About } from './About';
+export { default as Certification } from './Certification';
+export { default as Clients } from './Clients';
+export { default as GoalVision } from './GoalVision';
+export { default as Hero } from './Hero';
+export { default as Layout } from './Layout';
+export { default as Pricing } from './Pricing';
+export { default as Stats } from './Stats';
+export { default as WhyUs } from './WhyUs';

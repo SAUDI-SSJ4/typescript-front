@@ -20,50 +20,51 @@ const TextField = ({
   errors,
 }: Props) => {
   return (
-    <div className="flex flex-col gap-2">
+    <div className="flex flex-col gap-2 text-right" dir="rtl">
       {label && (
         <Label
           htmlFor={name}
-          className="text-sm font-medium text-card-foreground"
+          className="text-sm font-medium text-card-foreground text-right"
         >
           {label}
         </Label>
       )}
-      <Controller
-        control={control}
-        name={name}
-        render={({ field: { onChange, onBlur, value, ref } }) => (
-          <Input
-            className={`${
-              errors[name]
-                ? "border-destructive focus-visible:border-destructive focus-visible:ring-destructive/20"
-                : "!border-border !shadow-none focus-visible:ring-0 focus-visible:border-border"
-            } h-10 !bg-transparent`}
-            type={type}
-            onChange={(e) => {
-              const val = e.target.value;
-              // For number inputs, convert to number or set to 0 if empty
-              if (type === "number") {
-                onChange(val === "" ? 0 : Number(val));
-              } else {
-                onChange(val);
-              }
-            }}
-            onBlur={onBlur}
-            value={
-              type === "number" ? (value || 0).toString() : String(value || "")
-            }
-            ref={ref}
-            placeholder={placeholder || ""}
-            disabled={disabled || false}
-            autoFocus={autoFocus || false}
-            id={name}
-            aria-invalid={errors[name] ? "true" : "false"}
-          />
+      <div className="relative">
+        <Controller
+          control={control}
+          name={name}
+          render={({ field: { onChange, onBlur, value, ref } }) => (
+            <Input
+              className={`${
+                errors[name]
+                  ? "border-destructive focus-visible:border-destructive focus-visible:ring-destructive/20"
+                  : "!border-border !shadow-none focus-visible:ring-0 focus-visible:border-border"
+              } h-10 !bg-transparent text-right pr-3 pl-8 dir-rtl`}
+              type={type}
+              onChange={onChange}
+              onBlur={onBlur}
+              value={String(value || "")}
+              ref={ref}
+              placeholder={placeholder || ""}
+              disabled={disabled || false}
+              autoFocus={autoFocus || false}
+              id={name}
+              aria-invalid={errors[name] ? "true" : "false"}
+              dir="rtl"
+            />
+          )}
+        />
+        {type === "email" && (
+          <div className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-mail">
+              <rect width="20" height="16" x="2" y="4" rx="2" />
+              <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
+            </svg>
+          </div>
         )}
-      />
+      </div>
       {errors[name] && (
-        <p className="text-sm text-destructive">
+        <p className="text-sm text-destructive text-right">
           {errors[name]?.message as string}
         </p>
       )}

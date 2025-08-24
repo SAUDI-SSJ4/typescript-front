@@ -1,4 +1,5 @@
 import { create } from "zustand";
+<<<<<<< HEAD
 import type {
   LoginCredentials,
   RegisterData,
@@ -8,6 +9,12 @@ import type { User } from "@/types/user";
 import { authService } from "./services/authService";
 import { authCookies } from "@/lib/cookies";
 import { Routes, UserType } from "@/constants/enums";
+=======
+import type { User, LoginRequest, SignupRequest } from "@/types/user";
+import { authService } from "./services/authService";
+import { authCookies } from "@/lib/cookies";
+import { Pages, Routes } from "@/constants/enums";
+>>>>>>> sketch
 
 interface AuthState {
   // State
@@ -19,13 +26,22 @@ interface AuthState {
 
   // Actions
   setUser: (user: User | null) => void;
+  setTokens: (accessToken: string | null, refreshToken: string | null) => void;
+  setAccessToken: (token: string | null) => void;
+  setRefreshToken: (token: string | null) => void;
   setLoading: (loading: boolean) => void;
+<<<<<<< HEAD
   login: (credentials: LoginCredentials) => Promise<AuthResponse>;
   signup: (userData: RegisterData) => Promise<AuthResponse>;
+=======
+  login: (credentials: LoginRequest) => Promise<void>;
+  signup: (userData: SignupRequest) => Promise<void>;
+>>>>>>> sketch
   logout: () => Promise<void>;
   refreshUser: () => Promise<void>;
   refreshTokens: () => Promise<void>;
   clearAuth: () => void;
+<<<<<<< HEAD
   forgotPassword: (email: string) => Promise<unknown>;
   verifyAccount: ({
     email,
@@ -41,11 +57,15 @@ interface AuthState {
     password: string;
     password_confirmation: string;
   }) => Promise<unknown>;
+=======
+
+>>>>>>> sketch
   // Computed
   isStudent: () => boolean;
   isAcademy: () => boolean;
 }
 
+<<<<<<< HEAD
 // Initialize authentication state from cookies
 const initializeAuthState = () => {
   try {
@@ -89,11 +109,39 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
   // Initial state
   ...initializeAuthState(),
   
+=======
+export const useAuthStore = create<AuthState>()((set, get) => ({
+  // Initial state
+  user: null,
+  accessToken: null,
+  refreshToken: null,
+  isLoading: false,
+  isAuthenticated: false,
+
+>>>>>>> sketch
   // Actions
   setUser: (user) =>
     set(() => ({
       user,
       isAuthenticated: !!user && !!get().accessToken,
+    })),
+
+  setTokens: (accessToken, refreshToken) =>
+    set(() => ({
+      accessToken,
+      refreshToken,
+      isAuthenticated: !!get().user && !!accessToken,
+    })),
+
+  setAccessToken: (accessToken) =>
+    set(() => ({
+      accessToken,
+      isAuthenticated: !!get().user && !!accessToken,
+    })),
+
+  setRefreshToken: (refreshToken) =>
+    set(() => ({
+      refreshToken,
     })),
 
   setLoading: (loading) =>
@@ -103,6 +151,7 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
     set(() => ({ isLoading: true }));
 
     try {
+<<<<<<< HEAD
       console.log("Attempting login with:", { email: credentials.email });
       const data = await authService.login(credentials);
       console.log("Login response:", data);
@@ -111,17 +160,29 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
         user: data.user_data as unknown as User,  // Fixed: access user_data directly
         accessToken: data.access_token,           // Fixed: access access_token directly
         refreshToken: data.refresh_token,         // Fixed: access refresh_token directly
+=======
+      const response = await authService.login(credentials);
+
+      set(() => ({
+        user: response.user,
+        accessToken: response.access_token,
+        refreshToken: response.refresh_token,
+>>>>>>> sketch
         isAuthenticated: true,
         isLoading: false,
       }));
 
       // Store in cookies
+<<<<<<< HEAD
       authCookies.setAuthData(
         data.access_token,                        // Fixed: access access_token directly
         data.refresh_token,                       // Fixed: access refresh_token directly
         data.user_data as unknown as User        // Fixed: access user_data directly
       );
       return data;
+=======
+      authCookies.setTokens(response.access_token, response.refresh_token);
+>>>>>>> sketch
     } catch (error) {
       console.error("Login error:", error);
       set(() => ({ isLoading: false }));
@@ -138,20 +199,30 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
       console.log("Signup response:", response);
 
       set(() => ({
+<<<<<<< HEAD
         user: response.user_data as unknown as User,  // Fixed: access user_data directly
         accessToken: response.access_token,           // Fixed: access access_token directly
         refreshToken: response.refresh_token,         // Fixed: access refresh_token directly
+=======
+        user: response.user,
+        accessToken: response.access_token,
+        refreshToken: response.refresh_token,
+>>>>>>> sketch
         isAuthenticated: true,
         isLoading: false,
       }));
 
       // Store in cookies
+<<<<<<< HEAD
       authCookies.setAuthData(
         response.access_token,                        // Fixed: access access_token directly
         response.refresh_token,                       // Fixed: access refresh_token directly
         response.user_data as unknown as User        // Fixed: access user_data directly
       );
       return response;
+=======
+      authCookies.setTokens(response.access_token, response.refresh_token);
+>>>>>>> sketch
     } catch (error) {
       console.error("Signup error:", error);
       set(() => ({ isLoading: false }));
@@ -168,6 +239,8 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
       // Clear state regardless of API success
       set(() => ({
         user: null,
+        accessToken: null,
+        refreshToken: null,
         isAuthenticated: false,
         isLoading: false,
       }));
@@ -220,6 +293,11 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
     try {
       const response = await authService.refreshToken(refreshToken);
 
+      set(() => ({
+        accessToken: response.access_token,
+        refreshToken: response.refresh_token,
+      }));
+
       // Update tokens in cookies
       authCookies.setTokens(response.data.access_token, response.data.access_token);
     } catch (error) {
@@ -233,6 +311,8 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
   clearAuth: () => {
     set(() => ({
       user: null,
+      accessToken: null,
+      refreshToken: null,
       isAuthenticated: false,
       isLoading: false,
     }));
@@ -244,11 +324,12 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
   // Computed getters
   isStudent: () => {
     const { user } = get();
-    return user?.user_type === UserType.STUDENT;
+    return user?.user_type === "STUDENT";
   },
 
   isAcademy: () => {
     const { user } = get();
+<<<<<<< HEAD
     return user?.user_type === UserType.ACADEMY;
   },
   forgotPassword: async (email: string) => {
@@ -316,6 +397,9 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
       set(() => ({ isLoading: false }));
       throw error;
     }
+=======
+    return user?.user_type === "ACADEMY";
+>>>>>>> sketch
   },
 }));
 
@@ -325,6 +409,16 @@ export const useIsAuthenticated = () =>
   useAuthStore((state) => state.isAuthenticated);
 export const useIsLoading = () => useAuthStore((state) => state.isLoading);
 
+// Token selectors
+export const useAccessToken = () => useAuthStore((state) => state.accessToken);
+export const useRefreshToken = () =>
+  useAuthStore((state) => state.refreshToken);
+export const useTokens = () =>
+  useAuthStore((state) => ({
+    accessToken: state.accessToken,
+    refreshToken: state.refreshToken,
+  }));
+
 // Individual action selectors - more stable than returning an object
 export const useLogin = () => useAuthStore((state) => state.login);
 export const useSignup = () => useAuthStore((state) => state.signup);
@@ -333,6 +427,7 @@ export const useRefreshUser = () => useAuthStore((state) => state.refreshUser);
 export const useRefreshTokens = () =>
   useAuthStore((state) => state.refreshTokens);
 export const useClearAuth = () => useAuthStore((state) => state.clearAuth);
+<<<<<<< HEAD
 
 export const useForgotPassword = () =>
   useAuthStore((state) => state.forgotPassword);
@@ -343,3 +438,5 @@ export const useVerifyAccount = () =>
 export const useResnedOtp = () => useAuthStore((state) => state.resendOtp);
 export const useResetPassword = () =>
   useAuthStore((state) => state.resetPassword);
+=======
+>>>>>>> sketch

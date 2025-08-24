@@ -80,7 +80,11 @@ function AiFeatures() {
             اكتشف كيف يحسن الذكاء الاصطناعي تجربة التعليم والتعلم في منصة سيان
           </p>
         </div>
+<<<<<<< HEAD
 
+=======
+        
+>>>>>>> sketch
         {/* Features Grid */}
         <Features features={features} />
       </div>

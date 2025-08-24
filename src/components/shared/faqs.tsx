@@ -12,23 +12,16 @@ function FAQs({
   faqItems: { id: string; question: string; answer: string }[];
 }) {
   return (
-    <section className="py-14 sm:py-20 relative">
-      <div
-        style={{
-          background:
-            "linear-gradient(136.72deg, rgba(0, 255, 206, 0.1) -16.9%, rgba(255, 255, 255, 0.173594) 34.08%, rgba(255, 255, 255, 0) 135.36%)",
-        }}
-        className="absolute inset-0 z-[-1] rotate-180"
-      ></div>
-      <div className="container mx-auto px-4">
-        <div className="flex flex-col md:flex-row items-start justify-between mb-10">
+    <section className="py-16 md:py-20 relative">
+      <div className="container">
+        <div className="flex flex-col md:flex-row items-start justify-between mb-12">
           <div className="md:w-2/5 mb-10 md:mb-0 space-y-6">
-            <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-foreground flex items-end gap-2">
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-foreground flex items-end gap-2">
               <span className="leading-tight">
-                الأسئلة <br />
+                <span className="text-primary">الأسئلة</span> <br />
                 الشائعة
               </span>
-              <span className="text-primary text-7xl ml-4">؟</span>
+              <span className="text-primary text-5xl ml-4">؟</span>
             </h2>
             <div
               style={{ background: "rgba(0, 98, 255, 0.15)" }}

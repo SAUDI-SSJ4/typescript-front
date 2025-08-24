@@ -1,10 +1,24 @@
 import axios from "axios";
+<<<<<<< HEAD
 import type { AxiosError, AxiosResponse, InternalAxiosRequestConfig } from "axios";
 import { API_BASE_URL } from "./api-config";
+=======
+import type {
+  AxiosError,
+  AxiosResponse,
+  InternalAxiosRequestConfig,
+} from "axios";
+import { authCookies } from "@/lib/cookies";
+import { Pages, Routes } from "@/constants/enums";
+>>>>>>> sketch
 
 // Create axios instance with centralized configuration
 export const api = axios.create({
+<<<<<<< HEAD
   baseURL: API_BASE_URL,
+=======
+  baseURL: import.meta.env.VITE_API_URL || "http://localhost:3000/api",
+>>>>>>> sketch
   headers: {
     "Content-Type": "application/json",
   },
@@ -44,6 +58,7 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   (response: AxiosResponse) => response,
   async (error: AxiosError) => {
+<<<<<<< HEAD
     console.error("Axios error:", error);
     
     if (error.response?.status === 401) {
@@ -51,6 +66,49 @@ api.interceptors.response.use(
       // Redirect to login page if unauthorized
       // The backend's cookie middleware should handle clearing expired/invalid cookies
       window.location.href = "/auth/signin";
+=======
+    const originalRequest = error.config as InternalAxiosRequestConfig & {
+      _retry?: boolean;
+    };
+
+    if (error.response?.status === 401 && !originalRequest._retry) {
+      originalRequest._retry = true;
+
+      const refreshToken = authCookies.getRefreshToken();
+      if (refreshToken) {
+        try {
+          // Try to refresh the token
+          const response = await axios.post(
+            `${api.defaults.baseURL}/auth/refresh`,
+            {
+              refresh_token: refreshToken,
+            }
+          );
+
+          const { access_token, refresh_token: newRefreshToken } =
+            response.data;
+
+          // Update tokens in cookies
+          authCookies.setTokens(access_token, newRefreshToken);
+
+          // Update the original request with new token
+          originalRequest.headers.Authorization = `Bearer ${access_token}`;
+
+          // Retry the original request
+          return api(originalRequest);
+        } catch (refreshError) {
+          console.error("Token refresh failed:", refreshError);
+          // Clear invalid auth cookies and redirect to login
+          authCookies.clearAll();
+          window.location.href = `${Routes.AUTH}/${Pages.SIGNIN}`;
+          return Promise.reject(refreshError);
+        }
+      } else {
+        // No refresh token available, clear auth and redirect
+        authCookies.clearAll();
+        window.location.href = `${Routes.AUTH}/${Pages.SIGNIN}`;
+      }
+>>>>>>> sketch
     }
     return Promise.reject(error);
   }

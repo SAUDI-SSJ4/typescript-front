@@ -1,19 +1,22 @@
-import { Pages, Routes } from "@/constants/enums";
-import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useCallback, useState, useEffect } from "react";
+import { useCallback } from "react";
 import FormFields from "@/components/shared/formFields/form-fields";
 import type { IFormField } from "@/types/app";
 import { useForm, type Control, type FieldErrors } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { LoadingButton } from "@/components/shared/Loader";
 import { toast } from "sonner";
-import { UserType } from "@/constants/enums";
+import { UserType, Pages, Routes } from "@/constants/enums";
 import { useAuth } from "@/features/auth/hooks/useAuthStore";
 import useFormFields from "../hooks/useFormFields";
 import useFormValidations from "../hooks/useFormValidations";
+<<<<<<< HEAD
 import SiginWithGoogle from "@/components/shared/sigin-with-google";
 // import { cookieStorage } from "@/lib/cookies";
+=======
+import LoginDialog from "@/components/ui/login-dialog";
+>>>>>>> sketch
 
 const AuthForm: React.FC<{
   slug: string;
@@ -21,18 +24,8 @@ const AuthForm: React.FC<{
   const navigate = useNavigate();
   const { getFormFields } = useFormFields({ slug });
   const { getValidationSchema } = useFormValidations({ slug });
-  const searchParams = useSearchParams();
-  const { email: verifiedEmail } = Object.fromEntries(searchParams[0]);
-  const { verification_token } = Object.fromEntries(searchParams[0]);
 
-  const {
-    login,
-    signup,
-    isLoading,
-    forgotPassword,
-    verifyAccount,
-    resetPassword,
-  } = useAuth();
+  const { signup, isLoading } = useAuth();
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const DEFAULT_VALUES: any = {};
@@ -56,6 +49,7 @@ const AuthForm: React.FC<{
     async (data: Record<string, unknown>) => {
       try {
         if (slug === Pages.SIGNIN) {
+<<<<<<< HEAD
           const { message } = await login({
             email: data.email as string,
             password: data.password as string,
@@ -69,12 +63,24 @@ const AuthForm: React.FC<{
           const { message } = await signup({
             fname: data.fname as string,
             lname: data.lname as string,
+=======
+          // await login({
+          //   email: data.email as string,
+          //   password: data.password as string,
+          // });
+          toast.success("تم تسجيل الدخول بنجاح");
+          navigate("/dashboard");
+        } else if (slug === Pages.SIGNUP) {
+          await signup({
+            name: data.name as string,
+>>>>>>> sketch
             email: data.email as string,
-            phone_number: data.phone_number as string,
+            phone: data.phone as string,
             password: data.password as string,
             password_confirmation: data.confirm_password as string,
             user_type: data.user_type as UserType,
           });
+<<<<<<< HEAD
           if (message) {
             toast.success(message);
             navigate(
@@ -130,6 +136,10 @@ const AuthForm: React.FC<{
           navigate(Routes.DASHBOARD, {
             replace: true,
           });
+=======
+          toast.success("تم إنشاء الحساب بنجاح");
+          navigate("/");
+>>>>>>> sketch
         }
       } catch (error: unknown) {
         console.error("Auth error:", error); // إضافة تسجيل الأخطاء للتشخيص
@@ -149,20 +159,11 @@ const AuthForm: React.FC<{
         toast.error(errorMessage);
       }
     },
-    [
-      slug,
-      login,
-      navigate,
-      signup,
-      verifyAccount,
-      verifiedEmail,
-      forgotPassword,
-      resetPassword,
-      verification_token,
-    ]
+    [slug, signup, navigate]
   );
 
   const formLoading = isSubmitting || isLoading;
+<<<<<<< HEAD
   const googleConfigured = !!import.meta.env.VITE_GOOGLE_CLIENT_ID;
   const shouldShowGoogleButton =
     googleConfigured && (slug === Pages.SIGNUP || slug === Pages.SIGNIN);
@@ -205,6 +206,83 @@ const AuthForm: React.FC<{
       </form>
     </>
   );
+=======
+
+  const renderFormFields = () => {
+    const fields = getFormFields();
+    
+    if (slug === Pages.SIGNUP) {
+      // All fields visible except profile picture (optional)
+      return (
+        <div className="space-y-5">
+          {/* Account Type and Name on same row - for all screen sizes */}
+          <div className="grid grid-cols-2 gap-3 sm:gap-4">
+            <FormFields {...fields[0]} control={control} errors={errors} />
+            <FormFields {...fields[2]} control={control} errors={errors} />
+          </div>
+          
+          {/* Email and Phone on same row - for all screen sizes */}
+          <div className="grid grid-cols-2 gap-3 sm:gap-4">
+            <FormFields {...fields[4]} control={control} errors={errors} />
+            <FormFields {...fields[3]} control={control} errors={errors} />
+          </div>
+          
+          {/* Password - for all screen sizes */}
+          <div className="grid grid-cols-2 gap-3 sm:gap-4">
+            <FormFields {...fields[5]} control={control} errors={errors} />
+            <FormFields {...fields[6]} control={control} errors={errors} />
+          </div>
+          
+          {/* Profile Picture - Optional */}
+          <div className="border-t border-gray-200 pt-4">
+            <details className="group">
+              <summary className="flex items-center justify-between cursor-pointer list-none">
+                <span className="text-sm font-medium text-gray-700 flex items-center gap-2">
+                  <span className="w-4 h-4 bg-gray-100 rounded-full flex items-center justify-center">
+                    <span className="text-xs text-gray-500">+</span>
+                  </span>
+                  الصورة الشخصية (اختياري)
+                </span>
+                <span className="text-gray-400 group-open:rotate-180 transition-transform">
+                  ▼
+                </span>
+              </summary>
+              
+              <div className="mt-4 bg-gray-50 rounded-xl p-4">
+                <FormFields {...fields[1]} control={control} errors={errors} />
+              </div>
+            </details>
+          </div>
+        </div>
+      );
+    } else {
+      // Enhanced signin layout
+      return (
+        <div className="space-y-5 text-right" dir="rtl">
+          {fields.map((field: IFormField) => (
+            <div key={field.name} className="space-y-2">
+              <FormFields {...field} control={control} errors={errors} />
+              {/* Add helpful hints for certain fields */}
+ 
+            </div>
+          ))}
+        </div>
+      );
+    }
+  };
+
+  return (
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-6" dir="rtl">
+       {renderFormFields()}
+ 
+       <SubmitButton slug={slug} disabled={formLoading} loading={formLoading} />
+       
+       {/* تم نقل زر "هل نسيت كلمة المرور؟" إلى مكون AuthFormWithForgotPassword */}
+       
+       <NavigationLink slug={slug} />
+     </form>
+   );
+>>>>>>> sketch
 };
 
 export default AuthForm;
@@ -217,19 +295,21 @@ function ForgotPassword({
   control: Control<Record<string, unknown>>;
 }) {
   return (
-    <div className="flex items-center justify-between mb-6">
-      <FormFields
-        type="checkbox"
-        name="remember"
-        aria-describedby="remember"
-        id="remember"
-        label="تذكرني"
-        control={control}
-        errors={errors}
-      />
+    <div className="flex items-center justify-between p-3 rounded-md bg-accent border border-border">
+      <div className="flex items-center gap-2">
+        <FormFields
+          type="checkbox"
+          name="remember"
+          aria-describedby="remember"
+          id="remember"
+          label="تذكرني"
+          control={control}
+          errors={errors}
+        />
+      </div>
       <Link
         to={`/${Routes.AUTH}/${Pages.FORGOT_PASSWORD}`}
-        className="text-sm font-medium text-primary hover:underline"
+        className="text-sm font-medium text-primary hover:text-primary/80 transition-colors duration-200"
       >
         هل نسيت كلمة المرور؟
       </Link>
@@ -250,28 +330,48 @@ function SubmitButton({
       case Pages.SIGNIN:
         return "تسجيل الدخول";
       case Pages.SIGNUP:
-        return "إنشاء حساب";
+        return "تسجيل";
       case Pages.FORGOT_PASSWORD:
         return "متابعة";
       case Pages.VERIFY_ACCOUNT:
-        return "تأكيد";
+        return "إعادة إرسال بريد التحقق";
       case Pages.RESET_PASSWORD:
         return "تغيير كلمة المرور";
+<<<<<<< HEAD
 
+=======
+      case Pages.ENTER_OTP:
+        return "تأكيد";
+>>>>>>> sketch
       default:
         return "تسجيل الدخول";
+    }
+  };
+
+
+
+  const getLoadingText = () => {
+    switch (slug) {
+      case Pages.SIGNIN:
+        return "جار تسجيل الدخول...";
+      case Pages.SIGNUP:
+        return "جار التسجيل...";
+      default:
+        return "جار التحميل...";
     }
   };
 
   return (
     <Button
       type="submit"
-      className="w-full h-10 text-white font-medium"
+      size="lg"
+      className="w-full"
+      disabled={loading}
       {...rest}
     >
       <LoadingButton
         loading={loading}
-        loadingText="جار التحميل..."
+        loadingText={getLoadingText()}
         loaderSize="sm"
       >
         {renderButtonText()}
@@ -280,6 +380,7 @@ function SubmitButton({
   );
 }
 
+<<<<<<< HEAD
 function NavigationLink({
   slug,
   verifiedEmail,
@@ -320,30 +421,22 @@ function NavigationLink({
     }
   };
 
+=======
+function NavigationLink({ slug }: { slug: string }) {
+>>>>>>> sketch
   const getText = () => {
     switch (slug) {
       case Pages.SIGNIN:
         return {
           desc: "ليس لديك حساب؟",
-          title: "سجل الآن",
-          href: `/${Routes.AUTH}/${Pages.SIGNUP}`,
-          isButton: false,
+          title: "سجل الآن مجاناً",
+          slug: Pages.SIGNUP,
         };
       case Pages.SIGNUP:
         return {
-          desc: "لديك حساب بالفعل؟",
+          desc: "",
           title: "تسجيل الدخول",
-          href: `/${Routes.AUTH}/${Pages.SIGNIN}`,
-          isButton: false,
-        };
-      case Pages.VERIFY_ACCOUNT:
-        return {
-          desc: "لم تستلم الرمز؟",
-          title: countdown > 0 ? `إعادة إرسال (${countdown}s)` : "إعادة إرسال",
-          href: "",
-          isButton: true,
-          disabled: countdown > 0 || isLoading,
-          onClick: handleResendOtp,
+          slug: Pages.SIGNIN,
         };
       case Pages.SIGNIN_WITH_GOOGLE:
         return {
@@ -356,39 +449,11 @@ function NavigationLink({
         return {
           desc: "هل تحتاج إلى مساعدة؟",
           title: "اتصل بنا",
-          href: Routes.CONTACT,
-          isButton: false,
+          slug: Pages.FORGOT_PASSWORD,
         };
     }
   };
-
-  const linkData = getText();
-
-  return (
-    <div className="mt-6 flex items-center gap-2">
-      <p className="text-card-foreground text-sm">{linkData.desc}</p>
-      {linkData.isButton ? (
-        <button
-          type="button"
-          onClick={linkData.onClick}
-          disabled={linkData.disabled}
-          className={`text-sm font-medium transition-colors duration-200 ${
-            linkData.disabled
-              ? "text-gray-400 cursor-not-allowed"
-              : "text-primary hover:underline"
-          }`}
-        >
-          {linkData.title}
-        </button>
-      ) : (
-        <Link
-          to={linkData.href}
-          replace
-          className="text-primary hover:underline text-sm font-medium transition-colors duration-200"
-        >
-          {linkData.title}
-        </Link>
-      )}
-    </div>
-  );
+  
+  // تم إزالة "أو" و "سجل الآن مجاناً" كما طلب المستخدم
+  return null;
 }

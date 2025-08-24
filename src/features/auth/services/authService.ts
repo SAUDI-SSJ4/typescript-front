@@ -14,6 +14,7 @@ import type {
 } from "@/types/auth";
 
 export const authService = {
+<<<<<<< HEAD
   // Login
   async login(credentials: LoginCredentials): Promise<AuthResponse> {
     const response = await api.post<AuthResponse>(API_ENDPOINTS.LOGIN, credentials);
@@ -23,12 +24,38 @@ export const authService = {
   // Register
   async register(formData: FormData): Promise<AuthResponse> {
     const response = await api.post<AuthResponse>(API_ENDPOINTS.REGISTER, formData, {
+=======
+  // Login user
+  async login(credentials: LoginRequest): Promise<AuthResponse> {
+    const response = await api.post<AuthResponse>("/auth/login", credentials);
+    return response.data;
+  },
+
+  // Register user
+  async signup(userData: SignupRequest): Promise<AuthResponse> {
+    const formData = new FormData();
+
+    // Append text fields
+    formData.append("name", userData.name);
+    formData.append("email", userData.email);
+    formData.append("phone", userData.phone);
+    formData.append("password", userData.password);
+    formData.append("user_type", userData.user_type);
+
+    // Append file if exists
+    if (userData.profile_picture) {
+      formData.append("profile_picture", userData.profile_picture);
+    }
+
+    const response = await api.post<AuthResponse>("/auth/register", formData, {
+>>>>>>> sketch
       headers: {
         "Content-Type": "multipart/form-data",
       },
     });
     return response.data;
   },
+<<<<<<< HEAD
 
   // Forgot password
   async forgotPassword(email: string): Promise<any> {
@@ -53,6 +80,8 @@ export const authService = {
     });
     return response.data;
   },
+=======
+>>>>>>> sketch
 
   // Get current user
   async getCurrentUser(): Promise<User> {
@@ -73,10 +102,21 @@ export const authService = {
     return response.data;
   },
 
+<<<<<<< HEAD
   // Reset password with token
   async resetPasswordWithToken(data: PasswordResetData): Promise<any> {
     const response = await api.post("/auth/password/reset-with-token", data);
     return response.data;
+=======
+  // Request password reset
+  async requestPasswordReset(email: string): Promise<void> {
+    await api.post("/auth/forgot-password", { email });
+  },
+
+  // Reset password
+  async resetPassword(token: string, newPassword: string): Promise<void> {
+    await api.post("/auth/reset-password", { token, password: newPassword });
+>>>>>>> sketch
   },
 
   // Sign up (alias for register)

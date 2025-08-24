@@ -11,6 +11,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+<<<<<<< HEAD
 import { Info, Image as ImageIcon, CheckCircle, Loader2 } from "lucide-react";
 import { useAcademyAboutMutation } from "../hooks/useAboutMutations";
 import type { About, AboutPayload } from "@/types/academy/about";
@@ -21,6 +22,14 @@ const AcademyAboutForm = ({ about }: { about: About }) => {
   const academyAboutMutation = useAcademyAboutMutation();
   const [currentSliderId, setCurrentSliderId] = useState<string | null>(null);
   const [isChangingImage, setIsChangingImage] = useState(false);
+=======
+import { Badge } from "@/components/ui/badge";
+import { Info, Settings, Image as ImageIcon, CheckCircle, Loader2 } from "lucide-react";
+
+const AcademyAboutForm = () => {
+  const [hasUserChanges, setHasUserChanges] = useState(false);
+
+>>>>>>> sketch
   const {
     control,
     handleSubmit,
@@ -29,14 +38,23 @@ const AcademyAboutForm = ({ about }: { about: About }) => {
   } = useForm<AcademyAboutFormType>({
     resolver: zodResolver(academyAboutSchema),
     defaultValues: {
+<<<<<<< HEAD
       title: about.title || "",
       content: about.content || "",
       feature_one: about.feature_one || "",
       feature_two: about.feature_two || "",
+=======
+      title: "",
+      subtitle: "",
+      description: "",
+      featureOne: "",
+      featureTwo: "",
+>>>>>>> sketch
     },
     mode: "onChange",
   });
 
+<<<<<<< HEAD
   const onSubmit = async (data: AcademyAboutFormType) => {
     try {
       const payload: AboutPayload = {
@@ -64,13 +82,33 @@ const AcademyAboutForm = ({ about }: { about: About }) => {
     } catch (error) {
       console.error("Error submitting form:", error);
     }
+=======
+  // Track when user actually makes changes (after initial render)
+  useEffect(() => {
+    if (isDirty) {
+      setHasUserChanges(true);
+    }
+  }, [isDirty]);
+
+  const onSubmit = async (data: AcademyAboutFormType) => {
+    // Handle form submission logic here
+    console.log("Form submitted with data:", data);
+    // You can call your API or perform any other actions here
+
+    // After successful submission, reset the user changes flag
+    setHasUserChanges(false);
+>>>>>>> sketch
   };
 
   const handleReset = () => {
     reset();
   };
 
+<<<<<<< HEAD
   const formLoading = isSubmitting || academyAboutMutation.isPending;
+=======
+  const formLoading = isSubmitting;
+>>>>>>> sketch
 
   return (
     <div className="space-y-6" dir="rtl">
@@ -117,6 +155,39 @@ const AcademyAboutForm = ({ about }: { about: About }) => {
                   </p>
                 )}
               </div>
+<<<<<<< HEAD
+=======
+
+              <div className="space-y-2">
+                <Label className="text-sm font-medium text-card-foreground">
+                  العنوان الفرعي
+                </Label>
+                <Controller
+                  control={control}
+                  name="subtitle"
+                  render={({ field: { onChange, value } }) => (
+                    <Input
+                      type="text"
+                      value={value || ""}
+                      onChange={onChange}
+                      placeholder="أدخل العنوان الفرعي"
+                      disabled={formLoading}
+                      className={`${
+                        errors.subtitle
+                          ? "border-destructive focus-visible:border-destructive focus-visible:ring-destructive/20"
+                          : "!border-border !shadow-none focus-visible:ring-0 focus-visible:border-border"
+                      } h-10 !bg-transparent`}
+                      dir="rtl"
+                    />
+                  )}
+                />
+                {errors.subtitle && (
+                  <p className="text-sm text-destructive">
+                    {errors.subtitle.message}
+                  </p>
+                )}
+              </div>
+>>>>>>> sketch
             </CardContent>
           </Card>
 

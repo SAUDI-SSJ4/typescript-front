@@ -7,34 +7,49 @@ function Services() {
       icon: Palette,
       title: "برامج تدريبية متخصصة",
       description: "محتوى تدريبي شامل مصمم خصيصاً لاحتياجات كل قطاع وتخصص",
+<<<<<<< HEAD
       features: [
         "تصميم محتوى تفاعلي",
         "مواد تعليمية معتمدة",
         "تخصيص حسب القطاع",
       ],
       image: "/assets/images/employee-training/services.png",
+=======
+      features: ["تصميم محتوى تفاعلي", "مواد تعليمية معتمدة", "تخصيص حسب القطاع"],
+      image: "/assets/images/employee-training/services.png"
+>>>>>>> sketch
     },
     {
       icon: Video,
       title: "منصة تعلم إلكترونية",
       description: "نظام إدارة تعلم متطور مع أدوات تفاعلية وتقييم مستمر",
+<<<<<<< HEAD
       features: [
         "فيديوهات تدريبية عالية الجودة",
         "محتوى تفاعلي متقدم",
         "تقنيات الواقع الافتراضي",
       ],
       image: "/assets/images/employee-training/create-videos.png",
+=======
+      features: ["فيديوهات تدريبية عالية الجودة", "محتوى تفاعلي متقدم", "تقنيات الواقع الافتراضي"],
+      image: "/assets/images/employee-training/create-videos.png"
+>>>>>>> sketch
     },
     {
       icon: Users,
       title: "دعم ومتابعة مستمرة",
       description: "فريق دعم متخصص لضمان نجاح برامج التدريب وتحقيق الأهداف",
+<<<<<<< HEAD
       features: [
         "نظام إدارة متطور",
         "تتبع الأداء المباشر",
         "تقارير تفصيلية شاملة",
       ],
       image: "/assets/images/employee-training/manage.png",
+=======
+      features: ["نظام إدارة متطور", "تتبع الأداء المباشر", "تقارير تفصيلية شاملة"],
+      image: "/assets/images/employee-training/manage.png"
+>>>>>>> sketch
     },
   ];
 
@@ -96,10 +111,14 @@ function Services() {
                   {/* Features */}
                   <div className="space-y-2 pt-2">
                     {service.features.map((feature, featureIndex) => (
+<<<<<<< HEAD
                       <div
                         key={featureIndex}
                         className="flex items-center gap-3"
                       >
+=======
+                      <div key={featureIndex} className="flex items-center gap-3">
+>>>>>>> sketch
                         <div className="w-5 h-5 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0">
                           <div className="w-2 h-2 bg-green-600 rounded-full"></div>
                         </div>

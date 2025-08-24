@@ -24,10 +24,14 @@ export default function AcademyCard({ academy }: AcademyCardProps) {
           </div>
           <div className="flex-1">
             <h4 className="font-semibold text-gray-900 mb-1">{academy.name}</h4>
+<<<<<<< HEAD
             <a
               href={`/academy/${academy.slug}`}
               className="text-sm text-blue-600 hover:underline"
             >
+=======
+            <a href={`/academy/${academy.slug}`} className="text-sm text-blue-600 hover:underline">
+>>>>>>> sketch
               زيارة الأكاديمية
             </a>
           </div>
@@ -35,4 +39,8 @@ export default function AcademyCard({ academy }: AcademyCardProps) {
       </CardContent>
     </Card>
   );
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> sketch

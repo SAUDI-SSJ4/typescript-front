@@ -1,4 +1,4 @@
-import Home from "@/templates/template-one/pages";
+import Home from "@/templates/template-one/pages/index";
 import CourseDetails from "@/templates/template-one/pages/courses/[slug]";
 import { Route } from "react-router-dom";
 import { academyAuthRoutes } from "./AuthRoutes";

@@ -66,9 +66,13 @@ export default function CourseHeader({ courseData }: CourseHeaderProps) {
               />
             ))}
           </div>
+<<<<<<< HEAD
           <span className="font-semibold text-gray-900">
             {courseData.rating}
           </span>
+=======
+          <span className="font-semibold text-gray-900">{courseData.rating}</span>
+>>>>>>> sketch
           <span>({courseData.totalReviews || 0} تقييم)</span>
         </div>
         <div className="flex items-center gap-2">
@@ -78,4 +82,8 @@ export default function CourseHeader({ courseData }: CourseHeaderProps) {
       </div>
     </div>
   );
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> sketch

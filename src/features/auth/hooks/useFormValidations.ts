@@ -1,11 +1,5 @@
 import * as z from "zod";
-import {
-  signinSchema,
-  signupSchema,
-  verifyAccountSchema,
-  forgotPasswordSchema,
-  resetPassordSchema,
-} from "@/validations/auth";
+import { signinSchema, signupSchema } from "@/validations/auth";
 import type { IFormFieldsVariables } from "@/types/app";
 import { Pages } from "@/constants/enums";
 
@@ -18,6 +12,7 @@ const useFormValidations = (props: IFormFieldsVariables) => {
         return signinSchema;
       case Pages.SIGNUP:
         return signupSchema;
+<<<<<<< HEAD
       case Pages.VERIFY_ACCOUNT:
         return verifyAccountSchema;
       case Pages.FORGOT_PASSWORD:
@@ -28,6 +23,8 @@ const useFormValidations = (props: IFormFieldsVariables) => {
         return z.object({
           user_type: z.string().min(1, "يرجى تحديد نوع المستخدم"),
         });
+=======
+>>>>>>> sketch
 
       default:
         return z.object({});

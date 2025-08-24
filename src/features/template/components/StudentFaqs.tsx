@@ -1,55 +1,31 @@
-import { HelpCircle } from "lucide-react";
+import { useState } from "react";
+import WebBuilderLayout from "@/components/shared/WebBuilderLayout";
 import StudentFaqsForm from "./StudentFaqsForm";
 import StudentFaqsTable from "./StudentFaqsTable";
-import { useFAQs } from "../hooks/useFAQsQueries";
-import { Loader } from "@/components/shared";
-
-function Header() {
-  return (
-    <div className="flex flex-col sm:space-y-0 sm:flex-row sm:items-center sm:justify-between gap-4 bg-white p-4 lg:p-6 rounded-xl shadow-sm border border-gray-100">
-      <div className="flex flex-col sm:flex-row sm:items-center gap-3 lg:gap-4">
-        <div className="flex items-center gap-2 text-gray-600">
-          <HelpCircle className="w-5 h-5 text-blue-600" />
-          <span className="font-medium text-sm lg:text-base">
-            الأسئلة الشائعة
-          </span>
-        </div>
-      </div>
-      <div className="flex items-center gap-4">
-        <StudentFaqsForm />
-      </div>
-    </div>
-  );
-}
+import CustomCSSProvider from "./CustomCSSProvider";
+import HomePreview from "@/templates/template-one/pages/preview";
 
 function StudentFaqs() {
-  const { data: faqsResponse, isLoading, error } = useFAQs();
+  const [canUndo] = useState(false);
+  const [canRedo] = useState(false);
 
-  if (isLoading) {
-    return (
-      <div className="space-y-6">
-        <Header />
-        <div className="flex justify-center py-10">
-          <Loader />
-        </div>
-      </div>
-    );
-  }
+  const handleSave = () => {
+    // تنفيذ عملية الحفظ
+    console.log("حفظ التغييرات");
+  };
 
-  if (error) {
-    return (
-      <div className="space-y-6">
-        <Header />
-        <div className="text-center py-10 text-red-500">
-          حدث خطأ أثناء جلب الأسئلة الشائعة
-        </div>
-      </div>
-    );
-  }
+  const handleUndo = () => {
+    // تنفيذ عملية التراجع
+    console.log("تراجع");
+  };
 
-  const faqs = faqsResponse?.data.faqs || [];
+  const handleRedo = () => {
+    // تنفيذ عملية الإعادة
+    console.log("إعادة");
+  };
 
   return (
+<<<<<<< HEAD
     <div className="space-y-6">
       <Header />
       <StudentFaqsTable faqs={faqs.map(faq => ({
@@ -57,6 +33,56 @@ function StudentFaqs() {
         id: faq.id.toString()
       }))} />
     </div>
+=======
+    <CustomCSSProvider>
+      <WebBuilderLayout
+        title="الأسئلة الشائعة"
+        onSave={handleSave}
+        onUndo={handleUndo}
+        onRedo={handleRedo}
+        canUndo={canUndo}
+        canRedo={canRedo}
+        previewComponent={
+          <div className="w-full h-full bg-white">
+            <HomePreview />
+          </div>
+        }
+      >
+        <div className="space-y-6">
+          <div className="p-4 bg-indigo-50 rounded-lg border border-indigo-200">
+            <h3 className="font-semibold text-indigo-900 mb-2">إدارة الأسئلة الشائعة</h3>
+            <p className="text-sm text-indigo-700">
+              قم بإدارة وتحرير الأسئلة الشائعة المعروضة على الموقع
+            </p>
+          </div>
+          
+          <div className="mb-4">
+            <StudentFaqsForm />
+          </div>
+          
+          <StudentFaqsTable
+            faqs={[
+              {
+                question: "ما هي مدة المادة التعليمية؟",
+                answer:
+                  "مدة المادة التعليمية تعتمد على نوع الدورة والمحتوى المقدم. عادةً ما تتراوح بين 4 إلى 8 أسابيع.",
+              },
+              {
+                question: "كيف يمكنني الوصول إلى المحتوى التعليمي؟",
+                answer:
+                  "يمكنك الوصول إلى المحتوى التعليمي من خلال منصة الدورة بعد التسجيل. ستتلقى تعليمات مفصلة عبر البريد الإلكتروني.",
+              },
+              {
+                question: "هل هناك دعم فني متاح؟",
+                answer:
+                  "نعم، نحن نقدم دعمًا فنيًا على مدار الساعة عبر البريد الإلكتروني والدردشة المباشرة.",
+              },
+            ]}
+          />
+        </div>
+      </WebBuilderLayout>
+    </CustomCSSProvider>
+>>>>>>> sketch
   );
 }
 

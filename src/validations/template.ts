@@ -32,7 +32,11 @@ export const academyMainSettingsSchema = z.object({
     .regex(/^[\u0600-\u06FFa-zA-Z0-9\s\-_]+$/, {
       message: "اسم الأكاديمية يجب أن يحتوي على أحرف وأرقام فقط",
     }),
+<<<<<<< HEAD
   logo: z
+=======
+  academyLogo: z
+>>>>>>> sketch
     .instanceof(File, { message: "شعار الأكاديمية مطلوب" })
     .refine((file) => file.size <= 5 * 1024 * 1024, {
       message: "حجم الملف يجب أن يكون أقل من 5 ميجابايت",
@@ -40,9 +44,14 @@ export const academyMainSettingsSchema = z.object({
     .refine(
       (file) => ["image/jpeg", "image/png", "image/webp"].includes(file.type),
       { message: "نوع الملف يجب أن يكون JPEG أو PNG أو WebP" }
+<<<<<<< HEAD
     )
     .optional(),
   favicon: z
+=======
+    ),
+  academyIcon: z
+>>>>>>> sketch
     .instanceof(File, { message: "أيقونة الأكاديمية مطلوبة" })
     .refine((file) => file.size <= 2 * 1024 * 1024, {
       message: "حجم الملف يجب أن يكون أقل من 2 ميجابايت",
@@ -50,16 +59,22 @@ export const academyMainSettingsSchema = z.object({
     .refine(
       (file) => ["image/jpeg", "image/png", "image/webp"].includes(file.type),
       { message: "نوع الملف يجب أن يكون JPEG أو PNG أو WebP" }
+<<<<<<< HEAD
     )
     .optional(),
   primary_color: z
+=======
+    ),
+  primaryColor: z
+>>>>>>> sketch
     .string()
     .regex(/^#[0-9A-F]{6}$/i, { message: "يجب أن يكون اللون بصيغة صحيحة" }),
   secondary_color: z
     .string()
     .regex(/^#[0-9A-F]{6}$/i, { message: "يجب أن يكون اللون بصيغة صحيحة" }),
-  subdomain: z
+  customCSS: z
     .string()
+<<<<<<< HEAD
     .min(3, { message: "النطاق الفرعي يجب أن يكون 3 أحرف على الأقل" })
     .max(30, { message: "النطاق الفرعي يجب أن يكون 30 حرفًا أو أقل" })
     .regex(/^[a-z0-9]([a-z0-9-]*[a-z0-9])?$/, {
@@ -92,6 +107,27 @@ export const academyMainSettingsSchema = z.object({
     .url({ message: "رابط لينكد إن غير صحيح" })
     .optional()
     .or(z.literal("")),
+=======
+    .optional()
+    .refine(
+      (css) => {
+        if (!css || css.trim() === "") return true;
+        // Basic CSS validation - check for dangerous content
+        const dangerousPatterns = [
+          /@import/i,
+          /javascript:/i,
+          /expression\(/i,
+          /behavior:/i,
+          /binding:/i,
+          /-moz-binding/i,
+          /vbscript:/i,
+          /data:/i
+        ];
+        return !dangerousPatterns.some(pattern => pattern.test(css));
+      },
+      { message: "CSS غير آمن أو يحتوي على محتوى محظور" }
+    ),
+>>>>>>> sketch
 });
 export type AcademyMainSettingsFormData = z.infer<
   typeof academyMainSettingsSchema
@@ -139,7 +175,15 @@ export const academyAboutSchema = z.object({
     .string()
     .min(2, { message: "العنوان يجب أن يكون أكثر من حرفين" })
     .max(100, { message: "العنوان يجب أن يكون أقل من 100 حرف" }),
+<<<<<<< HEAD
   content: z
+=======
+  subtitle: z
+    .string()
+    .min(2, { message: "العنوان الفرعي يجب أن يكون أكثر من حرفين" })
+    .max(150, { message: "العنوان الفرعي يجب أن يكون أقل من 150 حرف" }),
+  description: z
+>>>>>>> sketch
     .string()
     .min(10, { message: "الوصف يجب أن يكون أكثر من 10 أحرف" })
     .max(1000, { message: "الوصف يجب أن يكون أقل من 1000 حرف" }),

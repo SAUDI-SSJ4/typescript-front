@@ -68,4 +68,8 @@ function Hero({ courseData }: { courseData: Course }) {
   );
 }
 
+<<<<<<< HEAD
 export default Hero;
+=======
+export default Hero;
+>>>>>>> sketch

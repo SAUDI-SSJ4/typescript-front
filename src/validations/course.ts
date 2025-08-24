@@ -1,4 +1,3 @@
-import { CourseLevels } from "@/constants/enums";
 import * as z from "zod";
 
 export const courseSchema = z.object({
@@ -9,19 +8,13 @@ export const courseSchema = z.object({
 
   category: z.string().min(1, { message: "الفئة مطلوبة" }),
 
-  instructor: z.string().optional(),
+  type: z.string().min(1, { message: "نوع المادة مطلوب" }),
 
-  level: z.enum(
-    [CourseLevels.BEGINNER, CourseLevels.INTERMEDIATE, CourseLevels.ADVANCED],
-    {
-      message: "المستوى يجب أن يكون مبتدئ، متوسط أو متقدم",
-    }
-  ),
+  instructor: z.string().min(1, { message: "المدرب مطلوب" }),
+
+  level: z.string().min(1, { message: "مستوى الطالب مطلوب" }),
+
   price: z.number().min(0, { message: "السعر يجب أن يكون 0 أو أكثر" }),
-
-  discountPrice: z
-    .number()
-    .min(0, { message: "سعر الخصم يجب أن يكون 0 أو أكثر" }),
 
   description: z
     .string()
@@ -39,12 +32,13 @@ export const courseSchema = z.object({
 
   image: z
     .any()
+    .optional()
     .refine(
       (file) => {
-        if (!file) return false;
+        if (!file) return true; // Make image optional
         return file instanceof File;
       },
-      { message: "صورة المادة مطلوبة" }
+      { message: "صورة المادة غير صحيحة" }
     )
     .refine(
       (file) => {
@@ -71,51 +65,11 @@ export const courseSchema = z.object({
     .any()
     .refine(
       (file) => {
-        if (!file) return false;
+        if (!file) return false; // Video is required
         return file instanceof File;
       },
       { message: "فيديو المادة مطلوب" }
     )
-    .refine(
-      (file) => {
-        if (!file) return true;
-        return file.size <= 100 * 1024 * 1024; // 100MB max
-      },
-      { message: "حجم الفيديو يجب أن يكون أقل من 100 ميجابايت" }
-    )
-    .refine(
-      (file) => {
-        if (!file) return true;
-        const allowedTypes = [
-          "video/mp4",
-          "video/avi",
-          "video/mov",
-          "video/wmv",
-        ];
-        return allowedTypes.includes(file.type);
-      },
-      { message: "نوع الفيديو يجب أن يكون MP4 أو AVI أو MOV أو WMV" }
-    ),
 });
 
 export type ICourseForm = z.infer<typeof courseSchema>;
-export const sectionSchema = z.object({
-  title: z
-    .string()
-    .min(1, { message: "عنوان الفصل مطلوب" })
-    .max(100, { message: "عنوان الفصل يجب أن يكون أقل من 100 حرف" }),
-});
-
-export type SectionFormData = z.infer<typeof sectionSchema>;
-
-export const lessonSchema = z.object({
-  title: z
-    .string()
-    .min(1, { message: "عنوان الدرس مطلوب" })
-    .max(100, { message: "عنوان الدرس يجب أن يكون أقل من 100 حرف" }),
-  type: z.enum(["video", "text", "exam", "tool"], {
-    message: "نوع الدرس مطلوب ويجب أن يكون فيديو، نص، امتحان أو أداة",
-  }),
-});
-
-export type LessonFormData = z.infer<typeof lessonSchema>;

@@ -1,4 +1,5 @@
 import Hero from "@/features/ai/components/Hero";
+import React from "react";
 import Layout from "@/features/ai/components/Layout";
 import FAQs from "@/components/shared/faqs";
 import AiFeatures from "@/features/ai/components/AiFeatures";

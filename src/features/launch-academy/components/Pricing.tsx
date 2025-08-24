@@ -13,8 +13,12 @@ function Pricing() {
       originalPrice: null,
       free: true,
       period: "مدى الحياة",
+<<<<<<< HEAD
       description:
         "ابدأ رحلتك التعليمية مجاناً واكتشف إمكانيات المنصة الأساسية",
+=======
+      description: "ابدأ رحلتك التعليمية مجاناً واكتشف إمكانيات المنصة الأساسية",
+>>>>>>> sketch
       features: [
         { name: "3 دورات تعليمية مجانية", included: true },
         { name: "دعم فني أساسي", included: true },
@@ -72,12 +76,19 @@ function Pricing() {
         {/* Section Header */}
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-6">
+<<<<<<< HEAD
             اختر الباقة المناسبة{" "}
             <span className="text-primary">لمنصتك التعليمية</span>
           </h2>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
             ابدأ مجاناً أو احصل على ميزات متقدمة بعرض محدود، واكتشف المستقبل مع
             باقتنا القادمة
+=======
+            اختر الباقة المناسبة <span className="text-primary">لمنصتك التعليمية</span>
+          </h2>
+          <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+            ابدأ مجاناً أو احصل على ميزات متقدمة بعرض محدود، واكتشف المستقبل مع باقتنا القادمة
+>>>>>>> sketch
           </p>
         </div>
 
@@ -225,7 +236,13 @@ function Pricing() {
                   <Link to="/auth/signup">{plan.buttonText}</Link>
                 </Button>
               ) : (
+<<<<<<< HEAD
                 <Button className="w-full py-3 text-lg rounded-xl bg-primary hover:bg-primary/90 text-white">
+=======
+                <Button
+                  className="w-full py-3 text-lg rounded-xl bg-primary hover:bg-primary/90 text-white"
+                >
+>>>>>>> sketch
                   {plan.buttonText}
                 </Button>
               )}

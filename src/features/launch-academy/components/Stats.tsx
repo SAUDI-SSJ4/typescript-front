@@ -79,12 +79,20 @@ function Stats() {
       title: "ريال تم تحقيقها شهرياً",
     },
     {
+<<<<<<< HEAD
       target: 15,
+=======
+      target: 4,
+>>>>>>> sketch
       suffix: "K+",
       title: "دورة تم إنشاؤها",
     },
     {
+<<<<<<< HEAD
       target: 100,
+=======
+      target: 10,
+>>>>>>> sketch
       suffix: "K+",
       title: "طالب يتعلم",
     },
@@ -105,7 +113,11 @@ function Stats() {
               />
             </div>
             <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-6 leading-tight">
+<<<<<<< HEAD
               <span className="text-primary">نجاحات</span> منشئي الأكاديميات
+=======
+              <span className="text-primary">إنجازاتنا</span> في أرقام
+>>>>>>> sketch
             </h2>
             <p className="text-lg text-muted-foreground leading-relaxed">
               انضم إلى آلاف منشئي المحتوى الذين حولوا خبراتهم إلى دخل شهري

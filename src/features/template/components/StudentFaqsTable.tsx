@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   flexRender,
   getCoreRowModel,
@@ -14,16 +14,6 @@ import type {
   VisibilityState,
 } from "@tanstack/react-table";
 import { ChevronDown, Edit, Trash2 } from "lucide-react";
-import { useDeleteFAQ } from "../hooks/useFAQsMutations";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import StudentFaqsEditForm from "./StudentFaqsEditForm";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -43,19 +33,63 @@ import {
 } from "@/components/ui/table";
 
 interface StudentFaq {
-  id: string;
   question: string;
   answer: string;
-  category?: string;
-  order?: number;
-  is_active?: boolean;
-  created_at?: string;
-  updated_at?: string;
 }
 
 interface StudentFaqsTableProps {
   faqs: StudentFaq[];
 }
+
+const columns: ColumnDef<StudentFaq>[] = [
+  {
+    accessorKey: "question",
+    header: "السؤال الشائع",
+    cell: ({ row }) => (
+      <div className="max-w-[400px] text-right">
+        <div className="font-medium truncate leading-relaxed">
+          {row.getValue("question")}
+        </div>
+      </div>
+    ),
+  },
+  {
+    accessorKey: "answer",
+    header: "الإجابة",
+    cell: ({ row }) => (
+      <div className="max-w-[500px] text-right">
+        <div className="text-sm text-gray-600 line-clamp-3 truncate">
+          {row.getValue("answer")}
+        </div>
+      </div>
+    ),
+  },
+  {
+    id: "actions",
+    header: "الإجراءات",
+    enableHiding: false,
+    cell: () => {
+      return (
+        <div>
+          <Button
+            variant="ghost"
+            size="sm"
+            className="h-8 w-8 p-0 text-blue-600 hover:text-blue-800 hover:bg-blue-50"
+          >
+            <Edit className="h-4 w-4" />
+          </Button>
+          <Button
+            variant="ghost"
+            size="sm"
+            className="h-8 w-8 p-0 text-red-600 hover:text-red-800 hover:bg-red-50"
+          >
+            <Trash2 className="h-4 w-4" />
+          </Button>
+        </div>
+      );
+    },
+  },
+];
 
 function StudentFaqsTable({ faqs }: StudentFaqsTableProps) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
@@ -65,6 +99,7 @@ function StudentFaqsTable({ faqs }: StudentFaqsTableProps) {
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
+<<<<<<< HEAD
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [selectedFaq, setSelectedFaq] = useState<StudentFaq | null>(null);
@@ -145,6 +180,8 @@ function StudentFaqsTable({ faqs }: StudentFaqsTableProps) {
       },
     },
   ];
+=======
+>>>>>>> sketch
 
   const table = useReactTable({
     data: faqs,
@@ -231,7 +268,6 @@ function StudentFaqsTable({ faqs }: StudentFaqsTableProps) {
                   <Button
                     variant="ghost"
                     size="sm"
-                    onClick={() => handleEditClick(row.original)}
                     className="h-8 w-8 p-0 text-blue-600"
                   >
                     <Edit className="h-4 w-4" />
@@ -239,7 +275,6 @@ function StudentFaqsTable({ faqs }: StudentFaqsTableProps) {
                   <Button
                     variant="ghost"
                     size="sm"
-                    onClick={() => handleDeleteClick(row.original)}
                     className="h-8 w-8 p-0 text-red-600"
                   >
                     <Trash2 className="h-4 w-4" />
@@ -348,6 +383,7 @@ function StudentFaqsTable({ faqs }: StudentFaqsTableProps) {
           </Button>
         </div>
       </div>
+<<<<<<< HEAD
 
       <Dialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
         <DialogContent className="sm:max-w-[425px]" dir="rtl">
@@ -386,6 +422,10 @@ function StudentFaqsTable({ faqs }: StudentFaqsTableProps) {
        />
       </div>
     );
+=======
+    </div>
+  );
+>>>>>>> sketch
 }
 
 export default StudentFaqsTable;

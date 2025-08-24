@@ -2,15 +2,16 @@ import Navbar, { links } from "./navbar";
 import AuthLinks from "./auth-links";
 import MobileMenu from "./mobile-menu";
 import { Link } from "react-router-dom";
+<<<<<<< HEAD
 import ShoppingCart from "./shopping-cart";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/features/auth/hooks/useAuthStore";
+=======
+>>>>>>> sketch
 
 export default function Header() {
-  const { user, isLoading } = useAuth();
-
   return (
     <header className="py-8 fixed left-0 w-full top-0 z-50">
       <div className="container">
@@ -33,6 +34,7 @@ export default function Header() {
             <MobileMenu links={links} />
             <Navbar />
           </div>
+<<<<<<< HEAD
           <div className="flex items-center gap-4 lg:gap-6">
             <ShoppingCart />
             {isLoading ? (
@@ -54,6 +56,9 @@ export default function Header() {
               <AuthLinks />
             )}
           </div>
+=======
+          <AuthLinks />
+>>>>>>> sketch
         </div>
       </div>
     </header>

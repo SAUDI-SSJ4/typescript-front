@@ -1,12 +1,17 @@
 import { motion } from "framer-motion";
+<<<<<<< HEAD
 import { Settings, Shield, Zap, CheckCircle, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
+=======
+import { Settings, BarChart3, Shield, Zap, CheckCircle } from "lucide-react";
+>>>>>>> sketch
 
 function Features() {
   const features = [
     {
       icon: Settings,
       title: "نظام إدارة شامل",
+<<<<<<< HEAD
       description:
         "نظام متكامل لإدارة ومتابعة المتدربين مع تقارير مفصلة عن الأداء والتقدم",
       benefits: [
@@ -14,6 +19,24 @@ function Features() {
         "تتبع التقدم في الوقت الفعلي",
         "تقارير شاملة ومخصصة",
       ],
+=======
+      description: "نظام متكامل لإدارة ومتابعة المتدربين مع تقارير مفصلة عن الأداء والتقدم",
+      benefits: [
+        "إدارة المستخدمين والصلاحيات", 
+        "تتبع التقدم في الوقت الفعلي",
+        "تقارير شاملة ومخصصة"
+      ]
+    },
+    {
+      icon: BarChart3,
+      title: "تحليلات متقدمة",
+      description: "احصائيات دقيقة لقياس فعالية التدريب وتحسين النتائج",
+      benefits: [
+        "مؤشرات أداء رئيسية (KPIs)",
+        "تحليل الفجوات في المهارات", 
+        "توقعات الأداء المستقبلي"
+      ]
+>>>>>>> sketch
     },
     {
       icon: Shield,
@@ -22,8 +45,13 @@ function Features() {
       benefits: [
         "تشفير البيانات من الطرف للطرف",
         "امتثال لمعايير الحماية الدولية",
+<<<<<<< HEAD
         "نسخ احتياطية آمنة",
       ],
+=======
+        "نسخ احتياطية آمنة"
+      ]
+>>>>>>> sketch
     },
     {
       icon: Zap,
@@ -32,8 +60,13 @@ function Features() {
       benefits: [
         "تصميم متجاوب لجميع الأجهزة",
         "تكامل مع الأنظمة الموجودة",
+<<<<<<< HEAD
         "دعم فني مستمر",
       ],
+=======
+        "دعم فني مستمر"
+      ]
+>>>>>>> sketch
     },
   ];
 
@@ -57,8 +90,12 @@ function Features() {
               <span className="text-blue-600">مميزات</span> منصة سيان التقنية
             </h2>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+<<<<<<< HEAD
               منصة متطورة مبنية خصيصاً لتلبية احتياجات الشركات الكبيرة في
               التدريب والتطوير
+=======
+              منصة متطورة مبنية خصيصاً لتلبية احتياجات الشركات الكبيرة في التدريب والتطوير
+>>>>>>> sketch
             </p>
           </motion.div>
 
@@ -91,6 +128,7 @@ function Features() {
                     {/* Benefits List */}
                     <div className="space-y-2">
                       {feature.benefits.map((benefit, benefitIndex) => (
+<<<<<<< HEAD
                         <div
                           key={benefitIndex}
                           className="flex items-center gap-2"
@@ -99,6 +137,11 @@ function Features() {
                           <span className="text-sm text-gray-700">
                             {benefit}
                           </span>
+=======
+                        <div key={benefitIndex} className="flex items-center gap-2">
+                          <CheckCircle className="w-4 h-4 text-green-600 flex-shrink-0" />
+                          <span className="text-sm text-gray-700">{benefit}</span>
+>>>>>>> sketch
                         </div>
                       ))}
                     </div>
@@ -121,6 +164,7 @@ function Features() {
                 جاهز لبدء تطوير مهارات فريقك؟
               </h3>
               <p className="text-lg text-blue-100 mb-6 max-w-2xl mx-auto">
+<<<<<<< HEAD
                 احصل على عرض توضيحي مخصص لاحتياجات شركتك واكتشف كيف يمكن لمنصة
                 سيان تحويل برامج التدريب لديك
               </p>
@@ -139,6 +183,17 @@ function Features() {
                 >
                   تحدث مع خبير
                 </Button>
+=======
+                احصل على عرض توضيحي مخصص لاحتياجات شركتك واكتشف كيف يمكن لمنصة سيان تحويل برامج التدريب لديك
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <button className="bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-50 transition-colors">
+                  احجز عرض توضيحي
+                </button>
+                <button className="border border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-blue-600 transition-colors">
+                  تحدث مع خبير
+                </button>
+>>>>>>> sketch
               </div>
             </div>
           </motion.div>

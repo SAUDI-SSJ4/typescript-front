@@ -7,6 +7,7 @@ export default function CourseDetails() {
 
   return (
     <CourseLayout>
+<<<<<<< HEAD
       <main
         style={{
           background:
@@ -15,6 +16,10 @@ export default function CourseDetails() {
         className="pt-44 pb-20"
       >
         {/* <Hero courseData={courseData} /> */}
+=======
+      <main className="bg-[rgb(249_250_251)] pt-44 pb-20">
+        <Hero courseData={courseData} />
+>>>>>>> sketch
         <RelatedCourses />
       </main>
     </CourseLayout>

@@ -265,7 +265,7 @@ export function EditUserInfoModal({
               className="relative cursor-pointer group"
               onClick={() => document.getElementById("avatar-upload")?.click()}
             >
-              <Avatar className="w-24 h-24 transition-all duration-200 group-hover:opacity-80">
+              <Avatar className="w-20 h-20 transition-all duration-200 group-hover:opacity-80">
                 <AvatarImage
                   src={
                     typeof watchedValues.avatar === "string" && watchedValues.avatar
@@ -274,10 +274,17 @@ export function EditUserInfoModal({
                   }
                   alt="Profile"
                 />
+<<<<<<< HEAD
                 <AvatarFallback className="bg-gray-200 text-gray-600 text-2xl">
                   {watchedValues.fname
                     ? watchedValues.fname.charAt(0)
                     : userInfo.fname?.charAt(0) || "?"}
+=======
+                <AvatarFallback className="bg-gray-200 text-gray-600 text-xl">
+                  {watchedValues.name
+                    ? watchedValues.name.charAt(0)
+                    : userInfo.name.charAt(0)}
+>>>>>>> sketch
                 </AvatarFallback>
               </Avatar>
               <div className="absolute bottom-0 right-0 bg-blue-500 hover:bg-blue-600 text-white rounded-full p-2 transition-colors">

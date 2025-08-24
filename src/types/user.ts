@@ -1,5 +1,6 @@
 import { UserType } from "@/constants/enums";
 
+<<<<<<< HEAD
 export type AcademyMembership = {
   membership_id: number;
   academy_id: number;
@@ -22,12 +23,15 @@ export type AcademyMembership = {
   };
 };
 
+=======
+>>>>>>> sketch
 export type User = {
   id: string;
+  name: string;
   email: string;
-  fname: string;
-  lname: string;
+  phone?: string;
   user_type: UserType;
+<<<<<<< HEAD
   verified: boolean;
   avatar?: string;
   avatar_url?: string;
@@ -36,13 +40,19 @@ export type User = {
   phone_number?: string;
   gender?: string;
   academy_memberships?: AcademyMembership[];
+=======
+  profile_picture?: string;
+  createdAt: Date;
+  updatedAt: Date;
+>>>>>>> sketch
 };
 
-type UserWithTokens = {
-  user_data: User;
+export type AuthResponse = {
+  user: User;
   access_token: string;
   refresh_token: string;
 };
+<<<<<<< HEAD
 
 export type AuthResponse = UserWithTokens & {
   status_code: number;
@@ -58,6 +68,8 @@ export type AuthResponse = UserWithTokens & {
     };
   };
 };
+=======
+>>>>>>> sketch
 
 export type TokenRefreshResponse = {
   access_token: string;
@@ -72,12 +84,20 @@ export type LoginRequest = {
 };
 
 export type SignupRequest = {
+<<<<<<< HEAD
   fname?: string;
   lname?: string;
   email?: string;
   phone_number?: string;
   password?: string;
   confirm_password?: string;
+=======
+  name: string;
+  email: string;
+  phone: string;
+  password: string;
+  confirm_password: string;
+>>>>>>> sketch
   user_type: UserType;
   profile_picture?: File;
   google_token?: string;

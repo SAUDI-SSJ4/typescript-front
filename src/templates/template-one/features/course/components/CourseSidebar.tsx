@@ -1,5 +1,9 @@
 import CoursePricingCard from "./CoursePricingCard";
 import AcademyCard from "./AcademyCard";
+<<<<<<< HEAD
+=======
+import LearningPointsCard from "./LearningPointsCard";
+>>>>>>> sketch
 
 interface Course {
   id: number;
@@ -50,6 +54,7 @@ export default function CourseSidebar({ courseData }: CourseSidebarProps) {
     <div className="hidden lg:block lg:col-span-1">
       <div className="sticky top-6 space-y-6">
         <CoursePricingCard courseData={courseData} />
+<<<<<<< HEAD
         <AcademyCard
           academy={{
             name: "أكاديمية إبداع",
@@ -61,3 +66,11 @@ export default function CourseSidebar({ courseData }: CourseSidebarProps) {
     </div>
   );
 }
+=======
+        <AcademyCard academy={{ name: "أكاديمية إبداع", image: "/assets/images/logo.svg", slug: "ebdaa-academy" }} />
+        <LearningPointsCard />
+      </div>
+    </div>
+  );
+}
+>>>>>>> sketch

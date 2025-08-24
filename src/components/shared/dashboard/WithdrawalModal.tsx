@@ -132,10 +132,14 @@ function WithdrawalModal({
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild disabled={disabled}>
         {trigger || (
+<<<<<<< HEAD
           <Button 
             className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-lg shadow-md flex items-center justify-center gap-2"
             disabled={disabled}
           >
+=======
+          <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-lg shadow-md flex items-center justify-center gap-2">
+>>>>>>> sketch
             <Download className="w-5 h-5" />
             سحب الأرباح
           </Button>

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   flexRender,
   getCoreRowModel,
@@ -13,10 +13,14 @@ import type {
   SortingState,
   VisibilityState,
 } from "@tanstack/react-table";
+<<<<<<< HEAD
 import { ChevronDown, Edit, Trash2, Star } from "lucide-react";
 import { useForm, Controller } from "react-hook-form";
 import type { Control } from "react-hook-form";
 import ImageField from "@/components/shared/formFields/image-field";
+=======
+import { ChevronDown, Edit, Trash2 } from "lucide-react";
+>>>>>>> sketch
 
 import { Button } from "@/components/ui/button";
 import {
@@ -35,6 +39,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
+<<<<<<< HEAD
 import {
   Dialog,
   DialogContent,
@@ -52,24 +57,91 @@ import {
 } from "../hooks/useOpinionsMutations";
 import RemoteImage from "@/components/shared/RemoteImage";
 import type { OpinionPayload } from "@/types/academy/opinion";
+=======
+>>>>>>> sketch
 
 interface StudentReview {
-  id: string | number;
-  name: string;
-  title: string;
-  content: string;
+  student_name: string;
+  image: string;
   rating: number;
-  image?: string;
-  is_featured?: boolean;
-  is_approved?: boolean;
-  created_at?: string;
-  updated_at?: string;
+  comment: string;
 }
 
 interface StudentReviewsTableProps {
   reviews: StudentReview[];
 }
 
+<<<<<<< HEAD
+=======
+const columns: ColumnDef<StudentReview>[] = [
+  {
+    accessorKey: "image",
+    header: "الصورة",
+    cell: ({ row }) => (
+      <img
+        src={row.getValue("image")}
+        alt={row.getValue("name")}
+        className="h-12 w-12 rounded-lg object-cover"
+      />
+    ),
+    enableSorting: false,
+  },
+  {
+    accessorKey: "student_name",
+    header: "اسم الطالب",
+    cell: ({ row }) => (
+      <div className="max-w-[300px]">
+        <div className="font-medium text-right truncate">
+          {row.getValue("student_name")}
+        </div>
+      </div>
+    ),
+  },
+ 
+  {
+    accessorKey: "rating",
+    header: "التقييم",
+    cell: ({ row }) => (
+      <div className="text-[#FFC107]">{"★".repeat(row.getValue("rating"))}</div>
+    ),
+  },
+  {
+    accessorKey: "comment",
+    header: "التعليق",
+    cell: ({ row }) => (
+      <Badge variant="outline" className="border-blue-200 text-blue-800">
+        {row.getValue("comment")}
+      </Badge>
+    ),
+  },
+  {
+    id: "actions",
+    header: "الإجراءات",
+    enableHiding: false,
+    cell: () => {
+      return (
+        <div>
+          <Button
+            variant="ghost"
+            size="sm"
+            className="h-8 w-8 p-0 text-blue-600 hover:text-blue-800 hover:bg-blue-50"
+          >
+            <Edit className="h-4 w-4" />
+          </Button>
+          <Button
+            variant="ghost"
+            size="sm"
+            className="h-8 w-8 p-0 text-red-600 hover:text-red-800 hover:bg-red-50"
+          >
+            <Trash2 className="h-4 w-4" />
+          </Button>
+        </div>
+      );
+    },
+  },
+];
+
+>>>>>>> sketch
 function StudentReviewsTable({ reviews }: StudentReviewsTableProps) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
@@ -78,6 +150,7 @@ function StudentReviewsTable({ reviews }: StudentReviewsTableProps) {
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
+<<<<<<< HEAD
 
   // Edit Dialog States
   const [editDialogOpen, setEditDialogOpen] = useState(false);
@@ -208,6 +281,8 @@ function StudentReviewsTable({ reviews }: StudentReviewsTableProps) {
       },
     },
   ];
+=======
+>>>>>>> sketch
 
   const table = useReactTable({
     data: reviews,
@@ -228,6 +303,7 @@ function StudentReviewsTable({ reviews }: StudentReviewsTableProps) {
     },
   });
 
+<<<<<<< HEAD
   // Edit functions
   const handleEditClick = (review: StudentReview) => {
     setEditingReview(review);
@@ -283,14 +359,22 @@ function StudentReviewsTable({ reviews }: StudentReviewsTableProps) {
     );
   };
 
+=======
+>>>>>>> sketch
   return (
     <div className="w-full">
       <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 py-4">
         <Input
           placeholder="البحث في الاراء عن اسم الطالب..."
+<<<<<<< HEAD
           value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
+=======
+          value={
+            (table.getColumn("student_name")?.getFilterValue() as string) ?? ""
+          }
+>>>>>>> sketch
           onChange={(event) =>
-            table.getColumn("name")?.setFilterValue(event.target.value)
+            table.getColumn("student_name")?.setFilterValue(event.target.value)
           }
           className="w-full sm:max-w-sm"
         />
@@ -307,9 +391,9 @@ function StudentReviewsTable({ reviews }: StudentReviewsTableProps) {
               .map((column) => {
                 const columnHeaders = {
                   image: "الصورة",
-                  name: "اسم الطالب",
+                  student_name: "اسم الطالب",
                   rating: "التقييم",
-                  content: "التعليق",
+                  comment: "التعليق",
                 };
                 return (
                   <DropdownMenuCheckboxItem
@@ -338,6 +422,7 @@ function StudentReviewsTable({ reviews }: StudentReviewsTableProps) {
             >
               <div className="flex items-start gap-3">
                 <img
+<<<<<<< HEAD
                   src={
                     row.getValue("image") ||
                     "https://via.placeholder.com/64x64/e5e7eb/9ca3af?text=صورة"
@@ -350,16 +435,18 @@ function StudentReviewsTable({ reviews }: StudentReviewsTableProps) {
                     target.src =
                       "https://via.placeholder.com/64x64/e5e7eb/9ca3af?text=صورة";
                   }}
+=======
+                  src={row.getValue("image")}
+                  alt={row.getValue("title")}
+                  className="h-16 w-16 rounded-lg object-cover flex-shrink-0"
+>>>>>>> sketch
                 />
                 <div className="flex-1 min-w-0">
                   <h3 className="font-medium text-sm leading-5 line-clamp-2 text-right">
-                    {row.getValue("name")}
+                    {row.getValue("title")}
                   </h3>
-                  <div className="text-[#FFC107] mt-1">
-                    {"★".repeat(row.getValue("rating"))}
-                  </div>
-                  <p className="text-sm text-muted-foreground mt-1 text-right line-clamp-2">
-                    {row.getValue("content")}
+                  <p className="text-sm text-muted-foreground mt-1 text-right">
+                    {row.getValue("instructor")}
                   </p>
                 </div>
                 <div className="flex gap-2">
@@ -367,10 +454,10 @@ function StudentReviewsTable({ reviews }: StudentReviewsTableProps) {
                     variant="ghost"
                     size="sm"
                     className="h-8 w-8 p-0 text-blue-600"
-                    onClick={() => handleEditClick(row.original)}
                   >
                     <Edit className="h-4 w-4" />
                   </Button>
+<<<<<<< HEAD
                   <Dialog>
                     <DialogTrigger asChild>
                       <Button
@@ -415,20 +502,47 @@ function StudentReviewsTable({ reviews }: StudentReviewsTableProps) {
                       </DialogFooter>
                     </DialogContent>
                   </Dialog>
+=======
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="h-8 w-8 p-0 text-red-600"
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
+>>>>>>> sketch
                 </div>
               </div>
 
-              {row.original.is_featured && (
-                <div className="flex justify-end">
-                  <Badge
-                    variant="secondary"
-                    className="bg-yellow-100 text-yellow-800 text-xs"
-                  >
-                    مميز
-                  </Badge>
-                </div>
-              )}
+              <div className="flex flex-wrap gap-2 justify-end">
+                <Badge
+                  variant="secondary"
+                  className="bg-purple-100 text-purple-800 text-xs"
+                >
+                  {row.getValue("category")}
+                </Badge>
+                <Badge
+                  variant="outline"
+                  className="border-blue-200 text-blue-800 text-xs"
+                >
+                  {row.getValue("type")}
+                </Badge>
+                <Badge
+                  className={`text-xs ${
+                    row.getValue("level") === "مبتدئ"
+                      ? "bg-green-100 text-green-800"
+                      : row.getValue("level") === "متوسط"
+                      ? "bg-yellow-100 text-yellow-800"
+                      : row.getValue("level") === "متقدم"
+                      ? "bg-red-100 text-red-800"
+                      : "bg-gray-100 text-gray-800"
+                  }`}
+                >
+                  {row.getValue("level")}
+                </Badge>
+              </div>
 
+<<<<<<< HEAD
               {row.original.is_approved !== undefined && (
                 <div className="flex justify-end">
                   <Badge
@@ -439,8 +553,15 @@ function StudentReviewsTable({ reviews }: StudentReviewsTableProps) {
                   >
                     {row.original.is_approved ? "معتمد" : "في انتظار الموافقة"}
                   </Badge>
+=======
+              <div className="flex justify-end pt-2 border-t">
+                <div className="text-sm font-medium">
+                  {parseFloat(row.getValue("price")) === 0
+                    ? "مجاني"
+                    : `${row.getValue("price")} ر.س`}
+>>>>>>> sketch
                 </div>
-              )}
+              </div>
             </div>
           ))
         ) : (
@@ -533,6 +654,7 @@ function StudentReviewsTable({ reviews }: StudentReviewsTableProps) {
           </Button>
         </div>
       </div>
+<<<<<<< HEAD
 
       {/* Edit Dialog */}
       <Dialog open={editDialogOpen} onOpenChange={setEditDialogOpen}>
@@ -682,6 +804,8 @@ function StudentReviewsTable({ reviews }: StudentReviewsTableProps) {
           </form>
         </DialogContent>
       </Dialog>
+=======
+>>>>>>> sketch
     </div>
   );
 }

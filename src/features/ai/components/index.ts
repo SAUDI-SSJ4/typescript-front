@@ -1,0 +1,11 @@
+export { StatsCard } from './StatsCard';
+export { SearchAndFilters } from './SearchAndFilters';
+export { MaterialCard, type LearningMaterial } from './MaterialCard';
+export { PageHeader } from './PageHeader';
+export { EmptyState } from './EmptyState';
+export { WelcomeBanner } from './WelcomeBanner';
+export { MaterialCardSkeleton, MaterialsGridSkeleton } from './LoadingSkeleton';
+export { QuickStats } from './QuickStats';
+export { default as CreateChallenge } from './CreateChallenge';
+export { default as ChallengesList } from './ChallengesList';
+export { default as CodingChallenge } from './CodingChallenge';

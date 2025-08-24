@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import {
   ShoppingCart,
   Heart,
@@ -8,6 +9,9 @@ import {
   Award,
   MessageSquare,
 } from "lucide-react";
+=======
+import { ShoppingCart, Heart, Share2, BookOpen, Play, Clock, Award, MessageSquare } from "lucide-react";
+>>>>>>> sketch
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 
@@ -20,9 +24,13 @@ interface CoursePricingCardProps {
   courseData: Course;
 }
 
+<<<<<<< HEAD
 export default function CoursePricingCard({
   courseData,
 }: CoursePricingCardProps) {
+=======
+export default function CoursePricingCard({ courseData }: CoursePricingCardProps) {
+>>>>>>> sketch
   return (
     <Card className="border-gray-200 bg-white">
       <CardContent className="p-6">
@@ -42,6 +50,7 @@ export default function CoursePricingCard({
 
         {/* Action Buttons */}
         <div className="flex items-center gap-2 mb-6">
+<<<<<<< HEAD
           <Button
             size="lg"
             className="flex-grow h-12 text-base font-semibold bg-blue-600 hover:bg-blue-700 transition-all duration-200"
@@ -61,22 +70,40 @@ export default function CoursePricingCard({
             size="icon"
             className="h-12 w-12 border-gray-200 hover:bg-gray-50 flex-shrink-0"
           >
+=======
+          <Button size="lg" className="flex-grow h-12 text-base font-semibold bg-blue-600 hover:bg-blue-700 transition-all duration-200">
+            <ShoppingCart className="w-5 h-5 ml-2" />
+            اشترك في الدورة الآن
+          </Button>
+          <Button variant="outline" size="icon" className="h-12 w-12 border-gray-200 hover:bg-gray-50 flex-shrink-0">
+            <Heart className="w-5 h-5" />
+          </Button>
+          <Button variant="outline" size="icon" className="h-12 w-12 border-gray-200 hover:bg-gray-50 flex-shrink-0">
+>>>>>>> sketch
             <Share2 className="w-5 h-5" />
           </Button>
         </div>
 
         {/* Course Features */}
         <div className="bg-gray-50 rounded-xl p-4">
+<<<<<<< HEAD
           <h3 className="font-bold text-base mb-4 text-gray-900">
             معلومات الدورة
           </h3>
+=======
+          <h3 className="font-bold text-base mb-4 text-gray-900">معلومات الدورة</h3>
+>>>>>>> sketch
           <div className="grid grid-cols-1 gap-3">
             {[
               { icon: BookOpen, label: "مستوى مبتدئ" },
               { icon: Play, label: "3 دروس تعليمية" },
               { icon: Clock, label: "مشاهدة في أي وقت" },
               { icon: Award, label: "شهادة حضور" },
+<<<<<<< HEAD
               { icon: MessageSquare, label: "معززة بالذكاء الاصطناعي" },
+=======
+              { icon: MessageSquare, label: "معززة بالذكاء الاصطناعي" }
+>>>>>>> sketch
             ].map((feature, index) => (
               <div key={index} className="flex items-center gap-3">
                 <div className="p-1.5 bg-blue-50 rounded-lg">
@@ -90,4 +117,8 @@ export default function CoursePricingCard({
       </CardContent>
     </Card>
   );
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> sketch

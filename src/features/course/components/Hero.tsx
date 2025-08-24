@@ -1,5 +1,10 @@
+<<<<<<< HEAD
 import { Star, ShoppingCart, GlobeLockIcon, Check, Loader2 } from "lucide-react";
 import type { Course } from "@/types/couse";
+=======
+import { Star, ShoppingCart, GlobeLockIcon } from "lucide-react";
+import type { Course } from "@/types/course";
+>>>>>>> sketch
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import Icon from "@/components/shared/Icon";
@@ -24,16 +29,15 @@ function Hero({ courseData }: { courseData: Course }) {
           <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold">
             {courseData.title}
           </h1>
-          <CourseRating rating={courseData.avg_rating} />
+          <CourseRating rating={courseData.rating} />
         </div>
 
         <div className="flex items-stretch lg:flex-row flex-col gap-6 mt-6 md:mt-10 mb-6">
           <div className="flex-1 bg-card rounded-[20px] shadow-sm p-4 flex flex-col">
             <video
-              src={courseData.preview_video}
-              className="w-full h-full min-h-[300px] object-contain rounded-lg bg-gray-50"
+              src={courseData.videoUrl}
+              className="w-full h-full object-cover rounded-lg"
               controls
-              preload="metadata"
             />
             <CourseNavigation
               activeTab={activeTab}
@@ -42,10 +46,10 @@ function Hero({ courseData }: { courseData: Course }) {
           </div>
           <div className="lg:w-[350px] flex flex-col gap-6">
             <CourseCard
-              price={courseData.price || 0}
+              price={courseData.price}
               level={courseData.level}
-              lessonsCount={courseData.lessons_count}
-              insteadOf={courseData.discount_price || undefined}
+              lessonsCount={courseData.lessonsCount}
+              insteadOf={courseData.insteadOf}
             />
             <AcademyCard />
           </div>
@@ -269,104 +273,28 @@ function CourseNavigationContent({
         return (
           <div className="prose max-w-none space-y-6">
             <h3 className="text-lg font-bold">نظرة عامة:</h3>
-            <p className="text-muted-foreground">{courseData.content}</p>
+            <p className="text-muted-foreground">{courseData.description}</p>
           </div>
         );
       case "content":
         return (
-          <div className="space-y-6">
-            {/* Course content sections */}
-            <div className="space-y-4">
-              {/* Section 1 */}
-              <div className="border rounded-2xl overflow-hidden bg-card">
-                <div className="p-4 bg-gradient-to-r from-blue-50 to-blue-100 border-b">
-                  <div className="flex items-center justify-between">
-                    <h3 className="font-bold text-lg text-gray-800">المقدمة (3 دروس)</h3>
-                    <div className="flex items-center gap-2 text-sm text-gray-600">
-                      <span>5:30</span>
-                    </div>
-                  </div>
-                </div>
-                <div className="p-4 space-y-3">
-                  <div className="flex items-center justify-between p-3 rounded-lg bg-blue-50 hover:bg-blue-100 transition-colors cursor-pointer">
-                    <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
-                        <img src="/assets/icons/play.svg" className="w-4 h-4 text-white" />
-                      </div>
-                      <span className="font-medium text-gray-800">مرحباً بك في الدورة</span>
-                    </div>
-                    <span className="text-sm text-gray-600">5:30</span>
-                  </div>
-                  <div className="flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 transition-colors cursor-pointer">
-                    <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center">
-                        <img src="/assets/icons/play.svg" className="w-4 h-4 text-gray-600" />
-                      </div>
-                      <span className="font-medium text-gray-800">ما ستتعلمه في هذه ...</span>
-                    </div>
-                    <span className="text-sm text-gray-600">8:15</span>
-                  </div>
-                  <div className="flex items-center justify-between p-3 rounded-lg bg-blue-50 hover:bg-blue-100 transition-colors cursor-pointer">
-                    <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
-                        <img src="/assets/icons/play.svg" className="w-4 h-4 text-white" />
-                      </div>
-                      <span className="font-medium text-gray-800">إعداد بيئة العمل</span>
-                    </div>
-                    <span className="text-sm text-gray-600">12:45</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Section 2 */}
-              <div className="border rounded-2xl overflow-hidden bg-card">
-                <div className="p-4 bg-gradient-to-r from-purple-50 to-purple-100 border-b">
-                  <div className="flex items-center justify-between">
-                    <h3 className="font-bold text-lg text-gray-800">الأساسيات (2 دروس)</h3>
-                    <div className="flex items-center gap-2 text-sm text-gray-600">
-                      <span>25:30</span>
-                    </div>
-                  </div>
-                </div>
-                <div className="p-4 space-y-3">
-                  <div className="flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 transition-colors cursor-pointer">
-                    <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center">
-                        <img src="/assets/icons/play.svg" className="w-4 h-4 text-gray-600" />
-                      </div>
-                      <span className="font-medium text-gray-800">المفاهيم الأساسية</span>
-                    </div>
-                    <span className="text-sm text-gray-600">15:20</span>
-                  </div>
-                  <div className="flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 transition-colors cursor-pointer">
-                    <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center">
-                        <img src="/assets/icons/play.svg" className="w-4 h-4 text-gray-600" />
-                      </div>
-                      <span className="font-medium text-gray-800">التطبيقات المقدمة</span>
-                    </div>
-                    <span className="text-sm text-gray-600">10:10</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Add New Section Button */}
-              <div className="border-2 border-dashed border-gray-300 rounded-2xl p-6 text-center hover:border-blue-400 transition-colors cursor-pointer">
-                <div className="flex items-center justify-center gap-2 text-blue-600 font-medium">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <line x1="12" y1="5" x2="12" y2="19"></line>
-                    <line x1="5" y1="12" x2="19" y2="12"></line>
-                  </svg>
-                  إضافة قسم
-                </div>
-              </div>
+          <div className="space-y-4">
+            {/* Course content sections will go here */}
+            <div className="p-4 bg-muted rounded-lg">
+              <h3 className="font-semibold mb-2">القسم الأول: مقدمة</h3>
+              <ul className="space-y-2">
+                <li className="flex items-center gap-2">
+                  <img src="/assets/icons/play.svg" className="w-4 h-4" />
+                  <span>مقدمة عن الدورة</span>
+                </li>
+              </ul>
             </div>
           </div>
         );
       case "learning":
         return (
           <ul className="space-y-4">
-            {courseData.learning_outcomes?.split('\n').map((point: string, index: number) => (
+            {courseData.learningPoints?.map((point: string, index: number) => (
               <li key={index} className="flex items-center gap-2">
                 <img src="/assets/icons/learn.svg" className="w-4 h-4" />
                 <span>{point}</span>
@@ -377,34 +305,22 @@ function CourseNavigationContent({
       case "experience":
         return (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="bg-card p-4 rounded-lg">
-              <div className="flex items-center gap-4 mb-4">
-                <img
-                  src="/assets/images/home/instructor.png"
-                  alt="المراجع"
-                  className="w-12 h-12 rounded-full"
-                />
-                <div>
-                  <h4 className="font-semibold">أحمد محمد</h4>
-                  <CourseRating rating={5} />
+            {courseData.reviews?.map((review, index: number) => (
+              <div key={index} className="bg-card p-4 rounded-lg">
+                <div className="flex items-center gap-4 mb-4">
+                  <img
+                    src={review.avatar}
+                    alt={review.name}
+                    className="w-12 h-12 rounded-full"
+                  />
+                  <div>
+                    <h4 className="font-semibold">{review.name}</h4>
+                    <CourseRating rating={review.rating} />
+                  </div>
                 </div>
+                <p className="text-muted-foreground">{review.comment}</p>
               </div>
-              <p className="text-muted-foreground">دورة ممتازة، استفدت كثيراً من المحتوى المقدم. الشرح واضح ومفصل.</p>
-            </div>
-            <div className="bg-card p-4 rounded-lg">
-              <div className="flex items-center gap-4 mb-4">
-                <img
-                  src="/assets/images/home/instructor.png"
-                  alt="المراجع"
-                  className="w-12 h-12 rounded-full"
-                />
-                <div>
-                  <h4 className="font-semibold">سارة أحمد</h4>
-                  <CourseRating rating={4} />
-                </div>
-              </div>
-              <p className="text-muted-foreground">محتوى جيد جداً، لكن أتمنى لو كان هناك المزيد من التطبيقات العملية.</p>
-            </div>
+            ))}
           </div>
         );
     }

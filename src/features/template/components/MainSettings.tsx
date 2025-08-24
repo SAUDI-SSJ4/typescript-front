@@ -1,41 +1,48 @@
-import { Settings } from "lucide-react";
-import AcademySettingsForm from "./AcademyMainSettingsForm";
-import { Loader } from "@/components/shared";
-import { useAcademyMainSettings } from "../hooks/useMainSettingsQueries";
+import { useState } from "react";
+import WebBuilderLayout from "@/components/shared/WebBuilderLayout";
+import CustomCSSProvider from "./CustomCSSProvider";
+import HomePreview from "@/templates/template-one/pages/preview";
+import AcademyMainSettingsForm from "./AcademyMainSettingsForm";
 
 function MainSettings() {
-  const { data: mainSettings, isPending } = useAcademyMainSettings();
-  if (isPending) {
-    return (
-      <div className="element-center">
-        <Loader />
-      </div>
-    );
-  }
+  const [canUndo] = useState(false);
+  const [canRedo] = useState(false);
+
+  const handleSave = () => {
+    // تنفيذ عملية الحفظ
+    console.log("حفظ التغييرات");
+  };
+
+  const handleUndo = () => {
+    // تنفيذ عملية التراجع
+    console.log("تراجع");
+  };
+
+  const handleRedo = () => {
+    // تنفيذ عملية الإعادة
+    console.log("إعادة");
+  };
+
   return (
-    !isPending &&
-    mainSettings && (
-      <div className="space-y-6">
-        <Header />
-        <AcademySettingsForm mainSettings={mainSettings.data} />
-      </div>
-    )
+    <CustomCSSProvider>
+      <WebBuilderLayout
+        title="الإعدادات الرئيسية"
+        onSave={handleSave}
+        onUndo={handleUndo}
+        onRedo={handleRedo}
+        canUndo={canUndo}
+        canRedo={canRedo}
+        showBuilderControls={false}
+        previewComponent={
+          <div className="w-full h-full bg-white">
+            <HomePreview />
+          </div>
+        }
+      >
+        <AcademyMainSettingsForm />
+      </WebBuilderLayout>
+    </CustomCSSProvider>
   );
 }
 
 export default MainSettings;
-
-function Header() {
-  return (
-    <div className="flex flex-col sm:space-y-0 sm:flex-row sm:items-center sm:justify-between gap-4 bg-white p-4 lg:p-6 rounded-xl shadow-sm border border-gray-100">
-      <div className="flex flex-col sm:flex-row sm:items-center gap-3 lg:gap-4">
-        <div className="flex items-center gap-2 text-gray-600">
-          <Settings className="w-5 h-5 text-blue-600" />
-          <span className="font-medium text-sm lg:text-base">
-            الإعدادات الرئيسية
-          </span>
-        </div>
-      </div>
-    </div>
-  );
-}

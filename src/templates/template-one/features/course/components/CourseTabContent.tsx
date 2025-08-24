@@ -47,14 +47,19 @@ interface CourseTabContentProps {
   activeTab: TabId;
 }
 
+<<<<<<< HEAD
 export default function CourseTabContent({
   courseData,
   activeTab,
 }: CourseTabContentProps) {
+=======
+export default function CourseTabContent({ courseData, activeTab }: CourseTabContentProps) {
+>>>>>>> sketch
   if (activeTab === "overview") {
     return (
       <div className="space-y-8">
         <div>
+<<<<<<< HEAD
           <h3 className="text-2xl font-bold mb-4 text-gray-900">
             ماذا ستتعلم في هذه الدورة
           </h3>
@@ -67,6 +72,16 @@ export default function CourseTabContent({
                 "مشاريع عملية تطبيقية",
               ]
             ).map((point, index) => (
+=======
+          <h3 className="text-2xl font-bold mb-4 text-gray-900">ماذا ستتعلم في هذه الدورة</h3>
+          <div className="grid sm:grid-cols-2 gap-3">
+            {(courseData.learningPoints || [
+              "أساسيات المجال والمفاهيم الأساسية",
+              "التطبيق العملي للمهارات المكتسبة",
+              "أفضل الممارسات والأساليب المتقدمة",
+              "مشاريع عملية تطبيقية"
+            ]).map((point, index) => (
+>>>>>>> sketch
               <div key={index} className="flex items-start gap-3">
                 <CheckCircle className="w-5 h-5 text-green-600 mt-0.5 flex-shrink-0" />
                 <span className="text-gray-700">{point}</span>
@@ -76,6 +91,7 @@ export default function CourseTabContent({
         </div>
 
         <div>
+<<<<<<< HEAD
           <h3 className="text-2xl font-bold mb-4 text-gray-900">
             متطلبات الدورة
           </h3>
@@ -97,6 +113,21 @@ export default function CourseTabContent({
               <span className="text-gray-700">
                 الرغبة في التعلم والتطبيق العملي
               </span>
+=======
+          <h3 className="text-2xl font-bold mb-4 text-gray-900">متطلبات الدورة</h3>
+          <ul className="space-y-2">
+            <li className="flex items-start gap-3">
+              <ChevronRight className="w-4 h-4 text-blue-600 mt-1" />
+              <span className="text-gray-700">لا توجد متطلبات مسبقة - مناسبة للمبتدئين</span>
+            </li>
+            <li className="flex items-start gap-3">
+              <ChevronRight className="w-4 h-4 text-blue-600 mt-1" />
+              <span className="text-gray-700">جهاز كمبيوتر أو هاتف ذكي للوصول للمحتوى</span>
+            </li>
+            <li className="flex items-start gap-3">
+              <ChevronRight className="w-4 h-4 text-blue-600 mt-1" />
+              <span className="text-gray-700">الرغبة في التعلم والتطبيق العملي</span>
+>>>>>>> sketch
             </li>
           </ul>
         </div>
@@ -113,17 +144,26 @@ export default function CourseTabContent({
             { title: "المقدمة والأساسيات", lessons: 5 },
             { title: "المفاهيم المتقدمة", lessons: 8 },
             { title: "التطبيق العملي", lessons: 12 },
+<<<<<<< HEAD
             { title: "المشاريع النهائية", lessons: 6 },
+=======
+            { title: "المشاريع النهائية", lessons: 6 }
+>>>>>>> sketch
           ].map((section, index) => (
             <div key={index} className="bg-gray-50 rounded-lg p-4">
               <div className="flex items-center justify-between">
                 <div>
+<<<<<<< HEAD
                   <h4 className="font-semibold text-gray-900">
                     {section.title}
                   </h4>
                   <p className="text-sm text-gray-600">
                     {section.lessons} دروس
                   </p>
+=======
+                  <h4 className="font-semibold text-gray-900">{section.title}</h4>
+                  <p className="text-sm text-gray-600">{section.lessons} دروس</p>
+>>>>>>> sketch
                 </div>
                 <ChevronRight className="w-5 h-5 text-gray-400" />
               </div>
@@ -137,13 +177,18 @@ export default function CourseTabContent({
   if (activeTab === "instructor") {
     return (
       <div>
+<<<<<<< HEAD
         <h3 className="text-2xl font-bold mb-6 text-gray-900">
           ماذا سوف تتعلم
         </h3>
+=======
+        <h3 className="text-2xl font-bold mb-6 text-gray-900">ماذا سوف تتعلم</h3>
+>>>>>>> sketch
         <div className="grid md:grid-cols-2 gap-6">
           {[
             {
               title: "أساسيات التصميم والألوان",
+<<<<<<< HEAD
               description:
                 "تعلم مبادئ التصميم الأساسية واستخدام الألوان بشكل احترافي",
             },
@@ -169,6 +214,30 @@ export default function CourseTabContent({
               title: "تطبيق المشاريع العملية",
               description: "العمل على مشاريع واقعية لتطبيق المهارات المكتسبة",
             },
+=======
+              description: "تعلم مبادئ التصميم الأساسية واستخدام الألوان بشكل احترافي"
+            },
+            {
+              title: "استخدام أدوات التصميم",
+              description: "التعرف على أدوات التصميم المختلفة وكيفية استخدامها بكفاءة"
+            },
+            {
+              title: "تصميم واجهات تفاعلية",
+              description: "تصميم واجهات مستخدم جذابة وسهلة الاستخدام"
+            },
+            {
+              title: "مبادئ تجربة المستخدم",
+              description: "فهم احتياجات المستخدم وتصميم تجارب استخدام مميزة"
+            },
+            {
+              title: "إنشاء نماذج أولية",
+              description: "بناء نماذج أولية تفاعلية لاختبار التصميمات قبل التنفيذ"
+            },
+            {
+              title: "تطبيق المشاريع العملية",
+              description: "العمل على مشاريع واقعية لتطبيق المهارات المكتسبة"
+            }
+>>>>>>> sketch
           ].map((item, index) => (
             <div key={index} className="bg-gray-50 rounded-lg p-6">
               <div className="flex items-start gap-4">
@@ -176,9 +245,13 @@ export default function CourseTabContent({
                   <CheckCircle className="w-6 h-6 text-blue-600" />
                 </div>
                 <div>
+<<<<<<< HEAD
                   <h4 className="font-semibold text-gray-900 mb-2">
                     {item.title}
                   </h4>
+=======
+                  <h4 className="font-semibold text-gray-900 mb-2">{item.title}</h4>
+>>>>>>> sketch
                   <p className="text-gray-600">{item.description}</p>
                 </div>
               </div>
@@ -195,6 +268,7 @@ export default function CourseTabContent({
         <h3 className="text-2xl font-bold mb-6 text-gray-900">آراء الطلاب</h3>
         <div className="space-y-6">
           {[
+<<<<<<< HEAD
             {
               name: "أحمد محمد",
               rating: 5,
@@ -210,6 +284,11 @@ export default function CourseTabContent({
               rating: 4,
               comment: "دورة مفيدة جداً، ساعدتني في تطوير مهاراتي",
             },
+=======
+            { name: "أحمد محمد", rating: 5, comment: "دورة ممتازة وشاملة، استفدت منها كثيراً" },
+            { name: "فاطمة علي", rating: 5, comment: "المحتوى واضح والشرح مفصل، أنصح بها بشدة" },
+            { name: "خالد السعد", rating: 4, comment: "دورة مفيدة جداً، ساعدتني في تطوير مهاراتي" }
+>>>>>>> sketch
           ].map((review, index) => (
             <div key={index} className="bg-gray-50 rounded-lg p-6">
               <div className="flex items-start gap-4">
@@ -220,9 +299,13 @@ export default function CourseTabContent({
                 />
                 <div className="flex-1">
                   <div className="flex items-center gap-3 mb-2">
+<<<<<<< HEAD
                     <h5 className="font-semibold text-gray-900">
                       {review.name}
                     </h5>
+=======
+                    <h5 className="font-semibold text-gray-900">{review.name}</h5>
+>>>>>>> sketch
                     <div className="flex">
                       {[...Array(5)].map((_, i) => (
                         <Star
@@ -247,4 +330,8 @@ export default function CourseTabContent({
   }
 
   return null;
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> sketch

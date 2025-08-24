@@ -30,11 +30,18 @@ function GoalVision() {
               <span className="text-primary">هدفنا</span> ورؤيتنا
             </h2>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+<<<<<<< HEAD
               نسعى لبناء جيل متعلم ومبدع، ونؤمن بأن التعليم هو القوة الحقيقية
               للمستقبل
             </p>
           </div>
 
+=======
+              نسعى لبناء جيل متعلم ومبدع، ونؤمن بأن التعليم هو القوة الحقيقية للمستقبل
+            </p>
+          </div>
+          
+>>>>>>> sketch
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             {cards.map((card, index) => (
               <motion.div
