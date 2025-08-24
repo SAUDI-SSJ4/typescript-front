@@ -1,5 +1,66 @@
 import React, { useState, useEffect } from 'react';
 
+// Apple Pay type definitions
+declare global {
+  interface Window {
+    ApplePaySession?: typeof ApplePaySession;
+  }
+}
+
+declare class ApplePaySession {
+  static readonly STATUS_SUCCESS: number;
+  static readonly STATUS_FAILURE: number;
+  static canMakePayments(): boolean;
+  
+  constructor(version: number, paymentRequest: ApplePayPaymentRequest);
+  
+  onvalidatemerchant: (event: ApplePayValidateMerchantEvent) => void;
+  onpaymentauthorized: (event: ApplePayPaymentAuthorizedEvent) => void;
+  oncancel: (event: Event) => void;
+  
+  begin(): void;
+  abort(): void;
+  completeMerchantValidation(merchantSession: any): void;
+  completePayment(result: number): void;
+}
+
+interface ApplePayPaymentRequest {
+  countryCode: string;
+  currencyCode: string;
+  supportedNetworks: string[];
+  merchantCapabilities: string[];
+  total: ApplePayLineItem;
+}
+
+interface ApplePayLineItem {
+  label: string;
+  amount: string;
+}
+
+interface ApplePayValidateMerchantEvent extends Event {
+  validationURL: string;
+}
+
+interface ApplePayPaymentAuthorizedEvent extends Event {
+  payment: ApplePayPayment;
+}
+
+interface ApplePayPayment {
+  token: ApplePayPaymentToken;
+}
+
+interface ApplePayPaymentToken {
+  paymentData: any;
+  paymentMethod: ApplePayPaymentMethod;
+  transactionIdentifier: string;
+}
+
+interface ApplePayPaymentMethod {
+  displayName: string;
+  network: string;
+  type: string;
+}
+
 interface PaymentProcessorProps {
   method: string;
   amount: number;
@@ -32,7 +93,7 @@ export const PaymentProcessor: React.FC<PaymentProcessorProps> = ({
   onCancel
 }) => {
   const [isLoading, setIsLoading] = useState(false);
-  const [paymentUrl, setPaymentUrl] = useState<string | null>(null);
+  // const [paymentUrl, setPaymentUrl] = useState<string | null>(null);
 
   // Moyasar configuration
   const MOYASAR_PUBLIC_KEY = process.env.REACT_APP_MOYASAR_PUBLIC_KEY || 'pk_test_vcFZZiinQhLgdvZLlsx8O14XFTy2IVn6sGzFKgcH';
@@ -116,7 +177,7 @@ export const PaymentProcessor: React.FC<PaymentProcessorProps> = ({
       
       if (paymentSession.status === 'initiated') {
         // Redirect to Moyasar payment page
-        setPaymentUrl(paymentSession.url);
+        // setPaymentUrl(paymentSession.url);
         window.location.href = paymentSession.url;
       } else {
         throw new Error('فشل في تهيئة الدفع');
@@ -153,7 +214,7 @@ export const PaymentProcessor: React.FC<PaymentProcessorProps> = ({
 
       const session = new ApplePaySession(3, paymentRequest);
 
-      session.onvalidatemerchant = async (event) => {
+      session.onvalidatemerchant = async (event: ApplePayValidateMerchantEvent) => {
         try {
           // Validate merchant with your backend
           const validationResponse = await fetch('/api/v1/payment/apple-pay/validate', {
@@ -178,7 +239,7 @@ export const PaymentProcessor: React.FC<PaymentProcessorProps> = ({
         }
       };
 
-      session.onpaymentauthorized = async (event) => {
+      session.onpaymentauthorized = async (event: ApplePayPaymentAuthorizedEvent) => {
         try {
           // Process payment with your backend
           const paymentResponse = await fetch('/api/v1/payment/apple-pay/process', {
