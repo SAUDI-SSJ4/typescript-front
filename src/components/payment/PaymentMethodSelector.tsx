@@ -74,10 +74,6 @@ export const PaymentMethodSelector: React.FC<PaymentMethodSelectorProps> = ({
 }) => {
   const [hoveredMethod, setHoveredMethod] = useState<string | null>(null);
 
-  const isMethodAvailable = (method: PaymentMethod) => {
-    return method.enabled && amount >= method.minAmount && amount <= method.maxAmount;
-  };
-
   const getMethodStatus = (method: PaymentMethod) => {
     if (!method.enabled) return 'disabled';
     if (amount < method.minAmount) return 'below_min';

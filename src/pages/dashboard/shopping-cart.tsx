@@ -386,10 +386,10 @@ function ShoppingCart() {
         {/* Cart Items */}
         <div className="lg:col-span-2 space-y-4">
           {items.map((item) => (
-            <div key={item.id} className="bg-white rounded-lg shadow-sm border border-gray-100 p-4">
+            <div key={item.cart_id} className="bg-white rounded-lg shadow-sm border border-gray-100 p-4">
               <div className="flex items-start gap-4">
                 <RemoteImage
-                  src={item.item_details.thumbnail}
+                  src={item.item_details.image_url}
                   alt={item.item_details.title}
                   className="w-20 h-20 rounded-lg object-cover flex-shrink-0"
                 />
@@ -423,7 +423,7 @@ function ShoppingCart() {
                       <Button
                         variant="outline"
                         size="sm"
-                        onClick={() => handleRemoveItem(item.id)}
+                        onClick={() => handleRemoveItem(item.cart_id)}
                         className="text-red-600 border-red-300 hover:bg-red-50 mt-2"
                         disabled={loading}
                       >
