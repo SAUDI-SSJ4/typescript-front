@@ -23,6 +23,7 @@ import {
   PanelRightClose,
   PanelLeftClose,
   Menu,
+  Ticket,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -79,6 +80,7 @@ function AcademySidebar({
         : [...prev, itemId]
     );
   };
+  
   const academy = getAcademyDetails(user);
 
   // If no academy found, return null or a fallback
@@ -138,6 +140,12 @@ function AcademySidebar({
           icon: <Edit3 className="w-4 h-4" />,
           badge: "قريباً",
           comingSoon: true,
+        },
+        {
+          id: "coupons",
+          title: "الكوبونات",
+          href: "/dashboard/coupons",
+          icon: <Ticket className="w-4 h-4" />,
         },
       ],
     },

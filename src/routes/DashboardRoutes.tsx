@@ -19,6 +19,8 @@ import ManageCourse from "@/pages/dashboard/courses/mange";
 import DashboardLayout from "@/features/dashboard/components/DashboardLayout";
 import AILearningMaterials from "@/pages/dashboard/ai-learning-materials";
 import ComprehensiveWebDevelopment from "@/pages/dashboard/ai-learning-materials/comprehensive-web-development";
+import CouponsPage from "@/pages/dashboard/coupons";
+import CouponStatsPage from "@/pages/dashboard/coupons/stats/[id]";
 
 export const dashboardRoutes = (
   <Route
@@ -47,6 +49,9 @@ export const dashboardRoutes = (
     <Route path="purchases" element={<Purchases />} />
     <Route path="shopping-cart" element={<ShoppingCart />} />
     <Route path="wallet" element={<Wallet />} />
+    {/* Coupons Routes */}
+    <Route path="coupons" element={<CouponsPage />} />
+    <Route path="coupons/stats/:id" element={<CouponStatsPage />} />
     {/* Shopping Cart Routes */}
     <Route
       path="affiliate-marketing"
